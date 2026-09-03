@@ -1,3 +1,6 @@
+import type { StrainImage } from "@/data/genetics/types";
+import { homeArtworkSrc } from "@/lib/artwork";
+
 export const brand = {
   name: "Bandit Genetics",
   wordmark: "BANDIT GENETICS",
@@ -11,52 +14,42 @@ export const brand = {
 export const navItems = [
   { href: "/", label: "HOME" },
   { href: "/vault", label: "THE VAULT" },
-  { href: "/collections", label: "COLLECTIONS" },
   { href: "/about", label: "ABOUT" },
   { href: "/contact", label: "CONTACT" },
 ] as const;
 
-import type { StrainImage } from "@/data/genetics/types";
-
 export const homeHero: {
   classified: string;
   primaryCta: { href: string; label: string };
-  secondaryCta: { href: string; label: string };
-  /** Set to a `/images/home/...` file when Bandit homepage artwork exists. */
+  /** Bandit Genetics Frost Queen brand artwork. */
   artwork?: StrainImage;
 } = {
   classified: "FILE // BG 00  ·  VAULT ACCESS",
   primaryCta: { href: "/vault", label: "ENTER THE VAULT" },
-  secondaryCta: { href: "/collections", label: "EXPLORE GENETICS" },
+  artwork: {
+    src: homeArtworkSrc("frost-queen-bandit.png"),
+    alt: "Frost Queen, the Bandit Genetics brand mark",
+    width: 1254,
+    height: 1254,
+  },
 };
 
 export const vaultCopy = {
   kicker: "CLASSIFIED ARCHIVE",
   title: "THE VAULT",
   statement: "NOTHING ORDINARY MAKES IT THIS FAR.",
-  intro:
-    "Twelve named Bandit cultivars. Lineage stays accurate. The keeper hunt comes later.",
+  intro: "Taken from the best. Bred for the rest.",
   searchPlaceholder: "SEARCH THE VAULT",
   searchLabel: "Search the vault",
-  filtersLabel: "Filter files",
+  filtersLabel: "Filter strains",
   all: "ALL",
-  collection: "COLLECTION",
-  type: "TYPE",
-  difficulty: "DIFFICULTY",
-  featured: "FEATURED",
-  featuredOnly: "FEATURED ONLY",
-  empty: "NO FILES MATCH THIS SEARCH.",
+  empty: "NO STRAINS MATCH THIS SEARCH.",
   emptyHint: "Clear the query or filters and open the archive again.",
-  featuredKicker: "NOT IN THIS RELEASE",
-  featuredEmpty: "NO FEATURED FILES IN THIS RELEASE.",
-  featuredEmptyHint:
-    "The launch catalog does not mark any cultivar as featured. Clear the filter to open the full archive.",
   clear: "CLEAR FILTERS",
   viewDossier: "VIEW DOSSIER",
-  unassigned: "UNASSIGNED",
   comingSoon: "INFORMATION COMING SOON",
-  resultOne: "FILE IN RANGE",
-  resultMany: "FILES IN RANGE",
+  resultOne: "STRAIN IN RANGE",
+  resultMany: "STRAINS IN RANGE",
 } as const;
 
 export const pageCopy = {
@@ -64,11 +57,6 @@ export const pageCopy = {
     title: "THE VAULT",
     kicker: "CLASSIFIED ARCHIVE",
     body: "Twelve named Bandit cultivars. Lineage stays accurate. The keeper hunt comes later.",
-  },
-  collections: {
-    title: "Collections",
-    kicker: "Curated releases",
-    body: "Releases will be grouped here once the catalog is ready. Nothing is listed until it is real.",
   },
   about: {
     title: "About",

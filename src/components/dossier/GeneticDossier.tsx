@@ -1,6 +1,9 @@
 import Image from "next/image";
 import { ConfidenceStamp } from "@/components/dossier/ConfidenceStamp";
-import { DossierSection } from "@/components/dossier/DossierSection";
+import {
+  DossierPair,
+  DossierSection,
+} from "@/components/dossier/DossierSection";
 import { LineagePanel } from "@/components/dossier/LineagePanel";
 import { PendingPanel } from "@/components/dossier/PendingPanel";
 import { RelatedGenetics } from "@/components/dossier/RelatedGenetics";
@@ -9,14 +12,13 @@ import { StrainMedia } from "@/components/vault/StrainMedia";
 import { Button } from "@/components/ui/Button";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { dossierCopy } from "@/content/dossier";
-import { vaultCopy } from "@/content/site";
 import {
   getInfluencesForStrain,
   getParentById,
   getRelatedStrains,
 } from "@/data/genetics";
-import type { StrainRecord } from "@/data/genetics/types";
-import { hasArtworkSrc } from "@/lib/artwork";
+import { STRAIN_TYPE_LABELS, type StrainRecord } from "@/data/genetics/types";
+import { hasArtworkSrc, isLandscapeArtwork } from "@/lib/artwork";
 import { isPendingCopy } from "@/lib/pending";
 
 function Body({ children }: { children: string }) {
@@ -30,16 +32,18 @@ function CharacterSection({
   title,
   kicker,
   value,
+  compact = false,
 }: {
   id: string;
   title: string;
   kicker: string;
   value?: string;
+  compact?: boolean;
 }) {
   const unknown = Boolean(value && value.includes("UNKNOWN"));
 
   return (
-    <DossierSection id={id} title={title} kicker={kicker}>
+    <DossierSection id={id} title={title} kicker={kicker} compact={compact}>
       {isPendingCopy(value) ? (
         <PendingPanel label={dossierCopy.comingSoon} />
       ) : (
@@ -48,8 +52,10 @@ function CharacterSection({
             <ConfidenceStamp level="INFERRED" />
             {unknown ? <ConfidenceStamp level="UNKNOWN" /> : null}
           </div>
-          <Body>{value as string}</Body>
-          <p className="mt-3 max-w-2xl text-[0.82rem] leading-relaxed text-ice/45">
+          <p className="w-full text-[1.02rem] leading-relaxed text-ice/80">
+            {value as string}
+          </p>
+          <p className="mt-3 w-full text-[0.82rem] leading-relaxed text-ice/45">
             {dossierCopy.inferredReading}
           </p>
         </>
@@ -73,6 +79,7 @@ export function GeneticDossier({ strain }: GeneticDossierProps) {
   const related = getRelatedStrains(strain);
   const influences = getInfluencesForStrain(strain);
   const gallery = strain.galleryImages.filter(hasArtworkSrc);
+  const landscapeHero = isLandscapeArtwork(strain.heroImage);
 
   return (
     <article className="relative overflow-x-clip bg-black">
@@ -92,14 +99,8 @@ export function GeneticDossier({ strain }: GeneticDossierProps) {
           </p>
           <div className="mt-4 flex flex-wrap items-start gap-x-8 gap-y-4 font-label text-[0.65rem] tracking-[0.16em] text-ice/55 uppercase">
             <span>File {strain.fileCode}</span>
-            <span>{strain.type}</span>
+            <span>{STRAIN_TYPE_LABELS[strain.type]}</span>
             <span>{strain.collection}</span>
-            <span className="inline-flex flex-col gap-1">
-              <span className="text-ice/40">{vaultCopy.difficulty}</span>
-              <span className="text-ice/85">
-                {strain.difficulty ?? vaultCopy.unassigned}
-              </span>
-            </span>
             <span>{strain.status}</span>
           </div>
 
@@ -123,16 +124,37 @@ export function GeneticDossier({ strain }: GeneticDossierProps) {
           </div>
         </header>
 
-        <div className="mt-10 grid gap-8 lg:grid-cols-12 lg:items-start">
+        <div
+          className={
+            landscapeHero
+              ? "mt-10 grid gap-8"
+              : "mt-10 grid gap-8 lg:grid-cols-12 lg:items-start"
+          }
+        >
           <StrainMedia
             image={strain.heroImage}
             fileCode={strain.fileCode}
             theme={strain.theme}
             name={strain.name}
             labelled
-            className="min-h-56 aspect-[4/5] sm:aspect-[16/10] lg:col-span-5 lg:aspect-[4/5]"
+            priority
+            className={
+              landscapeHero
+                ? "w-full px-2 py-3 sm:px-4"
+                : "lg:col-span-5 px-2 py-3 sm:px-3"
+            }
+            sizes={
+              landscapeHero
+                ? "(max-width: 768px) 100vw, 92rem"
+                : "(max-width: 1024px) 100vw, 42vw"
+            }
+            imageClassName={
+              landscapeHero
+                ? "max-h-[min(70vh,36rem)]"
+                : "max-h-[min(82vh,48rem)]"
+            }
           />
-          <div className="lg:col-span-6 lg:col-start-7 lg:pt-4">
+          <div className={landscapeHero ? "max-w-3xl" : "lg:col-span-6 lg:col-start-7 lg:pt-4"}>
             <p className="font-label text-[0.62rem] tracking-[0.28em] text-gold uppercase">
               Opening statement
             </p>
@@ -151,13 +173,14 @@ export function GeneticDossier({ strain }: GeneticDossierProps) {
         {gallery.length > 0 ? (
           <ul className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-3">
             {gallery.map((image) => (
-              <li key={image.src} className="relative aspect-[4/5] overflow-hidden bg-steel">
+              <li key={image.src} className="flex items-center justify-center bg-black p-2">
                 <Image
                   src={image.src}
                   alt={image.alt || strain.name}
-                  fill
+                  width={image.width ?? 1200}
+                  height={image.height ?? 1600}
                   sizes="(max-width: 768px) 50vw, 30vw"
-                  className="object-cover"
+                  className="h-auto w-auto max-h-80 max-w-full object-contain"
                 />
               </li>
             ))}
@@ -178,20 +201,22 @@ export function GeneticDossier({ strain }: GeneticDossierProps) {
             </p>
           </DossierSection>
 
-          <div className="grid gap-16 lg:grid-cols-2 lg:gap-12">
+          <DossierPair>
             <CharacterSection
               id="plant"
               title={dossierCopy.plant}
               kicker="STRUCTURE"
               value={strain.plantCharacter}
+              compact
             />
             <CharacterSection
               id="flower"
               title={dossierCopy.flower}
               kicker="FORMATION"
               value={strain.flowerCharacter}
+              compact
             />
-          </div>
+          </DossierPair>
 
           <CharacterSection
             id="resin"
@@ -200,20 +225,22 @@ export function GeneticDossier({ strain }: GeneticDossierProps) {
             value={strain.resinExpression}
           />
 
-          <div className="grid gap-16 lg:grid-cols-2 lg:gap-12">
+          <DossierPair>
             <CharacterSection
               id="color"
               title={dossierCopy.color}
               kicker="VISUAL RANGE"
               value={strain.colorPotential}
+              compact
             />
             <CharacterSection
               id="aroma"
               title={dossierCopy.aroma}
               kicker="NOSE AND PALATE"
               value={strain.aromaDirection}
+              compact
             />
-          </div>
+          </DossierPair>
 
           <CharacterSection
             id="lineage-character"

@@ -1,18 +1,16 @@
-export const STRAIN_TYPES = ["REGULAR", "AUTOFLOWER"] as const;
+export const STRAIN_TYPES = ["FEMINIZED_PHOTOPERIOD", "AUTOFLOWER"] as const;
 export type StrainType = (typeof STRAIN_TYPES)[number];
+
+export const STRAIN_TYPE_LABELS: Record<StrainType, string> = {
+  FEMINIZED_PHOTOPERIOD: "FEMINIZED PHOTOPERIOD",
+  AUTOFLOWER: "AUTOFLOWER",
+};
 
 export const COLLECTIONS = [
   "BANDIT COLLECTION",
   "THIRST TRAP COLLECTION",
 ] as const;
 export type Collection = (typeof COLLECTIONS)[number];
-
-export const DIFFICULTIES = [
-  "BEGINNER",
-  "BEGINNER REGULAR",
-  "ADVANCED REGULAR",
-] as const;
-export type Difficulty = (typeof DIFFICULTIES)[number];
 
 export const CONFIDENCE_LEVELS = ["DOCUMENTED", "INFERRED", "UNKNOWN"] as const;
 export type Confidence = (typeof CONFIDENCE_LEVELS)[number];
@@ -68,10 +66,11 @@ export type StrainRecord = {
   parentOneId: string;
   parentTwoId: string;
   type: StrainType;
-  difficulty?: Difficulty;
   collection: Collection;
   theme: StrainTheme;
   shortDescription: string;
+  /** Vault card copy only. Must not replace dossier shortDescription. */
+  vaultDescription: string;
   longDescription: string;
   plantCharacter?: string;
   flowerCharacter?: string;
@@ -83,6 +82,8 @@ export type StrainRecord = {
   whyItsInTheVault: string;
   quote?: string;
   heroImage?: StrainImage;
+  /** Optional Vault crop. Falls back to heroImage when omitted. */
+  vaultImage?: StrainImage;
   galleryImages: StrainImage[];
   featured: boolean;
   status: string;
@@ -103,13 +104,10 @@ export type VaultListItem = {
   parentOne: string;
   parentTwo: string;
   type: StrainType;
-  difficulty?: Difficulty;
-  collection: Collection;
   theme: StrainTheme;
-  shortDescription: string;
-  quote?: string;
+  vaultDescription: string;
   heroImage?: StrainImage;
+  vaultImage?: StrainImage;
   galleryImages: StrainImage[];
-  featured: boolean;
   availability: string;
 };

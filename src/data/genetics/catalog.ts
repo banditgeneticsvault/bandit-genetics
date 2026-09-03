@@ -43,27 +43,19 @@ function assertCatalog() {
     throw new Error(`Catalog must contain 12 strains. Found ${strains.length}.`);
   }
 
-  const regulars = strains.filter((strain) => strain.type === "REGULAR");
+  const photos = strains.filter(
+    (strain) => strain.type === "FEMINIZED_PHOTOPERIOD",
+  );
   const autos = strains.filter((strain) => strain.type === "AUTOFLOWER");
 
-  if (regulars.length !== 9) {
-    throw new Error(`Expected 9 regular strains. Found ${regulars.length}.`);
+  if (photos.length !== 9) {
+    throw new Error(
+      `Expected 9 feminized photoperiod strains. Found ${photos.length}.`,
+    );
   }
 
   if (autos.length !== 3) {
     throw new Error(`Expected 3 autoflowers. Found ${autos.length}.`);
-  }
-
-  for (const auto of autos) {
-    if (auto.difficulty !== "BEGINNER") {
-      throw new Error(`${auto.name} must be BEGINNER.`);
-    }
-  }
-
-  for (const regular of regulars) {
-    if (regular.difficulty) {
-      throw new Error(`${regular.name} must not have assigned difficulty.`);
-    }
   }
 
   const slugs = new Set(strains.map((strain) => strain.slug));
@@ -143,14 +135,11 @@ export function toVaultListItem(strain: StrainRecord): VaultListItem {
     parentOne: parentsById[strain.parentOneId].name,
     parentTwo: parentsById[strain.parentTwoId].name,
     type: strain.type,
-    difficulty: strain.difficulty,
-    collection: strain.collection,
     theme: strain.theme,
-    shortDescription: strain.shortDescription,
-    quote: strain.quote,
+    vaultDescription: strain.vaultDescription,
     heroImage: strain.heroImage,
+    vaultImage: strain.vaultImage,
     galleryImages: strain.galleryImages,
-    featured: strain.featured,
     availability: strain.availability,
   };
 }

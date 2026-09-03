@@ -34,7 +34,6 @@ export function VaultArchive({ items }: VaultArchiveProps) {
       {results.length === 0 ? (
         <div className="mt-8">
           <VaultEmptyState
-            featuredOnly={filters.featuredOnly}
             onClear={() => setFilters(defaultVaultFilters)}
           />
         </div>

@@ -20,6 +20,10 @@ type StrainMediaProps = {
   name: string;
   className?: string;
   labelled?: boolean;
+  sizes?: string;
+  /** Tailwind max-height classes. Artwork keeps its ratio inside this cap. */
+  imageClassName?: string;
+  priority?: boolean;
 };
 
 export function StrainMedia({
@@ -29,24 +33,45 @@ export function StrainMedia({
   name,
   className,
   labelled = false,
+  sizes = "(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 40vw",
+  imageClassName = "max-h-[min(70vh,36rem)]",
+  priority = false,
 }: StrainMediaProps) {
   if (hasArtworkSrc(image)) {
+    const width = image.width ?? 1600;
+    const height = image.height ?? 1600;
+
     return (
-      <div className={cn("relative overflow-hidden bg-steel", className)}>
+      <figure
+        className={cn(
+          "flex items-center justify-center overflow-hidden bg-black",
+          className,
+        )}
+      >
         <Image
           src={image.src}
           alt={image.alt || name}
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 40vw"
-          className="object-cover"
+          width={width}
+          height={height}
+          sizes={sizes}
+          quality={85}
+          priority={priority}
+          className={cn(
+            "h-auto w-auto max-w-full object-contain",
+            imageClassName,
+          )}
         />
-      </div>
+      </figure>
     );
   }
 
   return (
     <div
-      className={cn("relative overflow-hidden", washes[theme], className)}
+      className={cn(
+        "relative min-h-44 overflow-hidden",
+        washes[theme],
+        className,
+      )}
       role={labelled ? "img" : undefined}
       aria-label={
         labelled ? `${name}. ${dossierCopy.artworkPending}.` : undefined

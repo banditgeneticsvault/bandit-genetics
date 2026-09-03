@@ -1,6 +1,5 @@
 import { vaultCopy } from "@/content/site";
-import type { VaultFilters } from "@/data/genetics";
-import { COLLECTIONS, STRAIN_TYPES } from "@/data/genetics/types";
+import type { VaultFilters, VaultView } from "@/data/genetics";
 import { cn } from "@/lib/cn";
 
 type VaultToolbarProps = {
@@ -8,6 +7,12 @@ type VaultToolbarProps = {
   onChange: (next: VaultFilters) => void;
   resultCount: number;
 };
+
+const VIEWS: { id: VaultView; label: string }[] = [
+  { id: "ALL", label: "ALL" },
+  { id: "FEMINIZED_PHOTOPERIOD", label: "FEMINIZED PHOTOPERIOD" },
+  { id: "AUTOFLOWER", label: "AUTOFLOWER" },
+];
 
 function Chip({
   active,
@@ -61,88 +66,24 @@ export function VaultToolbar({
         </label>
       </div>
 
-      <div className="flex flex-col gap-5 px-4 py-4 md:px-5">
+      <div className="flex flex-col gap-4 px-4 py-4 md:flex-row md:items-center md:justify-between md:px-5">
         <fieldset>
-          <legend className="mb-2 font-label text-[0.62rem] tracking-[0.24em] text-gold uppercase">
-            {vaultCopy.collection}
-          </legend>
+          <legend className="sr-only">{vaultCopy.filtersLabel}</legend>
           <div className="flex flex-wrap gap-2">
-            <Chip
-              active={filters.collection === "ALL"}
-              onClick={() => onChange({ ...filters, collection: "ALL" })}
-            >
-              {vaultCopy.all}
-            </Chip>
-            {COLLECTIONS.map((collection) => (
+            {VIEWS.map((view) => (
               <Chip
-                key={collection}
-                active={filters.collection === collection}
-                onClick={() => onChange({ ...filters, collection })}
+                key={view.id}
+                active={filters.view === view.id}
+                onClick={() => onChange({ ...filters, view: view.id })}
               >
-                {collection}
+                {view.label}
               </Chip>
             ))}
           </div>
         </fieldset>
-
-        <div className="grid gap-5 sm:grid-cols-2">
-          <fieldset>
-            <legend className="mb-2 font-label text-[0.62rem] tracking-[0.24em] text-gold uppercase">
-              {vaultCopy.type}
-            </legend>
-            <div className="flex flex-wrap gap-2">
-              <Chip
-                active={filters.type === "ALL"}
-                onClick={() => onChange({ ...filters, type: "ALL" })}
-              >
-                {vaultCopy.all}
-              </Chip>
-              {STRAIN_TYPES.map((type) => (
-                <Chip
-                  key={type}
-                  active={filters.type === type}
-                  onClick={() => onChange({ ...filters, type })}
-                >
-                  {type}
-                </Chip>
-              ))}
-            </div>
-          </fieldset>
-
-          <fieldset>
-            <legend className="mb-2 font-label text-[0.62rem] tracking-[0.24em] text-gold uppercase">
-              {vaultCopy.difficulty}
-            </legend>
-            <div className="flex flex-wrap gap-2">
-              <Chip
-                active={filters.difficulty === "ALL"}
-                onClick={() => onChange({ ...filters, difficulty: "ALL" })}
-              >
-                {vaultCopy.all}
-              </Chip>
-              <Chip
-                active={filters.difficulty === "BEGINNER"}
-                onClick={() => onChange({ ...filters, difficulty: "BEGINNER" })}
-              >
-                BEGINNER
-              </Chip>
-            </div>
-          </fieldset>
-        </div>
-
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <Chip
-            active={filters.featuredOnly}
-            onClick={() =>
-              onChange({ ...filters, featuredOnly: !filters.featuredOnly })
-            }
-          >
-            {vaultCopy.featuredOnly}
-          </Chip>
-          <p className="font-label text-[0.62rem] tracking-[0.22em] text-ice/45 uppercase">
-            {resultCount} {resultLabel}
-          </p>
-        </div>
+        <p className="font-label text-[0.62rem] tracking-[0.22em] text-ice/45 uppercase">
+          {resultCount} {resultLabel}
+        </p>
       </div>
     </div>
   );

@@ -1,19 +1,15 @@
-import type { Collection, Difficulty, StrainType, VaultListItem } from "./types";
+import type { StrainType, VaultListItem } from "./types";
+
+export type VaultView = "ALL" | StrainType;
 
 export type VaultFilters = {
   query: string;
-  collection: Collection | "ALL";
-  type: StrainType | "ALL";
-  difficulty: Difficulty | "ALL";
-  featuredOnly: boolean;
+  view: VaultView;
 };
 
 export const defaultVaultFilters: VaultFilters = {
   query: "",
-  collection: "ALL",
-  type: "ALL",
-  difficulty: "ALL",
-  featuredOnly: false,
+  view: "ALL",
 };
 
 function haystack(item: VaultListItem): string {
@@ -22,10 +18,8 @@ function haystack(item: VaultListItem): string {
     item.lineage,
     item.parentOne,
     item.parentTwo,
-    item.collection,
     item.type,
-    item.shortDescription,
-    item.difficulty ?? "",
+    item.vaultDescription,
     item.fileCode,
   ]
     .join(" ")
@@ -38,16 +32,11 @@ export function filterVaultItems(
 ): VaultListItem[] {
   const needle = filters.query.trim().toLowerCase();
 
-  return items.filter((item) => {
-    if (needle && !haystack(item).includes(needle)) return false;
-    if (filters.collection !== "ALL" && item.collection !== filters.collection) {
-      return false;
-    }
-    if (filters.type !== "ALL" && item.type !== filters.type) return false;
-    if (filters.difficulty !== "ALL") {
-      if (item.difficulty !== filters.difficulty) return false;
-    }
-    if (filters.featuredOnly && !item.featured) return false;
-    return true;
-  });
+  return items
+    .filter((item) => {
+      if (needle && !haystack(item).includes(needle)) return false;
+      if (filters.view === "ALL") return true;
+      return item.type === filters.view;
+    })
+    .sort((a, b) => a.name.localeCompare(b.name, "en"));
 }

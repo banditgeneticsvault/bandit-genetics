@@ -85,7 +85,7 @@ export function LineagePanel({
     parentOne.name,
     parentTwo.name,
     strain.lineageCharacter ?? strain.shortDescription,
-    strain.type === "AUTOFLOWER" ? "autoflower" : "regular",
+    strain.type === "AUTOFLOWER" ? "autoflower" : "feminized photoperiod",
   );
 
   return (

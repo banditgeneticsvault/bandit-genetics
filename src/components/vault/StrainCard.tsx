@@ -2,19 +2,8 @@ import Link from "next/link";
 import { StrainMedia } from "@/components/vault/StrainMedia";
 import { vaultCopy } from "@/content/site";
 import type { VaultListItem } from "@/data/genetics/types";
-import { cn } from "@/lib/cn";
-
-const shells: Record<VaultListItem["theme"], string> = {
-  METAL: "border-white/10 bg-charcoal",
-  SILK: "border-purple/50 bg-black",
-  FROST: "border-ice/20 bg-steel",
-};
-
-const mediaRatio: Record<VaultListItem["theme"], string> = {
-  METAL: "aspect-[16/9]",
-  SILK: "aspect-[5/3]",
-  FROST: "aspect-[16/10]",
-};
+import { STRAIN_TYPE_LABELS } from "@/data/genetics/types";
+import { pickVaultImage } from "@/lib/artwork";
 
 type StrainCardProps = {
   strain: VaultListItem;
@@ -22,16 +11,13 @@ type StrainCardProps = {
 
 export function StrainCard({ strain }: StrainCardProps) {
   return (
-    <article
-      className={cn("flex h-full flex-col border", shells[strain.theme])}
-    >
+    <article className="flex h-full flex-col border border-white/10 bg-charcoal">
       <header className="flex items-start justify-between gap-4 border-b border-white/8 px-4 py-3">
         <p className="font-label text-[0.62rem] tracking-[0.22em] text-gold uppercase">
           File {strain.fileCode}
         </p>
-        <p className="text-right font-label text-[0.62rem] tracking-[0.18em] text-ice/55 uppercase">
-          {strain.type}
-          <span className="mt-1 block text-ice/35">{strain.collection}</span>
+        <p className="font-label text-[0.62rem] tracking-[0.18em] text-ice/55 uppercase">
+          {STRAIN_TYPE_LABELS[strain.type]}
         </p>
       </header>
 
@@ -42,30 +28,22 @@ export function StrainCard({ strain }: StrainCardProps) {
         <p className="mt-3 font-label text-[0.75rem] leading-relaxed tracking-[0.05em] text-ice uppercase">
           {strain.lineage}
         </p>
-        {strain.difficulty ? (
-          <p className="mt-3 font-label text-[0.62rem] tracking-[0.22em] text-gold uppercase">
-            Difficulty {strain.difficulty}
-          </p>
-        ) : null}
       </div>
 
       <StrainMedia
-        image={strain.heroImage}
+        image={pickVaultImage(strain)}
         fileCode={strain.fileCode}
         theme={strain.theme}
         name={strain.name}
-        className={mediaRatio[strain.theme]}
+        className="px-3 py-3"
+        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+        imageClassName="max-h-[min(58vh,28rem)]"
       />
 
       <div className="flex flex-1 flex-col px-4 pt-4 pb-5">
         <p className="text-[0.92rem] leading-relaxed text-ice/75">
-          {strain.shortDescription}
+          {strain.vaultDescription}
         </p>
-        {strain.quote ? (
-          <p className="mt-4 font-display text-lg leading-snug text-frost/80">
-            {strain.quote}
-          </p>
-        ) : null}
         <Link
           href={`/strain/${strain.slug}`}
           className="mt-5 inline-flex min-h-11 w-full items-center justify-center border border-gunmetal px-4 font-label text-[0.68rem] tracking-[0.22em] text-ice uppercase hover:border-ice hover:text-frost sm:w-auto"

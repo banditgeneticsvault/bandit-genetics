@@ -1,4 +1,92 @@
+import { localStrainImage } from "@/lib/artwork";
 import type { StrainRecord } from "./types";
+
+const strainArt = {
+  "gorilla-heist": localStrainImage(
+    "gorilla-heist",
+    "hero.png",
+    "GORILLA HEIST limited release artwork",
+    1921,
+    2560,
+  ),
+  "black-market-barbie": localStrainImage(
+    "black-market-barbie",
+    "hero.JPG",
+    "BLACK MARKET BARBIE limited release artwork",
+    4000,
+    1848,
+  ),
+  "vault-robbery": localStrainImage(
+    "vault-robbery",
+    "hero.jpg",
+    "VAULT ROBBERY limited release artwork",
+    3024,
+    3024,
+  ),
+  "criminal-cherry": localStrainImage(
+    "criminal-cherry",
+    "hero.jpg",
+    "CRIMINAL CHERRY limited release artwork",
+    2296,
+    4080,
+  ),
+  "velvet-vice": localStrainImage(
+    "velvet-vice",
+    "hero.jpg",
+    "VELVET VICE limited release artwork",
+    2160,
+    3840,
+  ),
+  "diamond-thief": localStrainImage(
+    "diamond-thief",
+    "hero.png",
+    "DIAMOND THIEF limited release artwork",
+    1921,
+    2560,
+  ),
+  "bandit-queen": localStrainImage(
+    "bandit-queen",
+    "hero.jpg",
+    "BANDIT QUEEN limited release artwork",
+    1530,
+    2040,
+  ),
+  "felons-fantasy": localStrainImage(
+    "felons-fantasy",
+    "hero.jpg",
+    "FELON'S FANTASY limited release artwork",
+    3000,
+    4000,
+  ),
+  "money-laundering": localStrainImage(
+    "money-laundering",
+    "hero.jpg",
+    "MONEY LAUNDERING limited release artwork",
+    3024,
+    4032,
+  ),
+  "highway-robbery": localStrainImage(
+    "highway-robbery",
+    "hero.jpg",
+    "HIGHWAY ROBBERY limited release artwork",
+    2160,
+    2880,
+  ),
+  "getaway-girl": localStrainImage(
+    "getaway-girl",
+    "hero.JPG",
+    "GETAWAY GIRL limited release artwork",
+    2592,
+    3888,
+  ),
+  "speeding-ticket": localStrainImage(
+    "speeding-ticket",
+    "hero.jpg",
+    "SPEEDING TICKET limited release artwork",
+    3000,
+    4000,
+  ),
+} as const;
 
 const comingSoon = "INFORMATION COMING SOON";
 
@@ -11,11 +99,13 @@ export const strains: StrainRecord[] = [
     lineage: "Gorilla Glue #4 × Dante's Inferno",
     parentOneId: "gorilla-glue-4",
     parentTwoId: "dantes-inferno",
-    type: "REGULAR",
+    type: "FEMINIZED_PHOTOPERIOD",
     collection: "BANDIT COLLECTION",
     theme: "METAL",
     shortDescription:
       "Glue resin meets Dante dessert in a Bandit named regular. The parents are famous. The file name is ours.",
+    vaultDescription:
+      "GG4 vigor and greasy resin potential with Dante dessert. Pine diesel may meet berry cream, with dense flowers and possible cool-night color.",
     longDescription:
       "GORILLA HEIST is Bandit Genetics’ name for Gorilla Glue #4 crossed to Dante's Inferno. GG4 is the accidental Nevada cut that made resin a punchline and a tool problem. Dante's Inferno, often listed as Oreoz × Devil Driver, is the color and pastry side of the pairing. We did not breed those parents. We did not invent the combination. We named our version, and we will select our own plants from it. GG4 may donate vigor, branching, pine diesel, and greasy trichomes. Dante may donate stacked calyxes, berry cream, and cool room color. The pairing is worth a vault file because the parents are proven. It is not a promise that every Bandit plant will frost the same way.",
     plantCharacter:
@@ -35,6 +125,7 @@ export const strains: StrainRecord[] = [
     whyItsInTheVault:
       "The job was too clean to leave on the table. Two proven parents, one Bandit name, room to select later.",
     quote: "SOME GENETICS ARE WORTH STEALING.",
+    heroImage: strainArt["gorilla-heist"],
     galleryImages: [],
     featured: false,
     status: "IN VAULT",
@@ -60,11 +151,13 @@ export const strains: StrainRecord[] = [
     lineage: "Permanent Marker S1 × Platinum Lemon Cherry Gelato S1",
     parentOneId: "permanent-marker-s1",
     parentTwoId: "platinum-lemon-cherry-gelato-s1",
-    type: "REGULAR",
+    type: "FEMINIZED_PHOTOPERIOD",
     collection: "THIRST TRAP COLLECTION",
     theme: "SILK",
     shortDescription:
       "Two selfed dessert cuts in one Thirst Trap regular. Marker ink on one side. Lemon cherry gelato on the other.",
+    vaultDescription:
+      "Two selfed dessert parents. Marker may bring candy gas and dense boutique flowers; PLCG may add lemon-cherry, frost, and color.",
     longDescription:
       "BLACK MARKET BARBIE pairs Permanent Marker S1 with Platinum Lemon Cherry Gelato S1. Permanent Marker went wide on loud candy gas and bag appeal. Platinum Lemon Cherry Gelato S1 is a selfed line built to keep lemon cherry candy, frost, and color more often than an open cross might. Bandit did not create those parents. An S1 on both sides may stack familiar traits. It may also still throw oddballs. That is why this file is a regular hunt, not a clone list. Marker may bring ink, floral dough, and dense boutique flowers. PLCG may bring lemon, cherry syrup, and brighter color. Together they read as a dressed up dessert file, which is why it sits in THIRST TRAP COLLECTION.",
     plantCharacter:
@@ -83,6 +176,7 @@ export const strains: StrainRecord[] = [
       "Two S1 parents can make a tighter looking F1. Useful for later selections that want candy without losing gas.",
     whyItsInTheVault:
       "Thirst Trap is for files that look expensive before they even hit a tray. This one earned the folder.",
+    heroImage: strainArt["black-market-barbie"],
     galleryImages: [],
     featured: false,
     status: "IN VAULT",
@@ -102,11 +196,13 @@ export const strains: StrainRecord[] = [
     lineage: "Gorilla Glue #4 S1 × Platinum Frosting",
     parentOneId: "gorilla-glue-4-s1",
     parentTwoId: "platinum-frosting",
-    type: "REGULAR",
+    type: "FEMINIZED_PHOTOPERIOD",
     collection: "BANDIT COLLECTION",
     theme: "METAL",
     shortDescription:
       "Selfed GG4 under Platinum Frosting. Glue in the lock. Dessert cream on the getaway.",
+    vaultDescription:
+      "Selfed GG4 under Platinum Frosting. Greasy glue resin against lemon-cherry cream and cookie gas, with mixed color potential in the pack.",
     longDescription:
       "VAULT ROBBERY is Gorilla Glue #4 S1 crossed to Platinum Frosting. Platinum Frosting is Platinum Lemon Cherry Gelato × Oreoz. The GG4 S1 keeps the glue family close. Frosting brings PLCG fruit and Oreoz cookie chocolate gas. Bandit does not own GG4, Oreoz, or PLCG. This file is our named regular and our future selections. GG4 may push structure, stretch, and greasy resin. Frosting may push cream, dessert, and darker color. GG4 already sits in GORILLA HEIST. That repeat is on purpose. This file asks what glue does when the other parent is frosting instead of Dante.",
     plantCharacter:
@@ -126,6 +222,7 @@ export const strains: StrainRecord[] = [
     whyItsInTheVault:
       "The vault was never built to stay closed. Glue and frosting in one file is a reason to open it.",
     quote: "THE VAULT WAS NEVER BUILT TO STAY CLOSED.",
+    heroImage: strainArt["vault-robbery"],
     galleryImages: [],
     featured: false,
     status: "IN VAULT",
@@ -145,11 +242,13 @@ export const strains: StrainRecord[] = [
     lineage: "Tropicana Blue × Blueberry Inferno",
     parentOneId: "tropicana-blue",
     parentTwoId: "blueberry-inferno",
-    type: "REGULAR",
+    type: "FEMINIZED_PHOTOPERIOD",
     collection: "BANDIT COLLECTION",
     theme: "METAL",
     shortDescription:
       "Citrus candy into dark berry fire. Two fruit parents, one Bandit cherry file.",
+    vaultDescription:
+      "Citrus candy from Tropicana Blue against blueberry and Dante fruit. Frost is likely; cherry-citrus or deeper berry can lead, with color possible.",
     longDescription:
       "CRIMINAL CHERRY crosses Tropicana Blue to Blueberry Inferno. Tropicana Blue is listed as Tropicana Cherry × Blueberry Sugar. Blueberry Inferno is Blueberry Sugar × Dante's Inferno. Blueberry Sugar shows up on both sides. Dante sits in Inferno, so this file also carries a Dante echo beside GORILLA HEIST. Bandit did not breed those parents. The Bandit product is this named regular and the plants we keep from it. Tropicana Blue may add candy citrus and a brighter top. Inferno may add deeper berry, more drama, and Dante color. The combination is interesting because it stacks blueberry dessert while still leaving a citrus lane open.",
     plantCharacter:
@@ -168,6 +267,7 @@ export const strains: StrainRecord[] = [
       "A fruit regular for later work if a citrus berry keeper shows. Also a second Dante touchstone in the vault.",
     whyItsInTheVault:
       "Cherry files get people talking. This one has a real family tree under the name.",
+    heroImage: strainArt["criminal-cherry"],
     galleryImages: [],
     featured: false,
     status: "IN VAULT",
@@ -187,11 +287,13 @@ export const strains: StrainRecord[] = [
     lineage: "Gucciberry × Dip N Stix S1",
     parentOneId: "gucciberry",
     parentTwoId: "dip-n-stix-s1",
-    type: "REGULAR",
+    type: "FEMINIZED_PHOTOPERIOD",
     collection: "THIRST TRAP COLLECTION",
     theme: "SILK",
     shortDescription:
       "Boutique berry against a frosty Dip N Stix S1. Built to look expensive in the folder.",
+    vaultDescription:
+      "Jammy blueberry candy from Gucciberry with Dip N Stix density, frost, and color potential. Fruit-forward rather than a chem-led pairing.",
     longDescription:
       "VELVET VICE is Gucciberry crossed to Dip N Stix S1. Gucciberry is Blueberry Sugar × Joker Juice 11. Dip N Stix S1 is a selfed Dip N Stix line. Deeper Dip N Stix ancestry is not clean in public trees, so we do not fake it. Bandit did not create either parent. Gucciberry may bring jammy blueberry candy and a dressed resin frame. Dip N Stix S1 may bring color, density, and sweet fruit frost. The cross reads as a looker, which is why it lives in THIRST TRAP COLLECTION rather than the heavier Bandit metal files.",
     plantCharacter:
@@ -210,6 +312,7 @@ export const strains: StrainRecord[] = [
       "Useful if the vault wants a berry parent that photographs well without pretending the Dip N Stix tree is fully mapped.",
     whyItsInTheVault:
       "Some files are stored because they look like trouble in the best way. This is one.",
+    heroImage: strainArt["velvet-vice"],
     galleryImages: [],
     featured: false,
     status: "IN VAULT",
@@ -235,11 +338,13 @@ export const strains: StrainRecord[] = [
     lineage: "Blue Ve'Gas × Platinum City Diesel",
     parentOneId: "blue-vegas",
     parentTwoId: "platinum-city-diesel",
-    type: "REGULAR",
+    type: "FEMINIZED_PHOTOPERIOD",
     collection: "BANDIT COLLECTION",
     theme: "METAL",
     shortDescription:
       "Berry glue butter into platinum chem diesel. A theft of frost, not a fairy tale.",
+    vaultDescription:
+      "Berry glue-butter from Blue Ve'Gas against platinum chem diesel. Resin-heavy on paper, with berry, lemon-cherry, and fuel in the mix.",
     longDescription:
       "DIAMOND THIEF pairs Blue Ve'Gas with Platinum City Diesel. Blue Ve'Gas is Gorilla Butter × Blueberry Sugar, so GG4 sits one generation back through Gorilla Butter. Platinum City Diesel is Platinum Lemon Cherry Gelato × 3D Chem. That same Platinum City Diesel parent also sits in MONEY LAUNDERING. Repeat anchors are intentional. Bandit did not breed Gorilla Butter, PLCG, or 3D Chem. Blue Ve'Gas may offer berry dessert, color, and a buttery glue echo. Platinum City Diesel may offer chem structure, fuel, and PLCG fruit. The file is interesting because frost and fuel can share a plant without either parent being a Bandit original.",
     plantCharacter:
@@ -258,6 +363,7 @@ export const strains: StrainRecord[] = [
       "Pairs with MONEY LAUNDERING as the two Platinum City Diesel files. Useful for seeing diesel under berry glue versus diesel under Permanent Marker.",
     whyItsInTheVault:
       "We did not come for the money. We came for the genetics that frost like they mean it.",
+    heroImage: strainArt["diamond-thief"],
     galleryImages: [],
     featured: false,
     status: "IN VAULT",
@@ -277,11 +383,13 @@ export const strains: StrainRecord[] = [
     lineage: "Dragon Gas × Blueberry Piff",
     parentOneId: "dragon-gas",
     parentTwoId: "blueberry-piff",
-    type: "REGULAR",
+    type: "FEMINIZED_PHOTOPERIOD",
     collection: "THIRST TRAP COLLECTION",
     theme: "SILK",
     shortDescription:
       "Grape gas structure beside a blueberry piff question mark. Queen of the folder, not a finished myth.",
+    vaultDescription:
+      "Dragon Gas may bring branching, density, resin, and grape-botanical gas. Blueberry Piff is unmapped, so blueberry or incense notes stay unconfirmed.",
     longDescription:
       "BANDIT QUEEN is Dragon Gas × Blueberry Piff. Dragon Gas is listed as Grape Gas × Zero Gravity: branching, density, resin, grape and botanical gas. Blueberry Piff does not have a confirmed pedigree in this pass. The name points at blueberry and piff, and we tag blueberry for discovery only. We do not invent a piff folklore story. Bandit did not create these parents. The combination is in the vault because grape gas next to blueberry mystery is a hunt worth running, not because the second parent is fully mapped.",
     plantCharacter:
@@ -300,6 +408,7 @@ export const strains: StrainRecord[] = [
       "Worth running to see if Blueberry Piff adds a high tone or a haze lean over grape gas. Results first, story second.",
     whyItsInTheVault:
       "A queen file needs mystery and muscle. Dragon Gas supplies muscle. Piff stays mysterious on purpose until we know more.",
+    heroImage: strainArt["bandit-queen"],
     galleryImages: [],
     featured: false,
     status: "IN VAULT",
@@ -325,11 +434,13 @@ export const strains: StrainRecord[] = [
     lineage: "Jokers Pie × Blue Grapesicle",
     parentOneId: "jokers-pie",
     parentTwoId: "blue-grapesicle",
-    type: "REGULAR",
+    type: "FEMINIZED_PHOTOPERIOD",
     collection: "THIRST TRAP COLLECTION",
     theme: "SILK",
     shortDescription:
       "Grape pie candy into a grapesicle. Dessert on dessert, named like a crime.",
+    vaultDescription:
+      "Grape candy, cream, and gas from Jokers Pie against a grapesicle fruit parent. Dessert density and purple potential, without a chem promise.",
     longDescription:
       "FELON'S FANTASY crosses Jokers Pie to Blue Grapesicle. Jokers Pie is Joker Juice 11 × Grape Pie, often described as grape candy, cream, and gas with color. Blue Grapesicle lineage listings conflict (Blue Ice × Joker Juice 11 versus Blueberry Sugar × Joker Juice). We print the parent name we were given. We do not pick a fake tree. Joker Juice may appear on both sides if one listing is wrong or the other is right. Either way the fantasy is fruit candy. Bandit did not breed these parents. This is our named regular.",
     plantCharacter:
@@ -348,6 +459,7 @@ export const strains: StrainRecord[] = [
       "A candy regular for Thirst Trap. Later dossiers should update Blue Grapesicle once the cut is confirmed.",
     whyItsInTheVault:
       "Not every crime is chem. Some of them are grape.",
+    heroImage: strainArt["felons-fantasy"],
     galleryImages: [],
     featured: false,
     status: "IN VAULT",
@@ -373,11 +485,13 @@ export const strains: StrainRecord[] = [
     lineage: "Big Perm × Platinum City Diesel",
     parentOneId: "big-perm",
     parentTwoId: "platinum-city-diesel",
-    type: "REGULAR",
+    type: "FEMINIZED_PHOTOPERIOD",
     collection: "BANDIT COLLECTION",
     theme: "METAL",
     shortDescription:
       "Permanent Marker and 3D Chem, then platinum diesel again. Clean money. Dirty gas.",
+    vaultDescription:
+      "Permanent Marker candy-gas over stacked 3D Chem and PLCG diesel. Structure may run sturdy; aroma can mix ink, lemon-cherry, and fuel.",
     longDescription:
       "MONEY LAUNDERING is Big Perm × Platinum City Diesel. Big Perm is Permanent Marker × 3D Chem. Platinum City Diesel is Platinum Lemon Cherry Gelato × 3D Chem. 3D Chem therefore sits on both sides. Platinum City Diesel also parents DIAMOND THIEF. That overlap is deliberate. Bandit did not create Permanent Marker, 3D Chem, or PLCG. Marker may bring ink candy and boutique flower. Diesel may bring PLCG fruit and chem fuel. Double 3D Chem may steady structure. It may also make the pack chem heavy. The file exists to wash dessert through chem until something keeper worthy settles out.",
     plantCharacter:
@@ -396,6 +510,7 @@ export const strains: StrainRecord[] = [
       "The second Platinum City Diesel file. Compare with DIAMOND THIEF to see berry glue versus Marker on the same diesel parent.",
     whyItsInTheVault:
       "If you are going to move dessert through chem, do it on purpose and put a name on the operation.",
+    heroImage: strainArt["money-laundering"],
     galleryImages: [],
     featured: false,
     status: "IN VAULT",
@@ -416,13 +531,14 @@ export const strains: StrainRecord[] = [
     parentOneId: "guava-n-chem-auto",
     parentTwoId: "carbon-cherry-auto",
     type: "AUTOFLOWER",
-    difficulty: "BEGINNER",
     collection: "BANDIT COLLECTION",
     theme: "FROST",
     shortDescription:
       "An auto file with chem in the name and cherry in the other seat. Fast work. Honest gaps.",
+    vaultDescription:
+      "Guava and chem suggest tropical fuel. Cherry from the second parent is a name reading until flower confirms. Auto stature is expected; flower details remain open.",
     longDescription:
-      "HIGHWAY ROBBERY is Guava N Chem Auto × Carbon Cherry Auto. Pages for these exact Bandit parents are thin. Similar named guava chem autos exist elsewhere. We do not steal another file’s description and paste it here. CHEM is tagged from Guava N Chem. Carbon Cherry stays lightly documented on purpose. Bandit did not create the original chem family. This is our named autoflower. Difficulty is BEGINNER because it is an autoflower in this catalog, not because we ran a trial.",
+      "HIGHWAY ROBBERY is Guava N Chem Auto × Carbon Cherry Auto. Pages for these exact Bandit parents are thin. Similar named guava chem autos exist elsewhere. We do not steal another file’s description and paste it here. CHEM is tagged from Guava N Chem. Carbon Cherry stays lightly documented on purpose. Bandit did not create the original chem family. This is our named autoflower.",
     plantCharacter:
       "Autos usually stay smaller and finish without a photoperiod flip. Exact height and branch habit for this pair are UNKNOWN.",
     flowerCharacter: comingSoon,
@@ -437,6 +553,7 @@ export const strains: StrainRecord[] = [
       "A beginner auto with chem on the label. Later research should pin the exact parent cuts.",
     whyItsInTheVault:
       "Not every job needs a twelve week photoperiod. Some of them happen on the highway.",
+    heroImage: strainArt["highway-robbery"],
     galleryImages: [],
     featured: false,
     status: "IN VAULT",
@@ -452,7 +569,7 @@ export const strains: StrainRecord[] = [
     growNotes: comingSoon,
     seoTitle: "HIGHWAY ROBBERY",
     seoDescription:
-      "HIGHWAY ROBBERY is Guava N Chem Auto × Carbon Cherry Auto. Bandit autoflower. BEGINNER. Lineage as supplied.",
+      "HIGHWAY ROBBERY is Guava N Chem Auto × Carbon Cherry Auto. Bandit autoflower. Lineage as supplied.",
   },
   {
     id: "getaway-girl",
@@ -463,13 +580,14 @@ export const strains: StrainRecord[] = [
     parentOneId: "strawberry-milk-qookies-f2-auto",
     parentTwoId: "red-runtz-auto",
     type: "AUTOFLOWER",
-    difficulty: "BEGINNER",
     collection: "THIRST TRAP COLLECTION",
     theme: "FROST",
     shortDescription:
       "Strawberry cookie auto into red runtz auto. Sweet getaway. F2 on the first parent.",
+    vaultDescription:
+      "Strawberry cream and cookie dessert against Red Runtz candy. Auto stature expected; F2 on one parent may widen the range. Color and gas are possible, not promised.",
     longDescription:
-      "GETAWAY GIRL is Strawberry Milk & Qookies F2 Auto crossed to Red Runtz Auto. Close names exist elsewhere. We do not claim those packs are this parent. The given names still tell a dessert story: strawberry milk, cookies, runtz candy. COOKIES and RUNTZ are tagged from those names. Bandit did not create Runtz or the cookie family. This is our named autoflower in THIRST TRAP COLLECTION. Difficulty is BEGINNER as an autoflower assignment, not a grow diary. An F2 parent can mean more scatter. That can be useful for a hunt and messy for a uniform tray.",
+      "GETAWAY GIRL is Strawberry Milk & Qookies F2 Auto crossed to Red Runtz Auto. Close names exist elsewhere. We do not claim those packs are this parent. The given names still tell a dessert story: strawberry milk, cookies, runtz candy. COOKIES and RUNTZ are tagged from those names. Bandit did not create Runtz or the cookie family. This is our named autoflower in THIRST TRAP COLLECTION. An F2 parent can mean more scatter. That can be useful for a hunt and messy for a uniform tray.",
     plantCharacter:
       "Auto stature expected. F2 on parent one may widen the range. Structure details UNKNOWN.",
     flowerCharacter: comingSoon,
@@ -485,6 +603,7 @@ export const strains: StrainRecord[] = [
       "The candy auto in the launch set. Later work can confirm which Red Runtz auto and which F2 cookie auto were used.",
     whyItsInTheVault:
       "The getaway should taste like candy even if the car is an auto.",
+    heroImage: strainArt["getaway-girl"],
     galleryImages: [],
     featured: false,
     status: "IN VAULT",
@@ -494,7 +613,7 @@ export const strains: StrainRecord[] = [
     growNotes: comingSoon,
     seoTitle: "GETAWAY GIRL",
     seoDescription:
-      "GETAWAY GIRL is Strawberry Milk & Qookies F2 Auto × Red Runtz Auto. Bandit autoflower. BEGINNER.",
+      "GETAWAY GIRL is Strawberry Milk & Qookies F2 Auto × Red Runtz Auto. Bandit autoflower.",
   },
   {
     id: "speeding-ticket",
@@ -505,13 +624,14 @@ export const strains: StrainRecord[] = [
     parentOneId: "tropicana-cookies-auto",
     parentTwoId: "atomic-burn-auto",
     type: "AUTOFLOWER",
-    difficulty: "BEGINNER",
     collection: "BANDIT COLLECTION",
     theme: "FROST",
     shortDescription:
       "Tropicana cookies auto with Atomic Burn in the passenger seat. Citrus on a timer.",
+    vaultDescription:
+      "Tropicana Cookies auto reputation is orange citrus candy. Atomic Burn is unmapped, so fuel or spice is not assigned. Auto timing and a modest frame are the safe reads.",
     longDescription:
-      "SPEEDING TICKET is Tropicana Cookies Auto × Atomic Burn Auto. Tropicana Cookies as a photoperiod is widely listed as Cookies × Tangie. Many autos reuse the name with different auto donors. Atomic Burn Auto has no confirmed pedigree in this pass. We keep that gap visible. COOKIES is tagged from Tropicana Cookies. Bandit did not breed the original Tropicana Cookies cut. This is our named autoflower. Difficulty is BEGINNER by catalog rule for autos. Citrus candy is the interesting bet. Burn stays undefined until a run fills it in.",
+      "SPEEDING TICKET is Tropicana Cookies Auto × Atomic Burn Auto. Tropicana Cookies as a photoperiod is widely listed as Cookies × Tangie. Many autos reuse the name with different auto donors. Atomic Burn Auto has no confirmed pedigree in this pass. We keep that gap visible. COOKIES is tagged from Tropicana Cookies. Bandit did not breed the original Tropicana Cookies cut. This is our named autoflower. Citrus candy is the interesting bet. Burn stays undefined until a run fills it in.",
     plantCharacter:
       "Auto timing and a modest frame are the safe assumptions. Atomic Burn structure is UNKNOWN.",
     flowerCharacter: comingSoon,
@@ -526,6 +646,7 @@ export const strains: StrainRecord[] = [
       "Closes the auto trio. Later dossiers should identify Atomic Burn before anyone writes terp scripture.",
     whyItsInTheVault:
       "If the citrus is real, the ticket writes itself. If Burn is a wildcard, that is why the file exists.",
+    heroImage: strainArt["speeding-ticket"],
     galleryImages: [],
     featured: false,
     status: "IN VAULT",
@@ -541,6 +662,6 @@ export const strains: StrainRecord[] = [
     growNotes: comingSoon,
     seoTitle: "SPEEDING TICKET",
     seoDescription:
-      "SPEEDING TICKET is Tropicana Cookies Auto × Atomic Burn Auto. Bandit autoflower. BEGINNER.",
+      "SPEEDING TICKET is Tropicana Cookies Auto × Atomic Burn Auto. Bandit autoflower.",
   },
 ];
