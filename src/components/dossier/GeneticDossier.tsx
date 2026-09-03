@@ -1,12 +1,13 @@
 import Image from "next/image";
-import { Button } from "@/components/ui/Button";
-import { PageContainer } from "@/components/layout/PageContainer";
+import { ConfidenceStamp } from "@/components/dossier/ConfidenceStamp";
 import { DossierSection } from "@/components/dossier/DossierSection";
 import { LineagePanel } from "@/components/dossier/LineagePanel";
 import { PendingPanel } from "@/components/dossier/PendingPanel";
 import { RelatedGenetics } from "@/components/dossier/RelatedGenetics";
 import { ResearchStatus } from "@/components/dossier/ResearchStatus";
 import { StrainMedia } from "@/components/vault/StrainMedia";
+import { Button } from "@/components/ui/Button";
+import { PageContainer } from "@/components/layout/PageContainer";
 import { dossierCopy } from "@/content/dossier";
 import { vaultCopy } from "@/content/site";
 import {
@@ -34,12 +35,23 @@ function CharacterSection({
   kicker: string;
   value?: string;
 }) {
+  const unknown = Boolean(value && value.includes("UNKNOWN"));
+
   return (
     <DossierSection id={id} title={title} kicker={kicker}>
       {isPendingCopy(value) ? (
         <PendingPanel label={dossierCopy.comingSoon} />
       ) : (
-        <Body>{value as string}</Body>
+        <>
+          <div className="mb-4 flex flex-wrap gap-2">
+            <ConfidenceStamp level="INFERRED" />
+            {unknown ? <ConfidenceStamp level="UNKNOWN" /> : null}
+          </div>
+          <Body>{value as string}</Body>
+          <p className="mt-3 max-w-2xl text-[0.82rem] leading-relaxed text-ice/45">
+            {dossierCopy.inferredReading}
+          </p>
+        </>
       )}
     </DossierSection>
   );
@@ -77,12 +89,16 @@ export function GeneticDossier({ strain }: GeneticDossierProps) {
           <p className="font-label text-[0.62rem] tracking-[0.28em] text-gold uppercase">
             {dossierCopy.classified} · {dossierCopy.restricted}
           </p>
-          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 font-label text-[0.65rem] tracking-[0.16em] text-ice/55 uppercase">
+          <div className="mt-4 flex flex-wrap items-start gap-x-8 gap-y-4 font-label text-[0.65rem] tracking-[0.16em] text-ice/55 uppercase">
             <span>File {strain.fileCode}</span>
             <span>{strain.type}</span>
             <span>{strain.collection}</span>
-            <span>{vaultCopy.difficulty}</span>
-            <span>{strain.difficulty ?? vaultCopy.unassigned}</span>
+            <span className="inline-flex flex-col gap-1">
+              <span className="text-ice/40">{vaultCopy.difficulty}</span>
+              <span className="text-ice/85">
+                {strain.difficulty ?? vaultCopy.unassigned}
+              </span>
+            </span>
             <span>{strain.status}</span>
           </div>
 

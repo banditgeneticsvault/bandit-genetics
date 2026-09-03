@@ -4,11 +4,6 @@ import { dossierCopy } from "@/content/dossier";
 import type { ParentRecord, ResearchNote, StrainRecord } from "@/data/genetics/types";
 import type { Confidence } from "@/data/genetics/types";
 
-function uniqueSources(notes: ResearchNote[]): string[] {
-  const labels = notes.flatMap((note) => note.sources.map((source) => source.label));
-  return [...new Set(labels)];
-}
-
 function uniqueLevels(notes: ResearchNote[]): Confidence[] {
   return [...new Set(notes.map((note) => note.confidence))];
 }
@@ -19,10 +14,10 @@ function statusCopy(levels: Confidence[]): string {
   const hasUnk = levels.includes("UNKNOWN");
 
   if (hasDoc && !hasInf && !hasUnk) {
-    return "Parent history on this file is mostly documented from public records. Bandit garden notes are still pending.";
+    return "Parent history on this file is documented. Bandit garden notes are still pending.";
   }
   if (!hasDoc && hasUnk && !hasInf) {
-    return "Public documentation on one or more parents is thin. Gaps stay visible. We will not invent a cleaner story.";
+    return "Documentation on one or more parents is thin. Gaps stay visible. We will not invent a cleaner story.";
   }
   return "This file mixes documented parent history with inferred garden expectations. Unknown items stay marked. Future Bandit Genetics phenotype observations are not in yet.";
 }
@@ -44,7 +39,6 @@ export function ResearchStatus({
     ...parentTwo.researchNotes,
   ];
   const levels = uniqueLevels(notes);
-  const sources = uniqueSources(notes);
 
   return (
     <DossierSection id="research" title={dossierCopy.research} kicker="CREDIBILITY">
@@ -75,16 +69,6 @@ export function ResearchStatus({
             </li>
           ))}
         </ul>
-      ) : null}
-      {sources.length > 0 ? (
-        <div className="mt-8">
-          <p className="font-label text-[0.62rem] tracking-[0.24em] text-gold uppercase">
-            {dossierCopy.recordsConsulted}
-          </p>
-          <p className="mt-2 max-w-2xl text-[0.85rem] leading-relaxed text-ice/45">
-            {sources.join(". ")}.
-          </p>
-        </div>
       ) : null}
     </DossierSection>
   );

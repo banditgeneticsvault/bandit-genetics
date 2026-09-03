@@ -172,13 +172,79 @@ function unique(values: string[]): string[] {
   return [...new Set(values)];
 }
 
+function citationNames(parent: ParentRecord): string[] {
+  return unique(
+    [parent.name, ...(parent.aliases ?? [])]
+      .map((name) => name.replace(/\s+S1$/i, "").replace(/\s+Auto$/i, "").trim())
+      .filter((name) => name.length >= 10),
+  );
+}
+
+function lineageCitesParent(
+  lineage: string | undefined,
+  parent: ParentRecord,
+): boolean {
+  if (!lineage) return false;
+  return citationNames(parent).some((name) => lineage.includes(name));
+}
+
+function isSelfedPair(a: string, b: string): boolean {
+  return a === `${b}-s1` || b === `${a}-s1`;
+}
+
+function documentedDirectReasons(
+  strain: StrainRecord,
+  other: StrainRecord,
+): string[] {
+  const ownParents = [
+    parentsById[strain.parentOneId],
+    parentsById[strain.parentTwoId],
+  ];
+  const otherParents = [
+    parentsById[other.parentOneId],
+    parentsById[other.parentTwoId],
+  ];
+  const reasons: string[] = [];
+
+  for (const own of ownParents) {
+    for (const theirs of otherParents) {
+      if (own.id === theirs.id) continue;
+
+      if (isSelfedPair(own.id, theirs.id)) {
+        reasons.push(
+          `Documented family link through ${own.name} and ${theirs.name}`,
+        );
+      }
+
+      if (lineageCitesParent(theirs.lineage, own)) {
+        reasons.push(`Documented in ${theirs.name} lineage: ${own.name}`);
+      }
+
+      if (lineageCitesParent(own.lineage, theirs)) {
+        reasons.push(`Documented in ${own.name} lineage: ${theirs.name}`);
+      }
+    }
+  }
+
+  return unique(reasons);
+}
+
+type RelatedScore = {
+  other: StrainRecord;
+  reasons: string[];
+  score: number;
+  sharedParentCount: number;
+  directCount: number;
+  influenceCount: number;
+};
+
 export function getRelatedStrains(
   strain: StrainRecord,
   limit = 4,
 ): RelatedStrainLink[] {
   const ownInfluences = getInfluencesForStrain(strain);
 
-  const scored = strains
+  const scored: RelatedScore[] = strains
     .filter((other) => other.id !== strain.id)
     .map((other) => {
       const sharedParents = unique(
@@ -190,37 +256,58 @@ export function getRelatedStrains(
           .map((parentId) => parentsById[parentId].name),
       );
 
+      const direct = documentedDirectReasons(strain, other);
+
       const sharedInfluences = getInfluencesForStrain(other).filter((influence) =>
         ownInfluences.includes(influence),
       );
 
       const reasons: string[] = [
         ...sharedParents.map((name) => `Shares ${name}`),
-        ...sharedInfluences.map((influence) => `Shares ${influence} influence`),
+        ...direct,
+        ...sharedInfluences.map(
+          (influence) => `Shares documented ${influence} influence`,
+        ),
       ];
 
-      if (sharedParents.length > 0 && other.collection === strain.collection) {
+      if (reasons.length > 0 && other.collection === strain.collection) {
         reasons.push("Same collection");
       }
 
       const score =
-        sharedParents.length * 100 +
-        sharedInfluences.length * 10 +
-        (other.collection === strain.collection ? 2 : 0) +
+        sharedParents.length * 400 +
+        direct.length * 120 +
+        sharedInfluences.length * 15 +
+        (other.collection === strain.collection ? 3 : 0) +
         (other.type === strain.type ? 1 : 0);
 
       return {
         other,
-        reasons,
+        reasons: unique(reasons),
         score,
-        include: sharedParents.length > 0 || sharedInfluences.length > 0,
+        sharedParentCount: sharedParents.length,
+        directCount: direct.length,
+        influenceCount: sharedInfluences.length,
       };
-    })
-    .filter((entry) => entry.include)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, limit);
+    });
 
-  return scored.map((entry) => ({
+  const genetic = scored.filter(
+    (entry) =>
+      entry.sharedParentCount > 0 ||
+      entry.directCount > 0 ||
+      entry.influenceCount > 0,
+  );
+
+  const core = genetic
+    .filter((entry) => entry.sharedParentCount > 0 || entry.directCount > 0)
+    .sort((a, b) => b.score - a.score);
+
+  const selected =
+    core.length >= 3
+      ? core.slice(0, limit)
+      : [...genetic].sort((a, b) => b.score - a.score).slice(0, limit);
+
+  return selected.map((entry) => ({
     item: toVaultListItem(entry.other),
     reasons: entry.reasons,
   }));

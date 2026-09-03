@@ -1,16 +1,22 @@
+import { ConfidenceStamp } from "@/components/dossier/ConfidenceStamp";
 import { DossierSection } from "@/components/dossier/DossierSection";
 import { dossierCopy } from "@/content/dossier";
 import {
   combinedDirectionCopy,
   parentContributionCopy,
 } from "@/data/genetics/parentVoice";
-import type { ParentRecord, StrainRecord } from "@/data/genetics/types";
+import type { Confidence, ParentRecord, StrainRecord } from "@/data/genetics/types";
 
 type LineagePanelProps = {
   strain: StrainRecord;
   parentOne: ParentRecord;
   parentTwo: ParentRecord;
 };
+
+function parentLevels(parent: ParentRecord): Confidence[] {
+  const levels = [...new Set(parent.researchNotes.map((note) => note.confidence))];
+  return levels.length > 0 ? levels : (["UNKNOWN"] as Confidence[]);
+}
 
 function ParentColumn({
   label,
@@ -37,6 +43,11 @@ function ParentColumn({
       <h3 className="mt-3 font-display text-[clamp(1.6rem,3vw,2.1rem)] leading-[0.95] text-frost">
         {parent.name}
       </h3>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {parentLevels(parent).map((level) => (
+          <ConfidenceStamp key={level} level={level} />
+        ))}
+      </div>
       {parent.lineage ? (
         <p className="mt-3 font-label text-[0.72rem] leading-relaxed tracking-[0.06em] text-ice/70 uppercase">
           {dossierCopy.publicLineage}: {parent.lineage}
@@ -46,12 +57,10 @@ function ParentColumn({
           {dossierCopy.publicLineage}: {dossierCopy.unknown}
         </p>
       )}
-      {parent.originalBreeder ? (
-        <p className="mt-2 text-[0.85rem] leading-relaxed text-ice/50">
-          {dossierCopy.originRecord}: {parent.originalBreeder}
-        </p>
-      ) : null}
       <p className="mt-5 text-[0.95rem] leading-relaxed text-ice/80">{contribution}</p>
+      <p className="mt-3 text-[0.82rem] leading-relaxed text-ice/45">
+        {dossierCopy.inferredReading}
+      </p>
     </div>
   );
 }
@@ -101,6 +110,9 @@ export function LineagePanel({
         <p className="font-label text-[0.62rem] tracking-[0.24em] text-gold uppercase">
           {dossierCopy.combined}
         </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <ConfidenceStamp level="INFERRED" />
+        </div>
         <p className="mt-4 max-w-3xl text-[1.02rem] leading-relaxed text-ice/85">
           {combined}
         </p>

@@ -33,7 +33,10 @@ export function VaultArchive({ items }: VaultArchiveProps) {
 
       {results.length === 0 ? (
         <div className="mt-8">
-          <VaultEmptyState onClear={() => setFilters(defaultVaultFilters)} />
+          <VaultEmptyState
+            featuredOnly={filters.featuredOnly}
+            onClear={() => setFilters(defaultVaultFilters)}
+          />
         </div>
       ) : (
         <ul className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3 xl:gap-7">

@@ -39,6 +39,10 @@ export const vaultCopy = {
   featuredOnly: "FEATURED ONLY",
   empty: "NO FILES MATCH THIS SEARCH.",
   emptyHint: "Clear the query or filters and open the archive again.",
+  featuredKicker: "NOT IN THIS RELEASE",
+  featuredEmpty: "NO FEATURED FILES IN THIS RELEASE.",
+  featuredEmptyHint:
+    "The launch catalog does not mark any cultivar as featured. Clear the filter to open the full archive.",
   clear: "CLEAR FILTERS",
   viewDossier: "VIEW DOSSIER",
   unassigned: "UNASSIGNED",

@@ -33,16 +33,10 @@ export type GeneticInfluence = (typeof GENETIC_INFLUENCES)[number];
 export const STRAIN_THEMES = ["METAL", "SILK", "FROST"] as const;
 export type StrainTheme = (typeof STRAIN_THEMES)[number];
 
-export type ResearchSource = {
-  label: string;
-  url?: string;
-};
-
 export type ResearchNote = {
   topic: string;
   body: string;
   confidence: Confidence;
-  sources: ResearchSource[];
 };
 
 export type StrainImage = {
@@ -56,9 +50,11 @@ export type ParentRecord = {
   id: string;
   name: string;
   aliases?: string[];
-  originalBreeder?: string;
   lineage?: string;
+  /** Documented family tags used for related genetics and the influence map. */
   influences: GeneticInfluence[];
+  /** Name or market readings only. Never used as proof of relatedness. */
+  inferredInfluences?: GeneticInfluence[];
   researchNotes: ResearchNote[];
 };
 

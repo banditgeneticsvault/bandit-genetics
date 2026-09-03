@@ -17,11 +17,11 @@ export const strains: StrainRecord[] = [
     shortDescription:
       "Glue resin meets Dante dessert in a Bandit named regular. The parents are famous. The file name is ours.",
     longDescription:
-      "GORILLA HEIST is Bandit Genetics’ name for Gorilla Glue #4 crossed to Dante's Inferno. GG4 is the accidental Nevada cut that made resin a punchline and a tool problem. Dante's Inferno, often listed as Oreoz × Devil Driver and run from the Mile High Dave #8 cut, is the color and pastry side of the pairing. We did not breed those parents. We did not invent the combination. We named our version, and we will select our own plants from it. GG4 may donate vigor, branching, pine diesel, and greasy trichomes. Dante may donate stacked calyxes, berry cream, and cool room color. Seedlys describes its own Dante × GG4 work as vigorous and resin heavy with a shot at vivid color. That helps explain why the pairing is worth a vault file. It is not a copy of their product, and it is not a promise that every Bandit plant will frost the same way.",
+      "GORILLA HEIST is Bandit Genetics’ name for Gorilla Glue #4 crossed to Dante's Inferno. GG4 is the accidental Nevada cut that made resin a punchline and a tool problem. Dante's Inferno, often listed as Oreoz × Devil Driver, is the color and pastry side of the pairing. We did not breed those parents. We did not invent the combination. We named our version, and we will select our own plants from it. GG4 may donate vigor, branching, pine diesel, and greasy trichomes. Dante may donate stacked calyxes, berry cream, and cool room color. The pairing is worth a vault file because the parents are proven. It is not a promise that every Bandit plant will frost the same way.",
     plantCharacter:
-      "Expect a plant that wants to grow. GG4 often stretches and builds side arms that can hold weight. Dante can keep the frame from turning into a single spear. Training response is likely, not guaranteed.",
+      "A vigorous frame is a reasonable reading. GG4 often stretches and builds side arms that can hold weight. Dante can keep the frame from turning into a single spear. Training response is likely, not guaranteed.",
     flowerCharacter:
-      "Flowers may stack dense and top heavy. Dante calyx structure can show. GG4 can swell bracts and make the cola look wet. Phenotype will decide which parent leads.",
+      "Flowers may stack dense and top heavy. Dante calyx structure can show. GG4 can swell bracts and make the cola look wet. Phenotype decides which parent leads.",
     resinExpression:
       "Resin is the reason GG4 stays in breeding rooms. Early frost is a reasonable hope. Extraction talk waits for a Bandit run.",
     colorPotential:
@@ -42,11 +42,8 @@ export const strains: StrainRecord[] = [
     researchNotes: [
       {
         topic: "Naming",
-        body: "Do not call this Mile High Glue. That is another company’s product name for a related pairing.",
+        body: "This file uses a Bandit name. Do not treat it as somebody else’s pairing under a different label.",
         confidence: "DOCUMENTED",
-        sources: [
-          { label: "Seedlys Mile High Glue", url: "https://www.seedlys.com/mile-high-glue-feminized-seeds/" },
-        ],
       },
     ],
     phenotypeNotes: comingSoon,
@@ -69,9 +66,9 @@ export const strains: StrainRecord[] = [
     shortDescription:
       "Two selfed dessert cuts in one Thirst Trap regular. Marker ink on one side. Lemon cherry gelato on the other.",
     longDescription:
-      "BLACK MARKET BARBIE pairs Permanent Marker S1 with Platinum Lemon Cherry Gelato S1. Permanent Marker is Seed Junky work that went wide on loud candy gas and bag appeal. Platinum Lemon Cherry Gelato S1 is a Heisenbeans selfed line built to keep lemon cherry candy, frost, and color more often than an open cross might. Bandit did not create those parents. An S1 on both sides may stack familiar traits. It may also still throw oddballs. That is why this file is a regular hunt, not a clone list. Marker may bring ink, floral dough, and dense boutique flowers. PLCG may bring lemon, cherry syrup, and brighter color. Together they read as a dressed up dessert file, which is why it sits in THIRST TRAP COLLECTION.",
+      "BLACK MARKET BARBIE pairs Permanent Marker S1 with Platinum Lemon Cherry Gelato S1. Permanent Marker went wide on loud candy gas and bag appeal. Platinum Lemon Cherry Gelato S1 is a selfed line built to keep lemon cherry candy, frost, and color more often than an open cross might. Bandit did not create those parents. An S1 on both sides may stack familiar traits. It may also still throw oddballs. That is why this file is a regular hunt, not a clone list. Marker may bring ink, floral dough, and dense boutique flowers. PLCG may bring lemon, cherry syrup, and brighter color. Together they read as a dressed up dessert file, which is why it sits in THIRST TRAP COLLECTION.",
     plantCharacter:
-      "Both parents are modern boutique lines. Medium stature and a managed canopy are a reasonable expectation. Stretch and internodes will vary with which S1 leads.",
+      "Both parents are modern boutique lines. Medium stature and a managed canopy are a reasonable expectation. Stretch and internodes vary with which S1 leads.",
     flowerCharacter:
       "Flowers may come dense and photogenic. Marker and PLCG are both grown for bag appeal. Density and fox tailing are phenotype questions.",
     resinExpression:
@@ -111,11 +108,11 @@ export const strains: StrainRecord[] = [
     shortDescription:
       "Selfed GG4 under Platinum Frosting. Glue in the lock. Dessert cream on the getaway.",
     longDescription:
-      "VAULT ROBBERY is Gorilla Glue #4 S1 crossed to Platinum Frosting. Platinum Frosting is Heisenbeans work: Platinum Lemon Cherry Gelato × Oreoz. The GG4 S1 keeps the glue family close. Frosting brings PLCG fruit and Oreoz cookie chocolate gas. Bandit does not own GG4, Oreoz, or PLCG. This file is our named regular and our future selections. GG4 may push structure, stretch, and greasy resin. Frosting may push cream, dessert, and darker color. GG4 already sits in GORILLA HEIST. That repeat is on purpose. This file asks what glue does when the other parent is frosting instead of Dante.",
+      "VAULT ROBBERY is Gorilla Glue #4 S1 crossed to Platinum Frosting. Platinum Frosting is Platinum Lemon Cherry Gelato × Oreoz. The GG4 S1 keeps the glue family close. Frosting brings PLCG fruit and Oreoz cookie chocolate gas. Bandit does not own GG4, Oreoz, or PLCG. This file is our named regular and our future selections. GG4 may push structure, stretch, and greasy resin. Frosting may push cream, dessert, and darker color. GG4 already sits in GORILLA HEIST. That repeat is on purpose. This file asks what glue does when the other parent is frosting instead of Dante.",
     plantCharacter:
       "GG4 S1 may still want vertical room. Frosting, sitting on Oreoz and PLCG, may thicken the frame. Watch internodes. Do not assume a squat plant.",
     flowerCharacter:
-      "Expect a fight between glue spears and dessert density. Some plants may ice over early. Some may stack darker, chunkier flowers.",
+      "A fight between glue spears and dessert density is a reasonable reading. Some plants may ice over early. Some may stack darker, chunkier flowers.",
     resinExpression:
       "Both sides are resin talkers. GG4 for grease. Oreoz for a glassy coat. Likely heavy frost. Unproven in a Bandit room.",
     colorPotential:
@@ -152,15 +149,15 @@ export const strains: StrainRecord[] = [
     collection: "BANDIT COLLECTION",
     theme: "METAL",
     shortDescription:
-      "Citrus candy into dark berry fire. Two Heisenbeans fruit parents, one Bandit cherry file.",
+      "Citrus candy into dark berry fire. Two fruit parents, one Bandit cherry file.",
     longDescription:
       "CRIMINAL CHERRY crosses Tropicana Blue to Blueberry Inferno. Tropicana Blue is listed as Tropicana Cherry × Blueberry Sugar. Blueberry Inferno is Blueberry Sugar × Dante's Inferno. Blueberry Sugar shows up on both sides. Dante sits in Inferno, so this file also carries a Dante echo beside GORILLA HEIST. Bandit did not breed those parents. The Bandit product is this named regular and the plants we keep from it. Tropicana Blue may add candy citrus and a brighter top. Inferno may add deeper berry, more drama, and Dante color. The combination is interesting because it stacks blueberry dessert while still leaving a citrus lane open.",
     plantCharacter:
       "Both parents are described as cooperative modern hybrids. A balanced frame is likely. Stretch from Tropicana Cherry ancestry is possible.",
     flowerCharacter:
-      "Berry lines can pack on calyx. Dante in Inferno may add stack and weight. Flower shape will split in the pack.",
+      "Berry lines can pack on calyx. Dante in Inferno may add stack and weight. Flower shape can split in the pack.",
     resinExpression:
-      "Frost is a talking point on both Seedlys parents. Likely present. Not graded here.",
+      "Frost is a talking point on both parents. Likely present. Not graded here.",
     colorPotential:
       "Dante and blueberry dessert lines can darken. Citrus parents sometimes stay greener. Color is on the table.",
     aromaDirection:
@@ -196,11 +193,11 @@ export const strains: StrainRecord[] = [
     shortDescription:
       "Boutique berry against a frosty Dip N Stix S1. Built to look expensive in the folder.",
     longDescription:
-      "VELVET VICE is Gucciberry crossed to Dip N Stix S1. Gucciberry is Heisenbeans: Blueberry Sugar × Joker Juice 11. Dip N Stix S1 is a selfed Dip N Stix line Heisenbeans lists through Seedlys. The original Dip N Stix is tied to Beleaf. Deeper Dip N Stix ancestry is not clean in public trees, so we do not fake it. Bandit did not create either parent. Gucciberry may bring jammy blueberry candy and a dressed resin frame. Dip N Stix S1 may bring color, density, and sweet fruit frost. The cross reads as a looker, which is why it lives in THIRST TRAP COLLECTION rather than the heavier Bandit metal files.",
+      "VELVET VICE is Gucciberry crossed to Dip N Stix S1. Gucciberry is Blueberry Sugar × Joker Juice 11. Dip N Stix S1 is a selfed Dip N Stix line. Deeper Dip N Stix ancestry is not clean in public trees, so we do not fake it. Bandit did not create either parent. Gucciberry may bring jammy blueberry candy and a dressed resin frame. Dip N Stix S1 may bring color, density, and sweet fruit frost. The cross reads as a looker, which is why it lives in THIRST TRAP COLLECTION rather than the heavier Bandit metal files.",
     plantCharacter:
       "Gucciberry is described as organized and agreeable. Dip N Stix is described as resilient. A manageable regular is a fair hope. Proof waits on a run.",
     flowerCharacter:
-      "Both parents are sold on dense, colorful flowers. Expect bag appeal to be the hunt, not raw farm yield talk.",
+      "Both parents are sold on dense, colorful flowers. Bag appeal is the hunt. Farm yield talk stays off this file.",
     resinExpression:
       "Joker Juice and Dip N Stix both carry resin reputations. Frost is likely. Grade unknown.",
     colorPotential:
@@ -220,11 +217,8 @@ export const strains: StrainRecord[] = [
     researchNotes: [
       {
         topic: "Dip N Stix pedigree",
-        body: "Public genealogy is inconsistent. Do not publish a fake family tree on the dossier later.",
+        body: "Public genealogy is inconsistent. Do not publish a fake family tree on this dossier.",
         confidence: "UNKNOWN",
-        sources: [
-          { label: "SeedFinder Dip N Stix genealogy", url: "https://seedfinder.eu/en/strain-info/dip-n-stix/beleaf-cannabis/genealogy" },
-        ],
       },
     ],
     phenotypeNotes: comingSoon,
@@ -247,9 +241,9 @@ export const strains: StrainRecord[] = [
     shortDescription:
       "Berry glue butter into platinum chem diesel. A theft of frost, not a fairy tale.",
     longDescription:
-      "DIAMOND THIEF pairs Blue Ve'Gas with Platinum City Diesel. Blue Ve'Gas is Gorilla Butter × Blueberry Sugar, so GG4 sits one generation back through Fresh Coast Gorilla Butter. Platinum City Diesel is Platinum Lemon Cherry Gelato × 3D Chem. That same Platinum City Diesel parent also sits in MONEY LAUNDERING. Repeat anchors are intentional. Bandit did not breed Gorilla Butter, PLCG, or 3D Chem. Blue Ve'Gas may offer berry dessert, color, and a buttery glue echo. Platinum City Diesel may offer chem structure, fuel, and PLCG fruit. The file is interesting because frost and fuel can share a plant without either parent being a Bandit original.",
+      "DIAMOND THIEF pairs Blue Ve'Gas with Platinum City Diesel. Blue Ve'Gas is Gorilla Butter × Blueberry Sugar, so GG4 sits one generation back through Gorilla Butter. Platinum City Diesel is Platinum Lemon Cherry Gelato × 3D Chem. That same Platinum City Diesel parent also sits in MONEY LAUNDERING. Repeat anchors are intentional. Bandit did not breed Gorilla Butter, PLCG, or 3D Chem. Blue Ve'Gas may offer berry dessert, color, and a buttery glue echo. Platinum City Diesel may offer chem structure, fuel, and PLCG fruit. The file is interesting because frost and fuel can share a plant without either parent being a Bandit original.",
     plantCharacter:
-      "3D Chem is used by Heisenbeans as a structure parent. Gorilla Butter lines can be sturdy too. A strong frame is likely. Height still depends on the seed.",
+      "3D Chem is used as a structure parent in this pairing. Gorilla Butter lines can be sturdy too. A strong frame is likely. Height still depends on the seed.",
     flowerCharacter:
       "Boutique frost from the platinum side. Berry density from Blue Ve'Gas. Diamonds in the name are a resin metaphor, not a lab result.",
     resinExpression:
@@ -289,7 +283,7 @@ export const strains: StrainRecord[] = [
     shortDescription:
       "Grape gas structure beside a blueberry piff question mark. Queen of the folder, not a finished myth.",
     longDescription:
-      "BANDIT QUEEN is Dragon Gas × Blueberry Piff. Dragon Gas is listed as Grape Gas × Zero Gravity in Heisenbeans records: branching, density, resin, grape and botanical gas. Blueberry Piff does not have a confirmed public pedigree in this research pass. The name points at blueberry and piff, and we tag blueberry for discovery only. We do not invent a DJ Short or Jamaican piff story. Bandit did not create these parents. The combination is in the vault because grape gas next to blueberry mystery is a hunt worth running, not because the second parent is fully mapped.",
+      "BANDIT QUEEN is Dragon Gas × Blueberry Piff. Dragon Gas is listed as Grape Gas × Zero Gravity: branching, density, resin, grape and botanical gas. Blueberry Piff does not have a confirmed pedigree in this pass. The name points at blueberry and piff, and we tag blueberry for discovery only. We do not invent a piff folklore story. Bandit did not create these parents. The combination is in the vault because grape gas next to blueberry mystery is a hunt worth running, not because the second parent is fully mapped.",
     plantCharacter:
       "Dragon Gas listings describe a sturdy main stem and thick sides without wild height. Blueberry Piff structure is UNKNOWN.",
     flowerCharacter:
@@ -315,7 +309,6 @@ export const strains: StrainRecord[] = [
         topic: "Blueberry Piff",
         body: "Do not fill this parent with folklore. Update when a reliable pedigree is in hand.",
         confidence: "UNKNOWN",
-        sources: [],
       },
     ],
     phenotypeNotes: comingSoon,
@@ -338,15 +331,15 @@ export const strains: StrainRecord[] = [
     shortDescription:
       "Grape pie candy into a grapesicle. Dessert on dessert, named like a crime.",
     longDescription:
-      "FELON'S FANTASY crosses Jokers Pie to Blue Grapesicle. Jokers Pie is Heisenbeans: Joker Juice 11 × Grape Pie, sold as grape candy, cream, and gas with color. Blue Grapesicle is also in the Heisenbeans world, but public lineage listings conflict (Blue Ice × Joker Juice 11 versus Blueberry Sugar × Joker Juice). We print the parent name we were given. We do not pick a fake tree. Joker Juice may appear on both sides if the Blue Ice listing is wrong or if the Sugar listing is right. Either way the fantasy is fruit candy. Bandit did not breed these parents. This is our named regular.",
+      "FELON'S FANTASY crosses Jokers Pie to Blue Grapesicle. Jokers Pie is Joker Juice 11 × Grape Pie, often described as grape candy, cream, and gas with color. Blue Grapesicle lineage listings conflict (Blue Ice × Joker Juice 11 versus Blueberry Sugar × Joker Juice). We print the parent name we were given. We do not pick a fake tree. Joker Juice may appear on both sides if one listing is wrong or the other is right. Either way the fantasy is fruit candy. Bandit did not breed these parents. This is our named regular.",
     plantCharacter:
       "Jokers Pie is described as medium, vigorous, and trainable. Blue Grapesicle structure waits on a cleaner source and a live run.",
     flowerCharacter:
-      "Expect dessert density and color from the Pie side. Grapesicle may echo that. Fox tails and foxtail talk stay off the card until seen.",
+      "Dessert density and color from the Pie side are a reasonable reading. Grapesicle may echo that. Fox tails and foxtail talk stay off the card until seen.",
     resinExpression:
       "Joker Juice parents are often sticky. Likely frost. Not scored.",
     colorPotential:
-      "Jokers Pie copy is explicit about purple. Grapesicle names suggest cold color too. Potential is high. Not guaranteed.",
+      "Jokers Pie is often described with purple. Grapesicle names suggest cold color too. Potential is high. Not guaranteed.",
     aromaDirection:
       "Grape candy, cream, and a gas back note are the documented Pie lane. Grapesicle should stay in fruit. Chem is unlikely unless a rogue plant appears.",
     lineageCharacter:
@@ -362,11 +355,8 @@ export const strains: StrainRecord[] = [
     researchNotes: [
       {
         topic: "Blue Grapesicle conflict",
-        body: "Resolve parentage before the full dossier step.",
+        body: "Resolve parentage before treating either tree as fact.",
         confidence: "UNKNOWN",
-        sources: [
-          { label: "PhenoDB Heisenbeans", url: "https://phenodb.eu/breeder/heisenbeans-genetics" },
-        ],
       },
     ],
     phenotypeNotes: comingSoon,
@@ -391,13 +381,13 @@ export const strains: StrainRecord[] = [
     longDescription:
       "MONEY LAUNDERING is Big Perm × Platinum City Diesel. Big Perm is Permanent Marker × 3D Chem. Platinum City Diesel is Platinum Lemon Cherry Gelato × 3D Chem. 3D Chem therefore sits on both sides. Platinum City Diesel also parents DIAMOND THIEF. That overlap is deliberate. Bandit did not create Permanent Marker, 3D Chem, or PLCG. Marker may bring ink candy and boutique flower. Diesel may bring PLCG fruit and chem fuel. Double 3D Chem may steady structure. It may also make the pack chem heavy. The file exists to wash dessert through chem until something keeper worthy settles out.",
     plantCharacter:
-      "Heisenbeans uses 3D Chem as a dependable frame. Dual chem parents may mean thicker arms and less flop. Still a regular. Still a hunt.",
+      "3D Chem is used as a dependable frame in this pairing. Dual chem parents may mean thicker arms and less flop. Still a regular. Still a hunt.",
     flowerCharacter:
       "Marker flowers are grown to be stared at. PLCG adds boutique shape. Chem can add spear and funk. Mixed.",
     resinExpression:
       "All three grandparent lanes (Marker, PLCG, 3D Chem) are resin adjacent in listings. Likely frost.",
     colorPotential:
-      "Marker and PLCG can color. Chem often stays green. Expect both.",
+      "Marker and PLCG can color. Chem often stays green. Both color lanes are possible.",
     aromaDirection:
       "Ink, candy, lemon cherry, and chem diesel. The laundered plant may smell expensive and wrong in the best sense.",
     lineageCharacter:
@@ -432,7 +422,7 @@ export const strains: StrainRecord[] = [
     shortDescription:
       "An auto file with chem in the name and cherry in the other seat. Fast work. Honest gaps.",
     longDescription:
-      "HIGHWAY ROBBERY is Guava N Chem Auto × Carbon Cherry Auto. Public pages for these exact Bandit parents are thin. Similar guava chem autos exist under other breeders. Carbon Crusher is a different Heisenbeans name. We do not steal another company’s description and paste it here. CHEM is tagged from Guava N Chem. Carbon Cherry stays lightly documented on purpose. Bandit did not create the original chem family. This is our named autoflower. Difficulty is BEGINNER because it is an autoflower in this catalog, not because we ran a trial.",
+      "HIGHWAY ROBBERY is Guava N Chem Auto × Carbon Cherry Auto. Pages for these exact Bandit parents are thin. Similar named guava chem autos exist elsewhere. We do not steal another file’s description and paste it here. CHEM is tagged from Guava N Chem. Carbon Cherry stays lightly documented on purpose. Bandit did not create the original chem family. This is our named autoflower. Difficulty is BEGINNER because it is an autoflower in this catalog, not because we ran a trial.",
     plantCharacter:
       "Autos usually stay smaller and finish without a photoperiod flip. Exact height and branch habit for this pair are UNKNOWN.",
     flowerCharacter: comingSoon,
@@ -454,9 +444,8 @@ export const strains: StrainRecord[] = [
     researchNotes: [
       {
         topic: "Parent identity",
-        body: "Do not attribute G.O.A.T. Genetics Guava N Chem or Carbon Crusher copy to these parents without confirmation.",
+        body: "Do not attribute another pack’s copy to these parents without confirmation.",
         confidence: "UNKNOWN",
-        sources: [],
       },
     ],
     phenotypeNotes: comingSoon,
@@ -480,7 +469,7 @@ export const strains: StrainRecord[] = [
     shortDescription:
       "Strawberry cookie auto into red runtz auto. Sweet getaway. F2 on the first parent.",
     longDescription:
-      "GETAWAY GIRL is Strawberry Milk & Qookies F2 Auto crossed to Red Runtz Auto. Close names exist in Night Owl and other catalogs. We do not claim those packs are this parent. The given names still tell a dessert story: strawberry milk, cookies, runtz candy. COOKIES and RUNTZ are tagged from those names. Bandit did not create Runtz or the cookie family. This is our named autoflower in THIRST TRAP COLLECTION. Difficulty is BEGINNER as an autoflower assignment, not a grow diary. An F2 parent can mean more scatter. That can be useful for a hunt and messy for a uniform tray.",
+      "GETAWAY GIRL is Strawberry Milk & Qookies F2 Auto crossed to Red Runtz Auto. Close names exist elsewhere. We do not claim those packs are this parent. The given names still tell a dessert story: strawberry milk, cookies, runtz candy. COOKIES and RUNTZ are tagged from those names. Bandit did not create Runtz or the cookie family. This is our named autoflower in THIRST TRAP COLLECTION. Difficulty is BEGINNER as an autoflower assignment, not a grow diary. An F2 parent can mean more scatter. That can be useful for a hunt and messy for a uniform tray.",
     plantCharacter:
       "Auto stature expected. F2 on parent one may widen the range. Structure details UNKNOWN.",
     flowerCharacter: comingSoon,
@@ -522,7 +511,7 @@ export const strains: StrainRecord[] = [
     shortDescription:
       "Tropicana cookies auto with Atomic Burn in the passenger seat. Citrus on a timer.",
     longDescription:
-      "SPEEDING TICKET is Tropicana Cookies Auto × Atomic Burn Auto. Tropicana Cookies as a photoperiod is tied to Oni Seed Co (Cookies × Tangie). Many autos reuse the name with different auto donors. Atomic Burn Auto has no confirmed public pedigree in this pass. We keep that gap visible. COOKIES is tagged from Tropicana Cookies. Bandit did not breed Oni’s cut and does not claim Fast Buds or Barney’s Farm as partners. This is our named autoflower. Difficulty is BEGINNER by catalog rule for autos. Citrus candy is the interesting bet. Burn stays undefined until research or a run fills it in.",
+      "SPEEDING TICKET is Tropicana Cookies Auto × Atomic Burn Auto. Tropicana Cookies as a photoperiod is widely listed as Cookies × Tangie. Many autos reuse the name with different auto donors. Atomic Burn Auto has no confirmed pedigree in this pass. We keep that gap visible. COOKIES is tagged from Tropicana Cookies. Bandit did not breed the original Tropicana Cookies cut. This is our named autoflower. Difficulty is BEGINNER by catalog rule for autos. Citrus candy is the interesting bet. Burn stays undefined until a run fills it in.",
     plantCharacter:
       "Auto timing and a modest frame are the safe assumptions. Atomic Burn structure is UNKNOWN.",
     flowerCharacter: comingSoon,
@@ -546,7 +535,6 @@ export const strains: StrainRecord[] = [
         topic: "Atomic Burn Auto",
         body: "No reliable pedigree found. Leave blank rather than invent a burn story.",
         confidence: "UNKNOWN",
-        sources: [],
       },
     ],
     phenotypeNotes: comingSoon,
