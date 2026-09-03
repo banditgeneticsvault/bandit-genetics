@@ -46,7 +46,7 @@ export function SectionHeader({
       )}
     >
       {kicker ? (
-        <p className="mb-3 font-label text-[0.68rem] tracking-[0.28em] text-gold uppercase">
+        <p className="mb-3 font-label text-ui tracking-[0.28em] text-gold uppercase">
           {kicker}
         </p>
       ) : null}
@@ -54,7 +54,7 @@ export function SectionHeader({
         {title}
       </h1>
       {children ? (
-        <div className="mt-5 text-[0.975rem] leading-relaxed text-ice/80">
+        <div className="mt-5 text-copy leading-relaxed text-ice/80">
           {children}
         </div>
       ) : null}

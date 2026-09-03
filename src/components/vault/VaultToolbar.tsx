@@ -29,7 +29,7 @@ function Chip({
       aria-pressed={active}
       onClick={onClick}
       className={cn(
-        "inline-flex min-h-11 items-center rounded-none border px-3 font-label text-[0.65rem] tracking-[0.16em] uppercase",
+        "inline-flex min-h-11 items-center rounded-none border px-3 font-label text-ui tracking-[0.16em] uppercase",
         active
           ? "border-frost bg-frost text-black"
           : "border-gunmetal text-ice hover:border-ice",
@@ -61,7 +61,7 @@ export function VaultToolbar({
             }
             placeholder={vaultCopy.searchPlaceholder}
             autoComplete="off"
-            className="min-h-12 w-full appearance-none rounded-none border-0 bg-transparent font-label text-[0.85rem] tracking-[0.18em] text-frost uppercase outline-none placeholder:text-ice/35"
+            className="min-h-12 w-full appearance-none rounded-none border-0 bg-transparent font-label text-copy tracking-[0.18em] text-frost uppercase outline-none placeholder:text-ice/35"
           />
         </label>
       </div>
@@ -81,7 +81,7 @@ export function VaultToolbar({
             ))}
           </div>
         </fieldset>
-        <p className="font-label text-[0.62rem] tracking-[0.22em] text-ice/45 uppercase">
+        <p className="font-label text-meta tracking-[0.22em] text-ice/45 uppercase">
           {resultCount} {resultLabel}
         </p>
       </div>

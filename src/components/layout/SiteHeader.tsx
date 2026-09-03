@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useId, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { brand, navItems } from "@/content/site";
+import { homeArtworkSrc } from "@/lib/artwork";
 import { cn } from "@/lib/cn";
 
 export function SiteHeader() {
@@ -29,17 +31,24 @@ export function SiteHeader() {
 
   return (
     <header className="absolute inset-x-0 top-0 z-40">
-      <div className="page-gutter mx-auto flex max-w-[92rem] items-center justify-between gap-6 py-5 md:py-7">
+      <div className="page-gutter mx-auto flex max-w-[92rem] items-center justify-between gap-4 py-4 md:gap-6 md:py-5">
         <Link
           href="/"
-          className="shrink min-w-0 font-label text-[0.72rem] tracking-[0.18em] text-frost uppercase sm:tracking-[0.32em]"
+          aria-label="Bandit Genetics home"
+          className="relative z-10 flex shrink-0 items-center"
         >
-          <span className="sm:hidden">BANDIT</span>
-          <span className="hidden sm:inline">{brand.wordmark}</span>
+          <Image
+            src={homeArtworkSrc("frost-queen-bandit.png")}
+            alt="Bandit Genetics home"
+            width={88}
+            height={88}
+            priority
+            className="h-12 w-12 object-contain sm:h-[3.25rem] sm:w-[3.25rem]"
+          />
         </Link>
 
         <nav aria-label="Primary" className="hidden lg:block">
-          <ul className="flex items-center gap-8">
+          <ul className="flex items-center gap-7 xl:gap-8">
             {navItems.map((item) => {
               const current =
                 item.href === "/"
@@ -51,7 +60,7 @@ export function SiteHeader() {
                     href={item.href}
                     aria-current={current ? "page" : undefined}
                     className={cn(
-                      "font-label text-[0.68rem] tracking-[0.24em] uppercase transition-colors",
+                      "font-label text-ui tracking-[0.22em] uppercase transition-colors",
                       current ? "text-frost" : "text-ice/55 hover:text-frost",
                     )}
                   >
@@ -65,7 +74,7 @@ export function SiteHeader() {
 
         <button
           type="button"
-          className="inline-flex min-h-10 shrink-0 items-center border border-gunmetal px-3 font-label text-[0.68rem] tracking-[0.28em] text-ice uppercase lg:hidden"
+          className="inline-flex min-h-11 shrink-0 items-center border border-gunmetal px-3 font-label text-ui tracking-[0.24em] text-ice uppercase lg:hidden"
           aria-expanded={open}
           aria-controls={panelId}
           onClick={() => setOpen((value) => !value)}
@@ -87,12 +96,12 @@ export function SiteHeader() {
 
         <div className="page-gutter relative flex h-full flex-col">
           <div className="flex items-center justify-between py-5">
-            <p className="font-label text-[0.68rem] tracking-[0.28em] text-gold uppercase">
+            <p className="font-label text-ui tracking-[0.28em] text-gold uppercase">
               Access panel
             </p>
             <button
               type="button"
-              className="font-label text-[0.68rem] tracking-[0.28em] text-ice uppercase"
+              className="font-label text-ui tracking-[0.28em] text-ice uppercase"
               onClick={() => setOpen(false)}
             >
               CLOSE
@@ -117,7 +126,7 @@ export function SiteHeader() {
                       <span className="font-display text-[clamp(2.25rem,10vw,3.5rem)] leading-none text-frost">
                         {item.label}
                       </span>
-                      <span className="font-label text-[0.62rem] tracking-[0.22em] text-gunmetal uppercase">
+                      <span className="font-label text-meta tracking-[0.22em] text-gunmetal uppercase">
                         0{index + 1}
                       </span>
                     </Link>
@@ -127,7 +136,7 @@ export function SiteHeader() {
             </ul>
           </nav>
 
-          <p className="pb-10 font-label text-[0.68rem] tracking-[0.28em] text-ice/50 uppercase">
+          <p className="pb-10 font-label text-ui tracking-[0.28em] text-ice/50 uppercase">
             {brand.philosophy}
           </p>
         </div>

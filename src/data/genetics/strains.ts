@@ -103,28 +103,27 @@ export const strains: StrainRecord[] = [
     collection: "BANDIT COLLECTION",
     theme: "METAL",
     shortDescription:
-      "Glue resin meets Dante dessert in a Bandit named regular. The parents are famous. The file name is ours.",
+      "GORILLA HEIST is Gorilla Glue #4 crossed to Dante's Inferno. Glue supplies the resin-and-fuel spine; Dante supplies dessert density and a lane for color. The pairing is interesting because greasy chem structure sits next to stacked pastry flower instead of another fuel parent. The file points toward a vigorous, frost-forward hybrid with pine diesel on one side and berry cream on the other.",
     vaultDescription:
-      "GG4 vigor and greasy resin potential with Dante dessert. Pine diesel may meet berry cream, with dense flowers and possible cool-night color.",
+      "GG4 resin and pine diesel against Dante dessert. Dense, greasy flowers with a lane for berry cream and cool-finish color.",
     longDescription:
-      "GORILLA HEIST is Bandit Genetics’ name for Gorilla Glue #4 crossed to Dante's Inferno. GG4 is the accidental Nevada cut that made resin a punchline and a tool problem. Dante's Inferno, often listed as Oreoz × Devil Driver, is the color and pastry side of the pairing. We did not breed those parents. We did not invent the combination. We named our version, and we will select our own plants from it. GG4 may donate vigor, branching, pine diesel, and greasy trichomes. Dante may donate stacked calyxes, berry cream, and cool room color. The pairing is worth a vault file because the parents are proven. It is not a promise that every Bandit plant will frost the same way.",
+      "GG4 is consistently described as vigorous, stretchy in flower, and coated in greasy trichomes. Dante's Inferno, listed as Oreoz × Devil Driver, is known for calyx stack, pastry sweetness, and dark color potential. This Bandit release watches for plants that keep the glue stick without losing Dante’s dessert nose. The pairing is built for resin and flower quality, not a uniform tray.",
     plantCharacter:
-      "A vigorous frame is a reasonable reading. GG4 often stretches and builds side arms that can hold weight. Dante can keep the frame from turning into a single spear. Training response is likely, not guaranteed.",
+      "The pairing can lean vigorous, with GG4’s reputation for flower stretch and lateral arms that may need support as colas pack on. Dante can keep the outline from reading as a single spear, offering a fuller stacked frame. A strong hybrid structure is the reasonable direction.",
     flowerCharacter:
-      "Flowers may stack dense and top heavy. Dante calyx structure can show. GG4 can swell bracts and make the cola look wet. Phenotype decides which parent leads.",
+      "Flowers can lean dense and resin-heavy, with GG4’s greasy bracts against Dante’s tighter dessert stacks. Aroma may split between pine, earth, and diesel and a berry-cream pastry lane. Color can show when Dante leads.",
     resinExpression:
-      "Resin is the reason GG4 stays in breeding rooms. Early frost is a reasonable hope. Extraction talk waits for a Bandit run.",
+      "GG4 is famous for greasy, tool-sticking frost. Dante is also a resin-forward parent. The file is built around trichome potential.",
     colorPotential:
-      "Dante lines can throw purple and red when nights drop. GG4 often stays lime and forest. Color is possible. It is not assigned.",
+      "Dante lines can run purple to burgundy. GG4 often stays forest green. Mixed color in a pack is the honest range.",
     aromaDirection:
-      "A likely split: pine, earth, and diesel from GG4 against berry cream from Dante. Some plants may smell like dessert on glue. Some may smell like glue with fruit in the back.",
+      "Pine, diesel, and cocoa-earth from glue against berry cream and cookie dessert from Dante.",
     lineageCharacter:
-      "Chem, diesel, and Oreoz dessert sit in the same file. That tension is the point.",
+      "Chem, diesel, and Oreoz dessert in one release.",
     breedingInterest:
-      "A regular population gives males and females to hunt. Useful if the vault later wants glue structure under Dante terps, or Dante color on a stickier plant.",
+      "Useful later if a keeper holds glue structure under Dante terps, or Dante color on a stickier plant.",
     whyItsInTheVault:
-      "The job was too clean to leave on the table. Two proven parents, one Bandit name, room to select later.",
-    quote: "SOME GENETICS ARE WORTH STEALING.",
+      "Greasy glue structure next to Dante dessert is too clean a pairing to leave unnamed.",
     heroImage: strainArt["gorilla-heist"],
     galleryImages: [],
     featured: false,
@@ -155,27 +154,27 @@ export const strains: StrainRecord[] = [
     collection: "THIRST TRAP COLLECTION",
     theme: "SILK",
     shortDescription:
-      "Two selfed dessert cuts in one Thirst Trap regular. Marker ink on one side. Lemon cherry gelato on the other.",
+      "BLACK MARKET BARBIE pairs Permanent Marker S1 with Platinum Lemon Cherry Gelato S1. Two selfed dessert parents, one Bandit release. Marker is known for candy gas, ink, and boutique density; PLCG is known for lemon-cherry, platinum frost, and color. The pairing hunts a dressed-up dessert flower with gas still in the jar.",
     vaultDescription:
-      "Two selfed dessert parents. Marker may bring candy gas and dense boutique flowers; PLCG may add lemon-cherry, frost, and color.",
+      "Two selfed dessert parents. Marker candy-gas and density against PLCG lemon-cherry, frost, and color.",
     longDescription:
-      "BLACK MARKET BARBIE pairs Permanent Marker S1 with Platinum Lemon Cherry Gelato S1. Permanent Marker went wide on loud candy gas and bag appeal. Platinum Lemon Cherry Gelato S1 is a selfed line built to keep lemon cherry candy, frost, and color more often than an open cross might. Bandit did not create those parents. An S1 on both sides may stack familiar traits. It may also still throw oddballs. That is why this file is a regular hunt, not a clone list. Marker may bring ink, floral dough, and dense boutique flowers. PLCG may bring lemon, cherry syrup, and brighter color. Together they read as a dressed up dessert file, which is why it sits in THIRST TRAP COLLECTION.",
+      "An S1 on both sides can concentrate familiar traits without turning the pack into a clone. Marker can bring solvent candy, floral dough, and tight internodes. PLCG can bring zesty lemon, cherry candy, and a silvery coat. The interest is whether ink and fruit stack on the same plant, or split into two loud lanes.",
     plantCharacter:
-      "Both parents are modern boutique lines. Medium stature and a managed canopy are a reasonable expectation. Stretch and internodes vary with which S1 leads.",
+      "Both parents are modern boutique lines. A medium, managed canopy is a fair read, with Marker often bushy and tight-noded. Stretch and internodes can shift with which S1 leads.",
     flowerCharacter:
-      "Flowers may come dense and photogenic. Marker and PLCG are both grown for bag appeal. Density and fox tailing are phenotype questions.",
+      "Flowers can come dense and photogenic. Marker is grown for bag appeal; PLCG is grown for platinum frost and citrus-cherry candy. Aroma can lean candy gas, lemon-cherry custard, or both.",
     resinExpression:
-      "Both parents are described as heavy frost donors. Resin is a likely theme. It is not measured here.",
+      "Both parents are described as heavy frost donors. Resin is a central theme of the pairing.",
     colorPotential:
-      "PLCG S1 is described as vivid. Marker families can darken. Color may show. Cool nights may help. Nothing is locked.",
+      "PLCG is often vivid. Marker families can darken. Color may show; it is not locked.",
     aromaDirection:
-      "Possible lanes: solvent candy and gas from Marker, lemon cherry custard from PLCG. A plant could lean either way or stack both.",
+      "Solvent candy and gas from Marker against lemon, cherry, and cream from PLCG.",
     lineageCharacter:
-      "Cookies family dessert on both sides, with Marker’s sharper chemical edge against PLCG fruit.",
+      "Dessert on both sides, with Marker’s sharper chemical edge against PLCG fruit.",
     breedingInterest:
-      "Two S1 parents can make a tighter looking F1. Useful for later selections that want candy without losing gas.",
+      "Useful later for candy that still holds gas.",
     whyItsInTheVault:
-      "Thirst Trap is for files that look expensive before they even hit a tray. This one earned the folder.",
+      "Two selfed dessert parents with ink on one side and lemon-cherry on the other.",
     heroImage: strainArt["black-market-barbie"],
     galleryImages: [],
     featured: false,
@@ -200,28 +199,27 @@ export const strains: StrainRecord[] = [
     collection: "BANDIT COLLECTION",
     theme: "METAL",
     shortDescription:
-      "Selfed GG4 under Platinum Frosting. Glue in the lock. Dessert cream on the getaway.",
+      "VAULT ROBBERY is Gorilla Glue #4 S1 under Platinum Frosting. Selfed glue keeps the resin-and-fuel family close. Frosting, listed as Platinum Lemon Cherry Gelato × Oreoz, brings lemon-cherry cream and cookie chocolate gas. The file asks what glue does when the other parent is dessert frosting instead of Dante.",
     vaultDescription:
-      "Selfed GG4 under Platinum Frosting. Greasy glue resin against lemon-cherry cream and cookie gas, with mixed color potential in the pack.",
+      "Selfed GG4 under Platinum Frosting. Greasy glue resin against lemon-cherry cream and Oreoz cookie gas.",
     longDescription:
-      "VAULT ROBBERY is Gorilla Glue #4 S1 crossed to Platinum Frosting. Platinum Frosting is Platinum Lemon Cherry Gelato × Oreoz. The GG4 S1 keeps the glue family close. Frosting brings PLCG fruit and Oreoz cookie chocolate gas. Bandit does not own GG4, Oreoz, or PLCG. This file is our named regular and our future selections. GG4 may push structure, stretch, and greasy resin. Frosting may push cream, dessert, and darker color. GG4 already sits in GORILLA HEIST. That repeat is on purpose. This file asks what glue does when the other parent is frosting instead of Dante.",
+      "GG4 S1 can still want vertical room and greasy colas. Frosting can thicken the flower and darken the finish, with PLCG fruit against Oreoz’s chocolate-cookie gas. Compared with GORILLA HEIST, this pack trades Dante fruit for frosting dessert over the same glue spine. Keepers may be the plants that hold both fuel and cream.",
     plantCharacter:
-      "GG4 S1 may still want vertical room. Frosting, sitting on Oreoz and PLCG, may thicken the frame. Watch internodes. Do not assume a squat plant.",
+      "GG4 S1 can still stretch and branch. Frosting, sitting on Oreoz and PLCG, can thicken the frame and tighten internodes. Do not assume a squat plant; the pairing suggests a hybrid that may need room and support.",
     flowerCharacter:
-      "A fight between glue spears and dessert density is a reasonable reading. Some plants may ice over early. Some may stack darker, chunkier flowers.",
+      "A fight between glue spears and dessert density is a fair reading. Some plants may ice over early. Some may stack darker, chunkier flowers with cookie gas over pine diesel.",
     resinExpression:
-      "Both sides are resin talkers. GG4 for grease. Oreoz for a glassy coat. Likely heavy frost. Unproven in a Bandit room.",
+      "Both sides are resin talkers: GG4 for grease, Oreoz for a glassy coat. Heavy frost is the direction.",
     colorPotential:
-      "Oreoz and PLCG can run dark. GG4 often does not. Mixed color in a pack is plausible.",
+      "Oreoz and PLCG can run dark. GG4 often stays green. Mixed color in a pack is plausible.",
     aromaDirection:
-      "Pine diesel and cocoa glue against lemon cherry cream and cookie gas. The keeper may be the plant that holds both.",
+      "Pine diesel and cocoa glue against lemon-cherry cream and cookie gas.",
     lineageCharacter:
-      "Direct GG4 plus PLCG and Oreoz. Glue, gelato, and cookie dessert in one regular.",
+      "Direct GG4 plus PLCG and Oreoz.",
     breedingInterest:
-      "A second GG4 anchor beside GORILLA HEIST. Useful for comparing Dante fruit against Frosting dessert on the same glue spine.",
+      "A second GG4 anchor beside GORILLA HEIST, for comparing Dante fruit against Frosting dessert.",
     whyItsInTheVault:
-      "The vault was never built to stay closed. Glue and frosting in one file is a reason to open it.",
-    quote: "THE VAULT WAS NEVER BUILT TO STAY CLOSED.",
+      "Glue under frosting, not Dante, so the vault can compare two dessert exits off the same resin spine.",
     heroImage: strainArt["vault-robbery"],
     galleryImages: [],
     featured: false,
@@ -246,27 +244,27 @@ export const strains: StrainRecord[] = [
     collection: "BANDIT COLLECTION",
     theme: "METAL",
     shortDescription:
-      "Citrus candy into dark berry fire. Two fruit parents, one Bandit cherry file.",
+      "CRIMINAL CHERRY is Tropicana Blue crossed to Blueberry Inferno. Tropicana Blue is Tropicana Cherry × Blueberry Sugar; Inferno is Blueberry Sugar × Dante's Inferno. Blueberry Sugar sits on both sides, with citrus candy on one parent and darker Dante fruit on the other. The release is fruit-forward, with a cherry-citrus lane still open.",
     vaultDescription:
-      "Citrus candy from Tropicana Blue against blueberry and Dante fruit. Frost is likely; cherry-citrus or deeper berry can lead, with color possible.",
+      "Citrus candy from Tropicana Blue against blueberry and Dante fruit. Frost and color can show; cherry is a direction, not a lock.",
     longDescription:
-      "CRIMINAL CHERRY crosses Tropicana Blue to Blueberry Inferno. Tropicana Blue is listed as Tropicana Cherry × Blueberry Sugar. Blueberry Inferno is Blueberry Sugar × Dante's Inferno. Blueberry Sugar shows up on both sides. Dante sits in Inferno, so this file also carries a Dante echo beside GORILLA HEIST. Bandit did not breed those parents. The Bandit product is this named regular and the plants we keep from it. Tropicana Blue may add candy citrus and a brighter top. Inferno may add deeper berry, more drama, and Dante color. The combination is interesting because it stacks blueberry dessert while still leaving a citrus lane open.",
+      "The stack is berry dessert with a citrus exit still available. Tropicana Blue can brighten the top; Inferno can deepen cooked blueberry and invite Dante color. Cherry is a plausible reading of the name and the Tropicana Cherry ancestry, not an assigned terp on every plant.",
     plantCharacter:
-      "Both parents are described as cooperative modern hybrids. A balanced frame is likely. Stretch from Tropicana Cherry ancestry is possible.",
+      "Both parents are cooperative modern hybrids. A balanced frame is likely, with possible stretch from Tropicana Cherry ancestry. Inferno can add a heavier, stacked outline through Dante.",
     flowerCharacter:
-      "Berry lines can pack on calyx. Dante in Inferno may add stack and weight. Flower shape can split in the pack.",
+      "Berry lines can pack calyx. Dante in Inferno may add stack and weight. Aroma can run cherry-citrus candy against deeper blueberry and pastry fruit.",
     resinExpression:
-      "Frost is a talking point on both parents. Likely present. Not graded here.",
+      "Frost is a talking point on both parents. Resin is a likely theme.",
     colorPotential:
       "Dante and blueberry dessert lines can darken. Citrus parents sometimes stay greener. Color is on the table.",
     aromaDirection:
-      "Cherry citrus candy against cooked blueberry and darker Dante fruit. A cherry reading is plausible. It is not assigned to every seed.",
+      "Cherry citrus candy against cooked blueberry and darker Dante fruit.",
     lineageCharacter:
       "Blueberry Sugar stacked, with Tropicana Cherry and Dante in the wings.",
     breedingInterest:
-      "A fruit regular for later work if a citrus berry keeper shows. Also a second Dante touchstone in the vault.",
+      "A fruit release with a second Dante touchstone beside GORILLA HEIST.",
     whyItsInTheVault:
-      "Cherry files get people talking. This one has a real family tree under the name.",
+      "Stacked blueberry dessert with a citrus lane still open.",
     heroImage: strainArt["criminal-cherry"],
     galleryImages: [],
     featured: false,
@@ -291,27 +289,27 @@ export const strains: StrainRecord[] = [
     collection: "THIRST TRAP COLLECTION",
     theme: "SILK",
     shortDescription:
-      "Boutique berry against a frosty Dip N Stix S1. Built to look expensive in the folder.",
+      "VELVET VICE is Gucciberry crossed to Dip N Stix S1. Gucciberry is Blueberry Sugar × Joker Juice 11; Dip N Stix is selfed, with a deeper tree that stays unmapped. The pairing is a looker: jammy blueberry candy against dense, colorful frost. Fruit-forward, not chem-led.",
     vaultDescription:
-      "Jammy blueberry candy from Gucciberry with Dip N Stix density, frost, and color potential. Fruit-forward rather than a chem-led pairing.",
+      "Jammy blueberry candy from Gucciberry with Dip N Stix density, frost, and color potential.",
     longDescription:
-      "VELVET VICE is Gucciberry crossed to Dip N Stix S1. Gucciberry is Blueberry Sugar × Joker Juice 11. Dip N Stix S1 is a selfed Dip N Stix line. Deeper Dip N Stix ancestry is not clean in public trees, so we do not fake it. Bandit did not create either parent. Gucciberry may bring jammy blueberry candy and a dressed resin frame. Dip N Stix S1 may bring color, density, and sweet fruit frost. The cross reads as a looker, which is why it lives in THIRST TRAP COLLECTION rather than the heavier Bandit metal files.",
+      "Gucciberry can offer organized branching and boutique berry. Dip N Stix listings point at density, color, and sweet fruit over earth. Public Dip N Stix pedigrees conflict, so this file does not invent a family tree. The hunt is bag appeal and fruit, not a mapped chem story.",
     plantCharacter:
-      "Gucciberry is described as organized and agreeable. Dip N Stix is described as resilient. A manageable regular is a fair hope. Proof waits on a run.",
+      "Gucciberry is described as organized and agreeable. Dip N Stix is described as resilient. A manageable hybrid frame is a fair hope, without promising a uniform canopy.",
     flowerCharacter:
-      "Both parents are sold on dense, colorful flowers. Bag appeal is the hunt. Farm yield talk stays off this file.",
+      "Both parents are sold on dense, colorful flowers. Blueberry candy from Gucciberry can meet sweet fruit and earth from Dip N Stix. Bag appeal is the direction.",
     resinExpression:
-      "Joker Juice and Dip N Stix both carry resin reputations. Frost is likely. Grade unknown.",
+      "Joker Juice and Dip N Stix both carry resin reputations. Frost is likely.",
     colorPotential:
       "Dip N Stix listings mention greens into purple. Gucciberry can show dessert color. Potential is there.",
     aromaDirection:
-      "Blueberry candy from Gucciberry. Sweet fruit and earth from Dip N Stix. A velvet fruit file, not a chem bomb, unless a wild pheno shows up.",
+      "Blueberry candy from Gucciberry. Sweet fruit and earth from Dip N Stix.",
     lineageCharacter:
-      "Blueberry Sugar and Joker Juice on one side. An S1 looker on the other. Pedigree under Dip N Stix remains partly open.",
+      "Blueberry Sugar and Joker Juice on one side. An S1 looker on the other.",
     breedingInterest:
-      "Useful if the vault wants a berry parent that photographs well without pretending the Dip N Stix tree is fully mapped.",
+      "A berry parent that photographs well, without pretending the Dip N Stix tree is fully mapped.",
     whyItsInTheVault:
-      "Some files are stored because they look like trouble in the best way. This is one.",
+      "Boutique berry against a frosty S1 looker.",
     heroImage: strainArt["velvet-vice"],
     galleryImages: [],
     featured: false,
@@ -342,27 +340,27 @@ export const strains: StrainRecord[] = [
     collection: "BANDIT COLLECTION",
     theme: "METAL",
     shortDescription:
-      "Berry glue butter into platinum chem diesel. A theft of frost, not a fairy tale.",
+      "DIAMOND THIEF pairs Blue Ve'Gas with Platinum City Diesel. Blue Ve'Gas is Gorilla Butter × Blueberry Sugar, so glue sits one generation back. Platinum City Diesel is Platinum Lemon Cherry Gelato × 3D Chem. The file is frost and fuel sharing a plant: berry butter against platinum chem diesel.",
     vaultDescription:
       "Berry glue-butter from Blue Ve'Gas against platinum chem diesel. Resin-heavy on paper, with berry, lemon-cherry, and fuel in the mix.",
     longDescription:
-      "DIAMOND THIEF pairs Blue Ve'Gas with Platinum City Diesel. Blue Ve'Gas is Gorilla Butter × Blueberry Sugar, so GG4 sits one generation back through Gorilla Butter. Platinum City Diesel is Platinum Lemon Cherry Gelato × 3D Chem. That same Platinum City Diesel parent also sits in MONEY LAUNDERING. Repeat anchors are intentional. Bandit did not breed Gorilla Butter, PLCG, or 3D Chem. Blue Ve'Gas may offer berry dessert, color, and a buttery glue echo. Platinum City Diesel may offer chem structure, fuel, and PLCG fruit. The file is interesting because frost and fuel can share a plant without either parent being a Bandit original.",
+      "Blue Ve'Gas can bring berry dessert and a buttery glue echo. Platinum City Diesel can bring chem frame, fuel, and PLCG fruit. The same diesel parent also sits in MONEY LAUNDERING, on purpose. Diamonds in the name are a resin metaphor, not a lab result.",
     plantCharacter:
-      "3D Chem is used as a structure parent in this pairing. Gorilla Butter lines can be sturdy too. A strong frame is likely. Height still depends on the seed.",
+      "3D Chem is used here as a structure parent. Gorilla Butter lines can be sturdy too. A strong frame is likely; height still depends on the plant.",
     flowerCharacter:
-      "Boutique frost from the platinum side. Berry density from Blue Ve'Gas. Diamonds in the name are a resin metaphor, not a lab result.",
+      "Boutique frost from the platinum side against berry density from Blue Ve'Gas. Aroma can mix berry butter with lemon-cherry and chem diesel.",
     resinExpression:
-      "Glue ancestry plus PLCG plus chem is a resin heavy recipe on paper. Confirm later.",
+      "Glue ancestry plus PLCG plus chem is a resin-heavy recipe on paper.",
     colorPotential:
       "Blueberry Sugar and PLCG can color up. Chem parents sometimes stay greener. Mixed pack likely.",
     aromaDirection:
-      "Berry butter against lemon cherry and chem diesel. Keepers may be the loudest blend, not the prettiest only.",
+      "Berry butter against lemon-cherry and chem diesel.",
     lineageCharacter:
-      "GG4 influence through Gorilla Butter. Direct PLCG. Direct 3D Chem. Blueberry Sugar in the mix.",
+      "GG4 influence through Gorilla Butter. Direct PLCG. Direct 3D Chem.",
     breedingInterest:
-      "Pairs with MONEY LAUNDERING as the two Platinum City Diesel files. Useful for seeing diesel under berry glue versus diesel under Permanent Marker.",
+      "Pairs with MONEY LAUNDERING as the two Platinum City Diesel files.",
     whyItsInTheVault:
-      "We did not come for the money. We came for the genetics that frost like they mean it.",
+      "Berry glue-butter against platinum chem diesel, built for frost.",
     heroImage: strainArt["diamond-thief"],
     galleryImages: [],
     featured: false,
@@ -387,27 +385,27 @@ export const strains: StrainRecord[] = [
     collection: "THIRST TRAP COLLECTION",
     theme: "SILK",
     shortDescription:
-      "Grape gas structure beside a blueberry piff question mark. Queen of the folder, not a finished myth.",
+      "BANDIT QUEEN is Dragon Gas × Blueberry Piff. Dragon Gas is Grape Gas × Zero Gravity, with a reputation for a sturdy stem, thick sides, resin, and grape-botanical gas. Blueberry Piff has no confirmed pedigree here. The pairing is mapped muscle next to an open blueberry-piff question.",
     vaultDescription:
       "Dragon Gas may bring branching, density, resin, and grape-botanical gas. Blueberry Piff is unmapped, so blueberry or incense notes stay unconfirmed.",
     longDescription:
-      "BANDIT QUEEN is Dragon Gas × Blueberry Piff. Dragon Gas is listed as Grape Gas × Zero Gravity: branching, density, resin, grape and botanical gas. Blueberry Piff does not have a confirmed pedigree in this pass. The name points at blueberry and piff, and we tag blueberry for discovery only. We do not invent a piff folklore story. Bandit did not create these parents. The combination is in the vault because grape gas next to blueberry mystery is a hunt worth running, not because the second parent is fully mapped.",
+      "Dragon Gas can suggest density, branching without wild height, and jewel-toned calyxes. Blueberry Piff stays unnamed beyond the name. Watch the grape-gas parent; treat blueberry or incense notes as unconfirmed until flower. Honesty about the second parent is part of the file.",
     plantCharacter:
-      "Dragon Gas listings describe a sturdy main stem and thick sides without wild height. Blueberry Piff structure is UNKNOWN.",
+      "Dragon Gas listings describe a sturdy main stem and thick sides without wild height. Blueberry Piff structure is unknown. The pairing can lean compact and branched on the documented side.",
     flowerCharacter:
-      "Dragon Gas is described as detailed calyxes and showy resin. Blueberry Piff flower character is UNKNOWN.",
+      "Dragon Gas is described with detailed calyxes, showy resin, and grape-botanical gas. Blueberry Piff flower character stays open. Color may appear as jewel tones from Dragon Gas; blueberry color is a name reading only.",
     resinExpression:
-      "Resin talk sits on the Dragon Gas side. Do not assign piff resin until it is seen.",
+      "Resin talk sits on the Dragon Gas side. Piff resin is not assigned.",
     colorPotential:
       "Dragon Gas listings mention jewel tones. Blueberry names often color. Still a maybe.",
     aromaDirection:
-      "Grape gas is the documented lane. Blueberry and incense piff notes are guesses until the plants speak.",
+      "Grape gas is the documented lane. Blueberry and incense piff notes stay guesses until the plants speak.",
     lineageCharacter:
-      "One parent is mapped. One parent is not. Honesty is part of the file.",
+      "One parent is mapped. One parent is not.",
     breedingInterest:
-      "Worth running to see if Blueberry Piff adds a high tone or a haze lean over grape gas. Results first, story second.",
+      "Worth running to see if Blueberry Piff adds a high tone over grape gas.",
     whyItsInTheVault:
-      "A queen file needs mystery and muscle. Dragon Gas supplies muscle. Piff stays mysterious on purpose until we know more.",
+      "Mapped grape-gas structure beside an honest piff gap.",
     heroImage: strainArt["bandit-queen"],
     galleryImages: [],
     featured: false,
@@ -438,27 +436,27 @@ export const strains: StrainRecord[] = [
     collection: "THIRST TRAP COLLECTION",
     theme: "SILK",
     shortDescription:
-      "Grape pie candy into a grapesicle. Dessert on dessert, named like a crime.",
+      "FELON'S FANTASY is Jokers Pie crossed to Blue Grapesicle. Jokers Pie is Joker Juice 11 × Grape Pie, often read as grape candy, cream, and a gas back note. Blue Grapesicle’s public trees conflict, so the parent name stays as recorded. The fantasy is fruit dessert, not chem.",
     vaultDescription:
-      "Grape candy, cream, and gas from Jokers Pie against a grapesicle fruit parent. Dessert density and purple potential, without a chem promise.",
+      "Grape candy, cream, and gas from Jokers Pie against a grapesicle fruit parent. Dessert density and purple potential.",
     longDescription:
-      "FELON'S FANTASY crosses Jokers Pie to Blue Grapesicle. Jokers Pie is Joker Juice 11 × Grape Pie, often described as grape candy, cream, and gas with color. Blue Grapesicle lineage listings conflict (Blue Ice × Joker Juice 11 versus Blueberry Sugar × Joker Juice). We print the parent name we were given. We do not pick a fake tree. Joker Juice may appear on both sides if one listing is wrong or the other is right. Either way the fantasy is fruit candy. Bandit did not breed these parents. This is our named regular.",
+      "The Pie side can offer medium vigor, color, and candy density. Grapesicle should stay in fruit. Listings disagree on Blue Grapesicle (Blue Ice × Joker Juice 11 versus Blueberry Sugar × Joker Juice), so this file will not freeze a fake tree. Joker Juice may appear on both sides depending on which listing is right.",
     plantCharacter:
-      "Jokers Pie is described as medium, vigorous, and trainable. Blue Grapesicle structure waits on a cleaner source and a live run.",
+      "Jokers Pie is described as medium, vigorous, and trainable. Blue Grapesicle structure waits on a cleaner source. A dessert hybrid frame is the safe read.",
     flowerCharacter:
-      "Dessert density and color from the Pie side are a reasonable reading. Grapesicle may echo that. Fox tails and foxtail talk stay off the card until seen.",
+      "Dessert density and color from the Pie side are a reasonable direction. Grapesicle should echo fruit candy. Chem is unlikely unless a rogue plant appears.",
     resinExpression:
-      "Joker Juice parents are often sticky. Likely frost. Not scored.",
+      "Joker Juice parents are often sticky. Frost is likely.",
     colorPotential:
       "Jokers Pie is often described with purple. Grapesicle names suggest cold color too. Potential is high. Not guaranteed.",
     aromaDirection:
-      "Grape candy, cream, and a gas back note are the documented Pie lane. Grapesicle should stay in fruit. Chem is unlikely unless a rogue plant appears.",
+      "Grape candy, cream, and a gas back note from Pie. Grapesicle should stay in fruit.",
     lineageCharacter:
       "Joker Juice and grape dessert, with an unresolved Grapesicle pedigree.",
     breedingInterest:
-      "A candy regular for Thirst Trap. Later dossiers should update Blue Grapesicle once the cut is confirmed.",
+      "A candy release. Update Blue Grapesicle once the cut is confirmed.",
     whyItsInTheVault:
-      "Not every crime is chem. Some of them are grape.",
+      "Grape dessert on dessert, with the second tree left honest.",
     heroImage: strainArt["felons-fantasy"],
     galleryImages: [],
     featured: false,
@@ -489,27 +487,27 @@ export const strains: StrainRecord[] = [
     collection: "BANDIT COLLECTION",
     theme: "METAL",
     shortDescription:
-      "Permanent Marker and 3D Chem, then platinum diesel again. Clean money. Dirty gas.",
+      "MONEY LAUNDERING is Big Perm × Platinum City Diesel. Big Perm is Permanent Marker × 3D Chem; Platinum City Diesel is Platinum Lemon Cherry Gelato × 3D Chem. Chem sits on both sides, with Marker candy-gas on one parent and lemon-cherry diesel on the other.",
     vaultDescription:
       "Permanent Marker candy-gas over stacked 3D Chem and PLCG diesel. Structure may run sturdy; aroma can mix ink, lemon-cherry, and fuel.",
     longDescription:
-      "MONEY LAUNDERING is Big Perm × Platinum City Diesel. Big Perm is Permanent Marker × 3D Chem. Platinum City Diesel is Platinum Lemon Cherry Gelato × 3D Chem. 3D Chem therefore sits on both sides. Platinum City Diesel also parents DIAMOND THIEF. That overlap is deliberate. Bandit did not create Permanent Marker, 3D Chem, or PLCG. Marker may bring ink candy and boutique flower. Diesel may bring PLCG fruit and chem fuel. Double 3D Chem may steady structure. It may also make the pack chem heavy. The file exists to wash dessert through chem until something keeper worthy settles out.",
+      "Double 3D Chem can suggest a sturdier frame. Marker can dress the flower; PLCG can add fruit and frost. The pack can also run chem-heavy. Compare with DIAMOND THIEF to see Marker versus berry glue on the same diesel parent.",
     plantCharacter:
-      "3D Chem is used as a dependable frame in this pairing. Dual chem parents may mean thicker arms and less flop. Still a regular. Still a hunt.",
+      "3D Chem is used as a dependable frame. Dual chem parents may mean thicker arms and less flop. It is still a hunt.",
     flowerCharacter:
-      "Marker flowers are grown to be stared at. PLCG adds boutique shape. Chem can add spear and funk. Mixed.",
+      "Marker flowers are grown to be stared at. PLCG adds boutique shape. Chem can add spear and funk. Aroma can mix ink, candy, lemon-cherry, and fuel.",
     resinExpression:
-      "All three grandparent lanes (Marker, PLCG, 3D Chem) are resin adjacent in listings. Likely frost.",
+      "Marker, PLCG, and 3D Chem are all resin-adjacent in listings. Frost is likely.",
     colorPotential:
-      "Marker and PLCG can color. Chem often stays green. Both color lanes are possible.",
+      "Marker and PLCG can color. Chem often stays green. Both lanes are possible.",
     aromaDirection:
-      "Ink, candy, lemon cherry, and chem diesel. The laundered plant may smell expensive and wrong in the best sense.",
+      "Ink, candy, lemon-cherry, and chem diesel.",
     lineageCharacter:
-      "Permanent Marker plus stacked 3D Chem plus PLCG. Cookies family dessert over a chem wash.",
+      "Permanent Marker plus stacked 3D Chem plus PLCG.",
     breedingInterest:
-      "The second Platinum City Diesel file. Compare with DIAMOND THIEF to see berry glue versus Marker on the same diesel parent.",
+      "The second Platinum City Diesel file, for comparing Marker against berry glue.",
     whyItsInTheVault:
-      "If you are going to move dessert through chem, do it on purpose and put a name on the operation.",
+      "Dessert washed through chem on purpose.",
     heroImage: strainArt["money-laundering"],
     galleryImages: [],
     featured: false,
@@ -534,25 +532,27 @@ export const strains: StrainRecord[] = [
     collection: "BANDIT COLLECTION",
     theme: "FROST",
     shortDescription:
-      "An auto file with chem in the name and cherry in the other seat. Fast work. Honest gaps.",
+      "HIGHWAY ROBBERY is Guava N Chem Auto × Carbon Cherry Auto. Exact public pages for these Bandit parents are thin. The names suggest tropical fuel against a cherry auto. This is a compact autoflower file, not a photoperiod hunt.",
     vaultDescription:
-      "Guava and chem suggest tropical fuel. Cherry from the second parent is a name reading until flower confirms. Auto stature is expected; flower details remain open.",
+      "Guava and chem suggest tropical fuel. Cherry from the second parent is a name reading. Auto stature is expected.",
     longDescription:
-      "HIGHWAY ROBBERY is Guava N Chem Auto × Carbon Cherry Auto. Pages for these exact Bandit parents are thin. Similar named guava chem autos exist elsewhere. We do not steal another file’s description and paste it here. CHEM is tagged from Guava N Chem. Carbon Cherry stays lightly documented on purpose. Bandit did not create the original chem family. This is our named autoflower.",
+      "Guava-and-chem autos are often described as fruit over fuel; that is market pattern, not confirmation of this cut. Carbon Cherry stays lightly documented. Similar named packs exist elsewhere and are not treated as this parent. Flower character stays conservative until a Bandit run.",
     plantCharacter:
-      "Autos usually stay smaller and finish without a photoperiod flip. Exact height and branch habit for this pair are UNKNOWN.",
-    flowerCharacter: comingSoon,
+      "Autoflower stature and a modest frame are the safe read. Exact height and branch habit for this pair remain open.",
+    flowerCharacter:
+      "Chem-named autos are often grown for grease. Cherry from the second parent is a name reading. Tropical fuel is a plausible direction, not a locked terp list.",
     resinExpression:
-      "Chem named autos are often grown for grease. That is a market pattern, not a Bandit measurement.",
-    colorPotential: comingSoon,
+      "Chem-named autos are often grown for grease. That is a market pattern, not a measurement.",
+    colorPotential:
+      "Color is not assigned. Carbon Cherry does not come with a confirmed visual map.",
     aromaDirection:
-      "Guava and chem is a plausible tropical fuel split. Cherry from the second parent is a name reading. Confirm in flower.",
+      "Guava and chem is a plausible tropical fuel split. Cherry from the second parent is a name reading.",
     lineageCharacter:
-      "Chem influence is the only mapped family tag. Cherry and carbon notes remain open.",
+      "Chem influence is the only mapped family tag.",
     breedingInterest:
-      "A beginner auto with chem on the label. Later research should pin the exact parent cuts.",
+      "An auto with chem on the label. Pin the exact parent cuts later.",
     whyItsInTheVault:
-      "Not every job needs a twelve week photoperiod. Some of them happen on the highway.",
+      "A fast auto file with honest gaps on both parents.",
     heroImage: strainArt["highway-robbery"],
     galleryImages: [],
     featured: false,
@@ -583,26 +583,27 @@ export const strains: StrainRecord[] = [
     collection: "THIRST TRAP COLLECTION",
     theme: "FROST",
     shortDescription:
-      "Strawberry cookie auto into red runtz auto. Sweet getaway. F2 on the first parent.",
+      "GETAWAY GIRL is Strawberry Milk & Qookies F2 Auto crossed to Red Runtz Auto. The names point at strawberry cream, cookie dessert, and Runtz candy. An F2 on one parent can widen the range. This is the candy auto in the launch set.",
     vaultDescription:
-      "Strawberry cream and cookie dessert against Red Runtz candy. Auto stature expected; F2 on one parent may widen the range. Color and gas are possible, not promised.",
+      "Strawberry cream and cookie dessert against Red Runtz candy. Auto stature expected; F2 on one parent may widen the range.",
     longDescription:
-      "GETAWAY GIRL is Strawberry Milk & Qookies F2 Auto crossed to Red Runtz Auto. Close names exist elsewhere. We do not claim those packs are this parent. The given names still tell a dessert story: strawberry milk, cookies, runtz candy. COOKIES and RUNTZ are tagged from those names. Bandit did not create Runtz or the cookie family. This is our named autoflower in THIRST TRAP COLLECTION. An F2 parent can mean more scatter. That can be useful for a hunt and messy for a uniform tray.",
+      "Close names exist elsewhere and are not treated as this parent. Cookies and Runtz are name tags. Red Runtz families can show candy and occasional red or pink accents; that stays possible, not promised. An F2 parent can scatter, which is useful for a hunt and messy for a uniform tray.",
     plantCharacter:
-      "Auto stature expected. F2 on parent one may widen the range. Structure details UNKNOWN.",
-    flowerCharacter: comingSoon,
+      "Auto stature is expected. F2 on parent one may widen the range. Structure details stay open.",
+    flowerCharacter:
+      "Dessert autos are often sticky and candy-led. Strawberry cream and cookie dough are reasonable hopes; Runtz candy may sit on top. Gas and color can appear without being promised.",
     resinExpression:
-      "Dessert autos are often sticky. Likely, not logged.",
+      "Dessert autos are often sticky. Frost is likely, not logged.",
     colorPotential:
-      "Red Runtz families can show red and pink pistils or darker flower. Possible. Not promised.",
+      "Red Runtz families can show red and pink pistils or darker flower. Possible, not promised.",
     aromaDirection:
-      "Strawberry cream and cookie dough are reasonable hopes. Runtz candy may sit on top. Gas may appear. Phenotype decides.",
+      "Strawberry cream and cookie dough against Runtz candy. Gas may appear.",
     lineageCharacter:
-      "Cookies and Runtz tags from the supplied names. Exact donor autos not assigned.",
+      "Cookies and Runtz tags from the supplied names.",
     breedingInterest:
-      "The candy auto in the launch set. Later work can confirm which Red Runtz auto and which F2 cookie auto were used.",
+      "The candy auto in the launch set.",
     whyItsInTheVault:
-      "The getaway should taste like candy even if the car is an auto.",
+      "Strawberry cookie dessert into Red Runtz candy, on auto timing.",
     heroImage: strainArt["getaway-girl"],
     galleryImages: [],
     featured: false,
@@ -627,25 +628,27 @@ export const strains: StrainRecord[] = [
     collection: "BANDIT COLLECTION",
     theme: "FROST",
     shortDescription:
-      "Tropicana cookies auto with Atomic Burn in the passenger seat. Citrus on a timer.",
+      "SPEEDING TICKET is Tropicana Cookies Auto × Atomic Burn Auto. Tropicana Cookies photoperiods are widely listed as Cookies × Tangie, with orange citrus candy as the family reputation. Atomic Burn Auto has no confirmed pedigree here. Citrus on a timer, with a wildcard in the passenger seat.",
     vaultDescription:
-      "Tropicana Cookies auto reputation is orange citrus candy. Atomic Burn is unmapped, so fuel or spice is not assigned. Auto timing and a modest frame are the safe reads.",
+      "Tropicana Cookies auto reputation is orange citrus candy. Atomic Burn is unmapped, so fuel or spice is not assigned.",
     longDescription:
-      "SPEEDING TICKET is Tropicana Cookies Auto × Atomic Burn Auto. Tropicana Cookies as a photoperiod is widely listed as Cookies × Tangie. Many autos reuse the name with different auto donors. Atomic Burn Auto has no confirmed pedigree in this pass. We keep that gap visible. COOKIES is tagged from Tropicana Cookies. Bandit did not breed the original Tropicana Cookies cut. This is our named autoflower. Citrus candy is the interesting bet. Burn stays undefined until a run fills it in.",
+      "Autos that reuse Tropicana Cookies can keep some orange candy or lean toward the auto donor. Atomic Burn stays blank rather than invented. The file exists to see whether the citrus is real when Burn is unknown.",
     plantCharacter:
-      "Auto timing and a modest frame are the safe assumptions. Atomic Burn structure is UNKNOWN.",
-    flowerCharacter: comingSoon,
-    resinExpression: comingSoon,
+      "Auto timing and a modest frame are the safe assumptions. Atomic Burn structure is unknown. Expect a compact auto, not a mapped photoperiod outline.",
+    flowerCharacter:
+      "Orange citrus candy is the Tropicana Cookies reputation. Atomic Burn is not assigned fuel, spice, or dessert. Color can purple on Tropicana Cookies lines; Burn color stays open.",
+    resinExpression:
+      "Frost is not graded. Tropicana Cookies families can finish resinous; Burn does not add a documented resin claim.",
     colorPotential:
-      "Tropicana Cookies lines can purple. Atomic Burn color is UNKNOWN.",
+      "Tropicana Cookies lines can purple. Atomic Burn color is unknown.",
     aromaDirection:
-      "Orange citrus candy is the Tropicana Cookies reputation. Atomic Burn may add fuel, spice, or nothing documented. Do not guess the blend.",
+      "Orange citrus candy from the Tropicana Cookies reputation. Atomic Burn is not guessed.",
     lineageCharacter:
       "Cookies family through Tropicana Cookies. Second parent unmapped.",
     breedingInterest:
-      "Closes the auto trio. Later dossiers should identify Atomic Burn before anyone writes terp scripture.",
+      "Closes the auto trio. Identify Atomic Burn before writing terp scripture.",
     whyItsInTheVault:
-      "If the citrus is real, the ticket writes itself. If Burn is a wildcard, that is why the file exists.",
+      "Citrus on auto timing, with Burn left as a real gap.",
     heroImage: strainArt["speeding-ticket"],
     galleryImages: [],
     featured: false,

@@ -18,6 +18,12 @@
   --font-label: var(--font-barlow), "Arial Narrow", sans-serif;
   --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
 
+  --text-copy: 1.09rem;
+  --text-copy-lg: 1.17rem;
+  --text-ui: 0.78rem;
+  --text-meta: 0.71rem;
+  --text-kicker: 0.82rem;
+
   --spacing-gutter: clamp(1.25rem, 5vw, 5rem);
   --spacing-section: clamp(4rem, 10vw, 8rem);
 }

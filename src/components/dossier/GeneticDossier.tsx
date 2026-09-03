@@ -1,31 +1,19 @@
 import Image from "next/image";
-import { ConfidenceStamp } from "@/components/dossier/ConfidenceStamp";
 import {
   DossierPair,
   DossierSection,
+  dossierKickerClass,
 } from "@/components/dossier/DossierSection";
 import { LineagePanel } from "@/components/dossier/LineagePanel";
-import { PendingPanel } from "@/components/dossier/PendingPanel";
 import { RelatedGenetics } from "@/components/dossier/RelatedGenetics";
-import { ResearchStatus } from "@/components/dossier/ResearchStatus";
 import { StrainMedia } from "@/components/vault/StrainMedia";
 import { Button } from "@/components/ui/Button";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { dossierCopy } from "@/content/dossier";
-import {
-  getInfluencesForStrain,
-  getParentById,
-  getRelatedStrains,
-} from "@/data/genetics";
+import { getParentById, getRelatedStrains } from "@/data/genetics";
 import { STRAIN_TYPE_LABELS, type StrainRecord } from "@/data/genetics/types";
-import { hasArtworkSrc, isLandscapeArtwork } from "@/lib/artwork";
+import { hasArtworkSrc } from "@/lib/artwork";
 import { isPendingCopy } from "@/lib/pending";
-
-function Body({ children }: { children: string }) {
-  return (
-    <p className="max-w-2xl text-[1.02rem] leading-relaxed text-ice/80">{children}</p>
-  );
-}
 
 function CharacterSection({
   id,
@@ -40,26 +28,13 @@ function CharacterSection({
   value?: string;
   compact?: boolean;
 }) {
-  const unknown = Boolean(value && value.includes("UNKNOWN"));
+  if (isPendingCopy(value)) return null;
 
   return (
     <DossierSection id={id} title={title} kicker={kicker} compact={compact}>
-      {isPendingCopy(value) ? (
-        <PendingPanel label={dossierCopy.comingSoon} />
-      ) : (
-        <>
-          <div className="mb-4 flex flex-wrap gap-2">
-            <ConfidenceStamp level="INFERRED" />
-            {unknown ? <ConfidenceStamp level="UNKNOWN" /> : null}
-          </div>
-          <p className="w-full text-[1.02rem] leading-relaxed text-ice/80">
-            {value as string}
-          </p>
-          <p className="mt-3 w-full text-[0.82rem] leading-relaxed text-ice/45">
-            {dossierCopy.inferredReading}
-          </p>
-        </>
-      )}
+      <p className="w-full text-copy-lg leading-relaxed text-ice/80">
+        {value as string}
+      </p>
     </DossierSection>
   );
 }
@@ -77,9 +52,10 @@ export function GeneticDossier({ strain }: GeneticDossierProps) {
   }
 
   const related = getRelatedStrains(strain);
-  const influences = getInfluencesForStrain(strain);
   const gallery = strain.galleryImages.filter(hasArtworkSrc);
-  const landscapeHero = isLandscapeArtwork(strain.heroImage);
+  const showResin = !isPendingCopy(strain.resinExpression);
+  const showColor = !isPendingCopy(strain.colorPotential);
+  const showAroma = !isPendingCopy(strain.aromaDirection);
 
   return (
     <article className="relative overflow-x-clip bg-black">
@@ -92,45 +68,25 @@ export function GeneticDossier({ strain }: GeneticDossierProps) {
         aria-hidden
       />
 
-      <PageContainer width="wide" className="relative pt-28 pb-20 md:pt-36 md:pb-28">
-        <header className="border-b border-white/10 pb-10">
-          <p className="font-label text-[0.62rem] tracking-[0.28em] text-gold uppercase">
+      <PageContainer width="wide" className="relative pt-28 pb-16 md:pt-36 md:pb-24">
+        <header className="border-b border-white/10 pb-8">
+          <p className={dossierKickerClass}>
             {dossierCopy.classified} · {dossierCopy.restricted}
           </p>
-          <div className="mt-4 flex flex-wrap items-start gap-x-8 gap-y-4 font-label text-[0.65rem] tracking-[0.16em] text-ice/55 uppercase">
+          <div className="mt-3 flex flex-wrap items-start gap-x-8 gap-y-3 font-label text-ui tracking-[0.16em] text-ice/55 uppercase">
             <span>File {strain.fileCode}</span>
             <span>{STRAIN_TYPE_LABELS[strain.type]}</span>
-            <span>{strain.collection}</span>
-            <span>{strain.status}</span>
           </div>
 
-          <div className="mt-8 grid items-end gap-8 lg:grid-cols-12">
-            <div className="lg:col-span-7">
-              <h1 className="max-w-4xl font-display text-[clamp(2.6rem,8vw,5.8rem)] leading-[0.85] text-frost">
-                {strain.name}
-              </h1>
-              <p className="mt-5 max-w-2xl font-label text-[0.82rem] leading-relaxed tracking-[0.07em] text-ice uppercase">
-                {strain.lineage}
-              </p>
-              {influences.length > 0 ? (
-                <p className="mt-5 font-label text-[0.62rem] tracking-[0.18em] text-ice/45 uppercase">
-                  Influence map: {influences.join(" · ")}
-                </p>
-              ) : null}
-            </div>
-            <p className="max-w-md text-[1.02rem] leading-relaxed text-ice/75 lg:col-span-5">
-              {strain.shortDescription}
-            </p>
-          </div>
+          <h1 className="mt-6 max-w-4xl font-display text-[clamp(2.6rem,8vw,5.8rem)] leading-[0.85] text-frost">
+            {strain.name}
+          </h1>
+          <p className="mt-4 max-w-2xl font-label text-copy leading-relaxed tracking-[0.07em] text-ice uppercase">
+            {strain.lineage}
+          </p>
         </header>
 
-        <div
-          className={
-            landscapeHero
-              ? "mt-10 grid gap-8"
-              : "mt-10 grid gap-8 lg:grid-cols-12 lg:items-start"
-          }
-        >
+        <div className="mt-8 grid grid-cols-1 items-start gap-8 md:grid-cols-2 md:gap-10">
           <StrainMedia
             image={strain.heroImage}
             fileCode={strain.fileCode}
@@ -138,40 +94,26 @@ export function GeneticDossier({ strain }: GeneticDossierProps) {
             name={strain.name}
             labelled
             priority
-            className={
-              landscapeHero
-                ? "w-full px-2 py-3 sm:px-4"
-                : "lg:col-span-5 px-2 py-3 sm:px-3"
-            }
-            sizes={
-              landscapeHero
-                ? "(max-width: 768px) 100vw, 92rem"
-                : "(max-width: 1024px) 100vw, 42vw"
-            }
-            imageClassName={
-              landscapeHero
-                ? "max-h-[min(70vh,36rem)]"
-                : "max-h-[min(82vh,48rem)]"
-            }
+            className="min-w-0 w-full px-1 py-2"
+            sizes="(max-width: 768px) 100vw, 46vw"
+            imageClassName="max-h-[min(78vh,44rem)]"
           />
-          <div className={landscapeHero ? "max-w-3xl" : "lg:col-span-6 lg:col-start-7 lg:pt-4"}>
-            <p className="font-label text-[0.62rem] tracking-[0.28em] text-gold uppercase">
-              Opening statement
+          <DossierSection
+            id="bandit-file"
+            title={dossierCopy.banditFile}
+            kicker="WHY IT IS HERE"
+          >
+            <p className="max-w-prose text-copy-lg leading-relaxed text-ice/80">
+              {strain.shortDescription}
             </p>
-            <p className="mt-4 font-display text-[clamp(1.45rem,2.6vw,2rem)] leading-snug text-frost">
-              {strain.whyItsInTheVault}
+            <p className="mt-4 max-w-prose text-copy-lg leading-relaxed text-ice/80">
+              {strain.longDescription}
             </p>
-            <p className="mt-6 text-[0.95rem] leading-relaxed text-ice/55">
-              {dossierCopy.banditDidNotBreed.replace(
-                "this parent",
-                "the original parent genetics",
-              )}
-            </p>
-          </div>
+          </DossierSection>
         </div>
 
         {gallery.length > 0 ? (
-          <ul className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-3">
+          <ul className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-3">
             {gallery.map((image) => (
               <li key={image.src} className="flex items-center justify-center bg-black p-2">
                 <Image
@@ -187,19 +129,11 @@ export function GeneticDossier({ strain }: GeneticDossierProps) {
           </ul>
         ) : null}
 
-        <div className="mt-16 flex flex-col gap-16 md:mt-24 md:gap-24">
+        <div className="mt-10 flex flex-col gap-10 md:mt-12 md:gap-12">
           <LineagePanel
-            strain={strain}
             parentOne={parentOne}
             parentTwo={parentTwo}
           />
-
-          <DossierSection id="bandit-file" title={dossierCopy.banditFile} kicker="WHY IT IS HERE">
-            <Body>{strain.longDescription}</Body>
-            <p className="mt-6 max-w-2xl text-[0.95rem] leading-relaxed text-ice/60">
-              {strain.whyItsInTheVault}
-            </p>
-          </DossierSection>
 
           <DossierPair>
             <CharacterSection
@@ -218,79 +152,37 @@ export function GeneticDossier({ strain }: GeneticDossierProps) {
             />
           </DossierPair>
 
-          <CharacterSection
-            id="resin"
-            title={dossierCopy.resin}
-            kicker="PRIMARY INTEREST"
-            value={strain.resinExpression}
-          />
+          {showColor || showAroma ? (
+            <DossierPair>
+              <CharacterSection
+                id="color"
+                title={dossierCopy.color}
+                kicker="COLOR"
+                value={strain.colorPotential}
+                compact
+              />
+              <CharacterSection
+                id="aroma"
+                title={dossierCopy.aroma}
+                kicker="AROMA"
+                value={strain.aromaDirection}
+                compact
+              />
+            </DossierPair>
+          ) : null}
 
-          <DossierPair>
+          {showResin ? (
             <CharacterSection
-              id="color"
-              title={dossierCopy.color}
-              kicker="VISUAL RANGE"
-              value={strain.colorPotential}
-              compact
+              id="resin"
+              title={dossierCopy.resin}
+              kicker="RESIN"
+              value={strain.resinExpression}
             />
-            <CharacterSection
-              id="aroma"
-              title={dossierCopy.aroma}
-              kicker="NOSE AND PALATE"
-              value={strain.aromaDirection}
-              compact
-            />
-          </DossierPair>
-
-          <CharacterSection
-            id="lineage-character"
-            title={dossierCopy.lineageCharacter}
-            kicker="FAMILY TENSION"
-            value={strain.lineageCharacter}
-          />
-
-          <CharacterSection
-            id="breeding"
-            title={dossierCopy.breeding}
-            kicker="SELECTION"
-            value={strain.breedingInterest}
-          />
-
-          <ResearchStatus
-            strain={strain}
-            parentOne={parentOne}
-            parentTwo={parentTwo}
-          />
-
-          <DossierSection id="phenotype" title={dossierCopy.phenotype} kicker="FIELD NOTES">
-            {isPendingCopy(strain.phenotypeNotes) ? (
-              <PendingPanel label={dossierCopy.phenotypePending} />
-            ) : (
-              <Body>{strain.phenotypeNotes}</Body>
-            )}
-          </DossierSection>
-
-          <DossierSection id="grow" title={dossierCopy.grow} kicker="GARDEN LOG">
-            {isPendingCopy(strain.growNotes) ? (
-              <PendingPanel label={dossierCopy.growPending} />
-            ) : (
-              <Body>{strain.growNotes}</Body>
-            )}
-          </DossierSection>
-
-          <DossierSection id="quote" title={dossierCopy.quote} kicker="FILE REMARK">
-            {strain.quote ? (
-              <blockquote className="max-w-3xl font-display text-[clamp(1.6rem,4vw,2.8rem)] leading-[1.05] text-frost">
-                <p>{strain.quote}</p>
-              </blockquote>
-            ) : (
-              <PendingPanel label={dossierCopy.quotePending} />
-            )}
-          </DossierSection>
+          ) : null}
 
           <RelatedGenetics related={related} />
 
-          <div className="border-t border-white/10 pt-10">
+          <div className="border-t border-white/10 pt-8">
             <Button href="/vault" variant="secondary">
               {dossierCopy.returnVault}
             </Button>

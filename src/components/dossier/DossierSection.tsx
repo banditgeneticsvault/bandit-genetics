@@ -1,5 +1,8 @@
 import { cn } from "@/lib/cn";
 
+export const dossierKickerClass =
+  "font-label text-kicker tracking-[0.26em] text-gold uppercase";
+
 type DossierSectionProps = {
   id: string;
   title: string;
@@ -25,7 +28,7 @@ export function DossierSection({
       className={cn("min-w-0 w-full @container scroll-mt-28", className)}
     >
       {kicker ? (
-        <p className="mb-2 font-label text-[0.62rem] tracking-[0.28em] text-gold uppercase">
+        <p className={cn("mb-2", dossierKickerClass)}>
           {kicker}
         </p>
       ) : null}
@@ -40,14 +43,14 @@ export function DossierSection({
       >
         {title}
       </h2>
-      <div className="mt-5 w-full">{children}</div>
+      <div className="mt-3 w-full">{children}</div>
     </section>
   );
 }
 
 export function DossierPair({ children }: { children: React.ReactNode }) {
   return (
-    <div className="grid grid-cols-1 items-start gap-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-x-12 lg:gap-y-16">
+    <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-x-10 lg:gap-y-8">
       {children}
     </div>
   );

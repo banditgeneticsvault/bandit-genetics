@@ -23,7 +23,7 @@ export default function VaultPage() {
       <PageContainer width="wide" className="relative pt-28 pb-20 md:pt-36 md:pb-28">
         <div className="mb-12 grid gap-10 lg:grid-cols-12 lg:items-end">
           <div className="lg:col-span-7">
-            <p className="font-label text-[0.68rem] tracking-[0.28em] text-gold uppercase">
+            <p className="font-label text-ui tracking-[0.28em] text-gold uppercase">
               {vaultCopy.kicker}
             </p>
             <h1 className="mt-4 font-display text-[clamp(3.2rem,10vw,7rem)] leading-[0.82] text-frost">
@@ -34,10 +34,10 @@ export default function VaultPage() {
             </p>
           </div>
           <div className="max-w-sm lg:col-span-4 lg:col-start-9">
-            <p className="text-[0.95rem] leading-relaxed text-ice/75">
+            <p className="text-copy leading-relaxed text-ice/75">
               {vaultCopy.intro}
             </p>
-            <p className="mt-6 font-label text-[0.68rem] tracking-[0.28em] text-ice/40 uppercase">
+            <p className="mt-6 font-label text-ui tracking-[0.28em] text-ice/40 uppercase">
               {brand.philosophy}
             </p>
           </div>

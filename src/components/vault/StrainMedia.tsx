@@ -80,7 +80,7 @@ export function StrainMedia({
     >
       <div className="vault-grate absolute inset-0 opacity-80" />
       <div className="vault-grain absolute inset-0" />
-      <p className="absolute top-4 left-4 font-label text-[0.62rem] tracking-[0.28em] text-gold uppercase">
+      <p className="absolute top-4 left-4 font-label text-meta tracking-[0.28em] text-gold uppercase">
         {dossierCopy.artworkPending}
       </p>
       <p className="absolute right-4 bottom-4 font-display text-4xl text-frost/25">
