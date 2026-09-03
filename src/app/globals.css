@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+@theme {
+  --color-black: #07080a;
+  --color-charcoal: #101318;
+  --color-steel: #1a1f26;
+  --color-gunmetal: #3d4652;
+  --color-emerald: #164038;
+  --color-emerald-deep: #0b241f;
+  --color-purple: #2a1733;
+  --color-purple-deep: #160c1c;
+  --color-ice: #c7d8e4;
+  --color-frost: #eef2f5;
+  --color-gold: #b89555;
+  --color-gold-dim: #7d6438;
+
+  --font-display: var(--font-cormorant), "Times New Roman", serif;
+  --font-label: var(--font-barlow), "Arial Narrow", sans-serif;
+  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+
+  --spacing-gutter: clamp(1.25rem, 5vw, 5rem);
+  --spacing-section: clamp(4rem, 10vw, 8rem);
+}
+
+@layer base {
+  html {
+    background: var(--color-black);
+    color: var(--color-frost);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    min-height: 100dvh;
+    overflow-x: clip;
+    font-family: var(--font-sans);
+    background: var(--color-black);
+    color: var(--color-frost);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: var(--color-emerald);
+    color: var(--color-frost);
+  }
+}
+
+@layer components {
+  .page-gutter {
+    padding-inline: var(--spacing-gutter);
+  }
+
+  .vault-grate {
+    background-image:
+      repeating-linear-gradient(
+        90deg,
+        rgb(255 255 255 / 0.028) 0 1px,
+        transparent 1px 72px
+      ),
+      repeating-linear-gradient(
+        0deg,
+        rgb(255 255 255 / 0.02) 0 1px,
+        transparent 1px 92px
+      );
+  }
+
+  .vault-grain {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+    opacity: 0.09;
+    mix-blend-mode: overlay;
+  }
+}
