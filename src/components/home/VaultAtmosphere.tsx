@@ -1,7 +1,25 @@
+import Image from "next/image";
+import { homeHero } from "@/content/site";
+import { hasArtworkSrc } from "@/lib/artwork";
+
 export function VaultAtmosphere() {
+  const artwork = homeHero.artwork;
+
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
       <div className="absolute inset-0 bg-black" />
+      <div data-artwork-slot="" className="absolute inset-0">
+        {hasArtworkSrc(artwork) ? (
+          <Image
+            src={artwork.src}
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+        ) : null}
+      </div>
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_18%_12%,rgb(42_23_51_/_0.7),transparent_42%),radial-gradient(ellipse_at_88%_8%,rgb(199_216_228_/_0.12),transparent_34%),radial-gradient(ellipse_at_70%_90%,rgb(11_36_31_/_0.9),transparent_46%)]" />
       <div className="vault-grate absolute inset-0 opacity-70" />
       <div className="absolute -top-24 right-[-10%] h-[70%] w-[58%] bg-[radial-gradient(circle,rgb(199_216_228_/_0.16),transparent_62%)] blur-3xl" />
@@ -25,7 +43,6 @@ export function VaultAtmosphere() {
       </svg>
       <div className="vault-grain absolute inset-0" />
       <div className="absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-black to-transparent" />
-      <div data-artwork-slot="" className="absolute inset-0" />
     </div>
   );
 }

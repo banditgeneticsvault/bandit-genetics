@@ -16,6 +16,7 @@ import {
   getRelatedStrains,
 } from "@/data/genetics";
 import type { StrainRecord } from "@/data/genetics/types";
+import { hasArtworkSrc } from "@/lib/artwork";
 import { isPendingCopy } from "@/lib/pending";
 
 function Body({ children }: { children: string }) {
@@ -71,7 +72,7 @@ export function GeneticDossier({ strain }: GeneticDossierProps) {
 
   const related = getRelatedStrains(strain);
   const influences = getInfluencesForStrain(strain);
-  const gallery = strain.galleryImages.filter((image) => image.src);
+  const gallery = strain.galleryImages.filter(hasArtworkSrc);
 
   return (
     <article className="relative overflow-x-clip bg-black">

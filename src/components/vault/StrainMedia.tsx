@@ -1,5 +1,7 @@
 import Image from "next/image";
+import { dossierCopy } from "@/content/dossier";
 import { cn } from "@/lib/cn";
+import { hasArtworkSrc } from "@/lib/artwork";
 import type { StrainImage, StrainTheme } from "@/data/genetics/types";
 
 const washes: Record<StrainTheme, string> = {
@@ -28,7 +30,7 @@ export function StrainMedia({
   className,
   labelled = false,
 }: StrainMediaProps) {
-  if (image?.src) {
+  if (hasArtworkSrc(image)) {
     return (
       <div className={cn("relative overflow-hidden bg-steel", className)}>
         <Image
@@ -46,13 +48,15 @@ export function StrainMedia({
     <div
       className={cn("relative overflow-hidden", washes[theme], className)}
       role={labelled ? "img" : undefined}
-      aria-label={labelled ? `${name}. Artwork pending.` : undefined}
+      aria-label={
+        labelled ? `${name}. ${dossierCopy.artworkPending}.` : undefined
+      }
       aria-hidden={labelled ? undefined : true}
     >
       <div className="vault-grate absolute inset-0 opacity-80" />
       <div className="vault-grain absolute inset-0" />
       <p className="absolute top-4 left-4 font-label text-[0.62rem] tracking-[0.28em] text-gold uppercase">
-        Artwork pending
+        {dossierCopy.artworkPending}
       </p>
       <p className="absolute right-4 bottom-4 font-display text-4xl text-frost/25">
         {fileCode}

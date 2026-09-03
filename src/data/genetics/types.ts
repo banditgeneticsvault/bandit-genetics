@@ -39,6 +39,7 @@ export type ResearchNote = {
   confidence: Confidence;
 };
 
+/** Local public path, for example `/images/strains/{slug}/hero.webp`. */
 export type StrainImage = {
   src: string;
   alt: string;

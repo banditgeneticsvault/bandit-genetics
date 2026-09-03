@@ -16,11 +16,19 @@ export const navItems = [
   { href: "/contact", label: "CONTACT" },
 ] as const;
 
-export const homeHero = {
+import type { StrainImage } from "@/data/genetics/types";
+
+export const homeHero: {
+  classified: string;
+  primaryCta: { href: string; label: string };
+  secondaryCta: { href: string; label: string };
+  /** Set to a `/images/home/...` file when Bandit homepage artwork exists. */
+  artwork?: StrainImage;
+} = {
   classified: "FILE // BG 00  ·  VAULT ACCESS",
   primaryCta: { href: "/vault", label: "ENTER THE VAULT" },
   secondaryCta: { href: "/collections", label: "EXPLORE GENETICS" },
-} as const;
+};
 
 export const vaultCopy = {
   kicker: "CLASSIFIED ARCHIVE",
