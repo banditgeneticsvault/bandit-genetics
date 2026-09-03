@@ -7,7 +7,7 @@ type VaultEmptyStateProps = {
 export function VaultEmptyState({ onClear }: VaultEmptyStateProps) {
   return (
     <div className="border border-gunmetal bg-charcoal px-6 py-16 text-center md:py-24">
-      <p className="font-label text-ui tracking-[0.28em] text-gold uppercase">
+      <p className="section-kicker">
         Archive miss
       </p>
       <p className="mt-4 font-display text-3xl text-frost md:text-4xl">

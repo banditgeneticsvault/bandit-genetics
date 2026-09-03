@@ -23,7 +23,7 @@ export default function VaultPage() {
       <PageContainer width="wide" className="relative pt-28 pb-20 md:pt-36 md:pb-28">
         <div className="mb-12 grid gap-10 lg:grid-cols-12 lg:items-end">
           <div className="lg:col-span-7">
-            <p className="font-label text-ui tracking-[0.28em] text-gold uppercase">
+            <p className="section-kicker">
               {vaultCopy.kicker}
             </p>
             <h1 className="mt-4 font-display text-[clamp(3.2rem,10vw,7rem)] leading-[0.82] text-frost">

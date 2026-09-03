@@ -96,7 +96,7 @@ export function SiteHeader() {
 
         <div className="page-gutter relative flex h-full flex-col">
           <div className="flex items-center justify-between py-5">
-            <p className="font-label text-ui tracking-[0.28em] text-gold uppercase">
+            <p className="section-kicker">
               Access panel
             </p>
             <button

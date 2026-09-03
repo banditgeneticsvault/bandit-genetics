@@ -18,11 +18,11 @@
   --font-label: var(--font-barlow), "Arial Narrow", sans-serif;
   --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
 
-  --text-copy: 1.09rem;
-  --text-copy-lg: 1.17rem;
-  --text-ui: 0.78rem;
-  --text-meta: 0.71rem;
-  --text-kicker: 0.82rem;
+  --text-copy: 1.25rem;
+  --text-copy-lg: 1.35rem;
+  --text-ui: 0.9rem;
+  --text-meta: 0.82rem;
+  --text-kicker: 0.96rem;
 
   --spacing-gutter: clamp(1.25rem, 5vw, 5rem);
   --spacing-section: clamp(4rem, 10vw, 8rem);
@@ -58,6 +58,14 @@
 @layer components {
   .page-gutter {
     padding-inline: var(--spacing-gutter);
+  }
+
+  .section-kicker {
+    font-family: var(--font-label);
+    font-size: var(--text-kicker);
+    letter-spacing: 0.28em;
+    color: var(--color-gold);
+    text-transform: uppercase;
   }
 
   .vault-grate {

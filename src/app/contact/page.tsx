@@ -27,7 +27,7 @@ export default function ContactPage() {
           <h1 className="font-display text-[clamp(2.4rem,7vw,5.2rem)] leading-[0.9] font-medium tracking-tight text-frost">
             {copy.title}
           </h1>
-          <p className="mt-6 max-w-xl text-[0.975rem] leading-relaxed text-ice/80">
+          <p className="mt-6 max-w-xl text-copy leading-relaxed text-ice/80">
             {copy.body}
           </p>
         </header>

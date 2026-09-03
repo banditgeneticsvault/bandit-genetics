@@ -16,7 +16,7 @@ export function HomeHero() {
       <div className="page-gutter relative mx-auto flex min-h-[100dvh] max-w-[92rem] flex-col justify-start pt-28 pb-10 md:justify-center md:pt-32 md:pb-16">
         <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-8">
           <div className="min-w-0 lg:col-span-6 lg:pb-6">
-            <p className="font-label text-meta tracking-[0.32em] text-gold uppercase">
+            <p className="font-label text-kicker tracking-[0.32em] text-gold uppercase">
               {homeHero.classified}
             </p>
             <h1 className="mt-5 pr-4 font-display text-[clamp(3.1rem,12vw,8.4rem)] leading-[0.82] font-medium tracking-[-0.03em] text-frost lg:pr-8">

@@ -6,7 +6,7 @@ export default function NotFound() {
   return (
     <main className="bg-black">
       <PageContainer width="wide" className="flex min-h-[70dvh] flex-col justify-center pt-32 pb-20">
-        <p className="font-label text-ui tracking-[0.28em] text-gold uppercase">
+        <p className="section-kicker">
           {dossierCopy.notFoundKicker}
         </p>
         <h1 className="mt-4 max-w-xl font-display text-[clamp(2.5rem,7vw,4.5rem)] leading-[0.9] text-frost">

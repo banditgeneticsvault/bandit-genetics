@@ -1,14 +1,12 @@
+import { AboutPage } from "@/components/about/AboutPage";
+import { aboutCopy } from "@/content/about";
 import type { Metadata } from "next";
-import { PlaceholderPage } from "@/components/layout/PlaceholderPage";
 
 export const metadata: Metadata = {
   title: "About",
+  description: `${aboutCopy.slogan} ${aboutCopy.opening[0]}`,
 };
 
-export default function AboutPage() {
-  return (
-    <main>
-      <PlaceholderPage page="about" />
-    </main>
-  );
+export default function About() {
+  return <AboutPage />;
 }

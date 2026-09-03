@@ -46,7 +46,7 @@ export function SectionHeader({
       )}
     >
       {kicker ? (
-        <p className="mb-3 font-label text-ui tracking-[0.28em] text-gold uppercase">
+        <p className="section-kicker mb-3">
           {kicker}
         </p>
       ) : null}

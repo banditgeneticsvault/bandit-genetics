@@ -16,7 +16,7 @@ import { cn } from "@/lib/cn";
 const copy = pageCopy.contact;
 
 const fieldClassName =
-  "min-h-12 w-full rounded-none border border-white/12 bg-black/40 px-3 py-3 font-sans text-[0.95rem] text-frost outline-none placeholder:text-ice/35 focus-visible:border-gold";
+  "min-h-12 w-full rounded-none border border-white/12 bg-black/40 px-3 py-3 font-sans text-copy text-frost outline-none placeholder:text-ice/35 focus-visible:border-gold";
 
 export function ContactForm() {
   const [state, formAction, pending] = useActionState(
@@ -130,7 +130,7 @@ export function ContactForm() {
           <p
             id={statusId}
             role="status"
-            className="border border-white/10 bg-black/40 px-4 py-3 text-[0.95rem] leading-relaxed text-ice"
+            className="border border-white/10 bg-black/40 px-4 py-3 text-copy leading-relaxed text-ice"
           >
             {copy.success}
           </p>
@@ -140,7 +140,7 @@ export function ContactForm() {
           <p
             id={statusId}
             role="alert"
-            className="border border-white/10 bg-black/40 px-4 py-3 text-[0.95rem] leading-relaxed text-ice"
+            className="border border-white/10 bg-black/40 px-4 py-3 text-copy leading-relaxed text-ice"
           >
             {copy.error}
           </p>
@@ -150,7 +150,7 @@ export function ContactForm() {
           type="submit"
           disabled={pending}
           className={cn(
-            "inline-flex min-h-12 w-full items-center justify-center border px-6 font-label text-[0.7rem] font-semibold tracking-[0.22em] uppercase transition-colors sm:w-auto sm:min-w-[12.5rem]",
+            "inline-flex min-h-12 w-full items-center justify-center border px-6 font-label text-ui font-semibold tracking-[0.22em] uppercase transition-colors sm:w-auto sm:min-w-[12.5rem]",
             pending
               ? "cursor-wait border-gunmetal bg-gunmetal text-ice/70"
               : "border-frost bg-frost text-black hover:border-ice hover:bg-ice",
@@ -205,7 +205,7 @@ function Field({
     <div className="grid gap-2">
       <label
         htmlFor={id}
-        className="font-label text-[0.68rem] tracking-[0.22em] text-ice/70 uppercase"
+        className="font-label text-ui tracking-[0.22em] text-ice/70 uppercase"
       >
         {label}
       </label>
@@ -237,7 +237,7 @@ function Field({
         />
       )}
       {error ? (
-        <p id={errorId} role="alert" className="text-[0.85rem] text-gold">
+        <p id={errorId} role="alert" className="text-copy text-gold">
           {error}
         </p>
       ) : null}

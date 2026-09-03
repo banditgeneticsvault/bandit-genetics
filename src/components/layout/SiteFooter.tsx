@@ -6,7 +6,7 @@ export function SiteFooter() {
     <footer className="relative border-t border-white/8 bg-charcoal">
       <div className="page-gutter mx-auto grid max-w-[92rem] gap-12 py-14 md:grid-cols-[1.4fr_0.8fr] md:items-end md:py-20">
         <div className="max-w-md">
-          <p className="font-label text-ui tracking-[0.28em] text-gold uppercase">
+          <p className="section-kicker">
             {brand.philosophy}
           </p>
           <p className="mt-4 font-display text-[clamp(2rem,5vw,3.4rem)] leading-[0.92] text-frost">

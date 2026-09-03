@@ -1,7 +1,7 @@
 import { cn } from "@/lib/cn";
 
 export const dossierKickerClass =
-  "font-label text-kicker tracking-[0.26em] text-gold uppercase";
+  "section-kicker tracking-[0.26em]";
 
 type DossierSectionProps = {
   id: string;

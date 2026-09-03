@@ -49,10 +49,10 @@ export function ResearchStatus({
           ),
         )}
       </div>
-      <p className="mt-5 max-w-2xl text-[0.98rem] leading-relaxed text-ice/80">
+      <p className="mt-5 max-w-2xl text-copy leading-relaxed text-ice/80">
         {statusCopy(levels)}
       </p>
-      <p className="mt-4 max-w-2xl text-[0.95rem] leading-relaxed text-ice/55">
+      <p className="mt-4 max-w-2xl text-copy leading-relaxed text-ice/55">
         {dossierCopy.futureObs}
       </p>
       {strain.researchNotes.length > 0 ? (
@@ -60,12 +60,12 @@ export function ResearchStatus({
           {strain.researchNotes.map((note) => (
             <li key={`${note.topic}-${note.confidence}`} className="border-t border-white/8 pt-4">
               <div className="flex flex-wrap items-center gap-3">
-                <p className="font-label text-[0.62rem] tracking-[0.2em] text-gold uppercase">
+                <p className="font-label text-kicker tracking-[0.2em] text-gold uppercase">
                   {note.topic}
                 </p>
                 <ConfidenceStamp level={note.confidence} />
               </div>
-              <p className="mt-2 text-[0.95rem] leading-relaxed text-ice/75">{note.body}</p>
+              <p className="mt-2 text-copy leading-relaxed text-ice/75">{note.body}</p>
             </li>
           ))}
         </ul>
