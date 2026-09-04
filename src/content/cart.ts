@@ -35,10 +35,16 @@ export const cartCopy = {
   checkoutIntro:
     "Review the strains on this ticket. Card checkout cannot start until Stripe is configured on this server. PAY LATER / PAY WITH CRYPTO is available. Submitting crypto does not mark the order paid.",
   checkoutIntroLive:
-    "Review the strains on this ticket. Pay by card on Stripe, or submit PAY LATER / PAY WITH CRYPTO. Card details stay on Stripe. Crypto is not marked paid until Bandit Genetics verifies it.",
+    "Review the strains on this ticket. Choose one payment method. Card details stay on Stripe Checkout. Crypto is not marked paid until Bandit Genetics verifies it.",
   continueStripe: "CHECKOUT WITH CARD",
   checkoutWithCard: "CHECKOUT WITH CARD",
   payLaterCrypto: "PAY LATER / PAY WITH CRYPTO",
+  paymentMethod: "PAYMENT METHOD",
+  payWithCard: "CREDIT / DEBIT CARD",
+  payWithCrypto: "CRYPTO",
+  choosePayment: "Choose one payment method.",
+  cardCheckoutNote:
+    "Card details are entered on Stripe Checkout. This site never handles raw card numbers. Stripe chooses which payment methods to show for the connected account.",
   cryptoNote:
     "This is not financing and not credit. You submit the order unpaid, then send cryptocurrency to the Bandit Genetics receiving address shown for the network you select.",
   cryptoVerifyNote:
@@ -85,7 +91,7 @@ export const cartCopy = {
   emptyCart: "Add a strain before checkout.",
   summary: "ORDER SUMMARY",
   shipping: "SHIPPING",
-  payment: "PAYMENT",
+  payment: "PAYMENT METHOD",
   taxNote: "Tax is not calculated on this site. Shipping rates are not configured.",
   network: "The checkout could not continue. Check the connection and try again.",
   chooseSeeds:
