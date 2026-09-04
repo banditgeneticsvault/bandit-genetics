@@ -49,7 +49,7 @@ export function AboutPage() {
           <h1 className="mt-3 font-display text-[clamp(2.6rem,8vw,5.6rem)] leading-[0.86] text-frost lg:col-start-1 lg:row-start-2 lg:mt-0">
             {aboutCopy.title}
           </h1>
-          <p className="mt-6 max-w-xl font-display text-[clamp(1.25rem,3.2vw,2rem)] leading-[1.12] text-ice lg:col-start-1 lg:row-start-3 lg:mt-0">
+          <p className="mt-6 max-w-xl font-display text-[clamp(1.25rem,3.2vw,2rem)] leading-[1.12] text-gold lg:col-start-1 lg:row-start-3 lg:mt-0">
             {aboutCopy.slogan}
           </p>
           <div className="mt-8 space-y-4 lg:col-start-2 lg:row-span-2 lg:row-start-2 lg:mt-0">
@@ -122,12 +122,12 @@ export function AboutPage() {
           className="mt-12 border-b border-white/10 pb-12 md:mt-14 md:pb-14"
         >
           <Kicker>{aboutCopy.philosophyKicker}</Kicker>
-          <h2
+            <h2
             id="philosophy-title"
-            className="mt-3 max-w-4xl font-display text-[clamp(1.9rem,5vw,3.4rem)] leading-[0.95] text-frost"
+            className="mt-3 max-w-4xl font-display text-[clamp(1.9rem,5vw,3.4rem)] leading-[0.95] text-gold"
           >
             {philosophyOne}
-            <span className="mt-1 block text-ice">{philosophyTwo}</span>
+            <span className="mt-1 block">{philosophyTwo}</span>
           </h2>
           <div className="mt-8 grid grid-cols-1 gap-x-12 gap-y-4 lg:grid-cols-2 lg:items-start">
             {aboutCopy.philosophy.map((paragraph) => (
@@ -143,7 +143,7 @@ export function AboutPage() {
 
         <section
           aria-labelledby="vault-title"
-          className="mt-12 border-b border-white/10 pb-12 md:mt-14 md:pb-14"
+          className="mt-12 pb-4 md:mt-14"
         >
           <Kicker>{aboutCopy.vaultKicker}</Kicker>
           <h2
@@ -164,14 +164,20 @@ export function AboutPage() {
           </div>
         </section>
 
-        <section className="mt-12 md:mt-16">
-          <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:justify-center">
-            <Button href={aboutCopy.vaultCta.href}>
-              {aboutCopy.vaultCta.label}
-            </Button>
-            <Button href={aboutCopy.contactCta.href} variant="secondary">
-              {aboutCopy.contactCta.label}
-            </Button>
+        <section
+          aria-label="Continue"
+          className="mt-12 border-t border-white/10 pt-10 md:mt-16 md:pt-12"
+        >
+          <div className="flex flex-col items-stretch gap-4 sm:items-start">
+            <p className="section-kicker">{aboutCopy.closingKicker}</p>
+            <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
+              <Button href={aboutCopy.vaultCta.href}>
+                {aboutCopy.vaultCta.label}
+              </Button>
+              <Button href={aboutCopy.contactCta.href} variant="secondary">
+                {aboutCopy.contactCta.label}
+              </Button>
+            </div>
           </div>
         </section>
       </PageContainer>

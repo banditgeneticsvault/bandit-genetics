@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
-import { VaultAtmosphere } from "@/components/home/VaultAtmosphere";
 import { brand, homeHero } from "@/content/site";
 import { hasArtworkSrc } from "@/lib/artwork";
 
@@ -11,9 +10,13 @@ export function HomeHero() {
 
   return (
     <section className="relative isolate min-h-[100dvh] overflow-hidden bg-black">
-      <VaultAtmosphere
-        softened={showArtwork}
-        background={homeHero.background}
+      <div
+        className="pointer-events-none absolute inset-0 vault-grate opacity-[0.06]"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_78%_18%,rgb(184_149_85_/_0.05),transparent_36%)]"
+        aria-hidden
       />
 
       <div className="page-gutter relative mx-auto flex min-h-[100dvh] max-w-[92rem] flex-col justify-start pt-28 pb-10 md:justify-center md:pt-32 md:pb-16">
@@ -25,7 +28,7 @@ export function HomeHero() {
             </h1>
             <p className="mt-8 max-w-md font-display text-[clamp(1.65rem,3.4vw,2.7rem)] leading-[1.05] text-gold">
               {firstLine}
-              <span className="mt-1 block text-gold-dim">{secondLine}</span>
+              <span className="mt-1 block">{secondLine}</span>
             </p>
             <p className="mt-6 max-w-sm text-copy leading-relaxed text-ice/75">
               {brand.shortStatement}
@@ -53,7 +56,7 @@ export function HomeHero() {
           ) : null}
         </div>
 
-        <p className="mt-14 font-label text-ui tracking-[0.18em] text-ice/45 md:mt-20">
+        <p className="mt-14 font-label text-ui tracking-[0.18em] text-gold md:mt-20">
           {brand.philosophy}
         </p>
       </div>

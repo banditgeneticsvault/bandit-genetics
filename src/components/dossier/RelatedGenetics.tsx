@@ -21,7 +21,7 @@ export function RelatedGenetics({ related }: RelatedGeneticsProps) {
             <li key={entry.item.id}>
               <Link
                 href={`/strain/${entry.item.slug}`}
-                className="block h-full border border-white/10 bg-charcoal px-4 py-5 transition-colors hover:border-ice/40"
+                className="block h-full border border-white/10 bg-charcoal px-4 py-5 transition-colors duration-300 hover:border-gold/45"
               >
                 <p className="font-label text-kicker tracking-[0.2em] text-gold uppercase">
                   {STRAIN_TYPE_LABELS[entry.item.type]}
@@ -33,7 +33,7 @@ export function RelatedGenetics({ related }: RelatedGeneticsProps) {
                   {entry.item.lineage}
                 </p>
                 <p className="mt-3 text-copy leading-relaxed text-ice/50">
-                  {entry.reasons.join(". ")}.
+                  {`${entry.reasons.map((reason) => reason.trim()).join(". ")}.`}
                 </p>
               </Link>
             </li>

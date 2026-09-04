@@ -4,11 +4,11 @@ import { cn } from "@/lib/cn";
 function SocialIcon({ id }: { id: SocialPlatformId }) {
   const common = {
     viewBox: "0 0 24 24",
-    width: 24,
-    height: 24,
+    width: 20,
+    height: 20,
     "aria-hidden": true as const,
     focusable: false as const,
-    className: "h-6 w-6 shrink-0",
+    className: "h-5 w-5 shrink-0",
   };
 
   switch (id) {
@@ -58,12 +58,12 @@ function SocialIcon({ id }: { id: SocialPlatformId }) {
 }
 
 const controlClassName =
-  "inline-flex h-11 w-11 items-center justify-center border border-white/12 text-gold transition-colors";
+  "inline-flex h-11 w-11 items-center justify-center border text-gold transition-colors duration-200";
 
 export function SocialLinks() {
   return (
     <nav aria-label="Social media">
-      <ul className="flex flex-wrap justify-start gap-2 lg:gap-3">
+      <ul className="flex flex-wrap justify-start gap-2 sm:gap-3">
         {socialPlatforms.map((platform) => (
           <li key={platform.id}>
             {platform.href ? (
@@ -74,24 +74,20 @@ export function SocialLinks() {
                 aria-label={platform.label}
                 className={cn(
                   controlClassName,
-                  "hover:border-gold hover:bg-gold/10 hover:text-frost focus-visible:border-gold",
+                  "border-white/12 hover:border-gold hover:bg-gold/10 hover:text-gold focus-visible:border-gold",
                 )}
               >
                 <SocialIcon id={platform.id} />
               </a>
             ) : (
               <span
-                aria-label={
-                  platform.id === "discord"
-                    ? "Discord (pending)"
-                    : `${platform.label} (not linked yet)`
-                }
-                title={
-                  platform.id === "discord"
-                    ? "Discord — pending"
-                    : `${platform.label} — not linked yet`
-                }
-                className={cn(controlClassName, "cursor-default")}
+                aria-disabled="true"
+                aria-label="Discord (pending)"
+                title="Discord — pending"
+                className={cn(
+                  controlClassName,
+                  "cursor-default border-white/8 text-gold/40",
+                )}
               >
                 <SocialIcon id={platform.id} />
               </span>

@@ -66,6 +66,7 @@ export const aboutCopy = {
     "The Vault is Bandit Genetics’ curated library of individual releases we are preserving, studying, and developing. It is meant to stay focused on purpose.",
     "Quality over quantity. Files worth hunting. Files worth keeping. The archive should grow when a release deserves a slot, not because a catalog looks empty without more names.",
   ],
+  closingKicker: "CONTINUE",
   vaultCta: { href: "/vault", label: "ENTER THE VAULT" },
-  contactCta: { href: "/contact", label: "CONTACT US" },
+  contactCta: { href: "/contact", label: "CONTACT BANDIT GENETICS" },
 } as const;

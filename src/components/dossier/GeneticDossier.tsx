@@ -70,19 +70,13 @@ export function GeneticDossier({ strain }: GeneticDossierProps) {
 
       <PageContainer width="wide" className="relative pt-28 pb-16 md:pt-36 md:pb-24">
         <header className="border-b border-white/10 pb-8">
-          <p className={dossierKickerClass}>
-            {dossierCopy.classified} · {dossierCopy.restricted}
-          </p>
-          <h1 className="mt-4 max-w-4xl font-display text-[clamp(2.6rem,8vw,5.8rem)] leading-[0.85] text-frost">
+          <h1 className="max-w-4xl font-display text-[clamp(2.6rem,8vw,5.8rem)] leading-[0.85] text-frost">
             {strain.name}
           </h1>
-          <p className="mt-4 font-label text-ui tracking-[0.16em] text-ice/55 uppercase">
+          <p className={cn("mt-4", dossierKickerClass)}>
             {STRAIN_TYPE_LABELS[strain.type]}
           </p>
-          <p className={cn("mt-5", dossierKickerClass)}>
-            {dossierCopy.parentsLineage}
-          </p>
-          <p className="mt-2 max-w-2xl font-label text-copy leading-relaxed tracking-[0.07em] text-ice uppercase">
+          <p className="mt-4 max-w-2xl font-label text-copy leading-relaxed tracking-[0.07em] text-ice uppercase">
             {parentOne.name} × {parentTwo.name}
           </p>
         </header>

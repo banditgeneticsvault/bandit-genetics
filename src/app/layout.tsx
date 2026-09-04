@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Barlow_Condensed, Cormorant_Garamond, Figtree } from "next/font/google";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
-import { brand } from "@/content/site";
+import { brand, homeHero } from "@/content/site";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -25,12 +25,33 @@ const figtree = Figtree({
   display: "swap",
 });
 
+const siteDescription = `${brand.sloganInline} ${brand.shortStatement}`;
+const ogImage = {
+  url: homeHero.artwork?.src ?? "/images/home/frost-queen-bandit.png",
+  width: homeHero.artwork?.width ?? 1254,
+  height: homeHero.artwork?.height ?? 1254,
+  alt: homeHero.artwork?.alt ?? "Frost Queen, the Bandit Genetics brand mark",
+};
+
 export const metadata: Metadata = {
   title: {
     default: brand.name,
     template: `%s · ${brand.name}`,
   },
-  description: `${brand.sloganInline} ${brand.shortStatement}`,
+  description: siteDescription,
+  openGraph: {
+    title: brand.name,
+    description: siteDescription,
+    siteName: brand.name,
+    type: "website",
+    images: [ogImage],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: brand.name,
+    description: siteDescription,
+    images: [ogImage.url],
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

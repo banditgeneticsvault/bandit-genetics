@@ -22,7 +22,8 @@ export default function ContactPage() {
 
       <PageContainer width="wide" className="relative pt-28 pb-20 md:pt-36 md:pb-28">
         <header className="mb-12 max-w-3xl">
-          <h1 className="font-display text-[clamp(2.4rem,7vw,5.2rem)] leading-[0.9] font-medium tracking-tight text-frost drop-shadow-[0_2px_16px_rgb(0_0_0_/_0.72)]">
+          <p className="section-kicker">{copy.kicker}</p>
+          <h1 className="mt-4 font-display text-[clamp(2.4rem,7vw,5.2rem)] leading-[0.9] font-medium tracking-tight text-frost drop-shadow-[0_2px_16px_rgb(0_0_0_/_0.72)]">
             {copy.title}
           </h1>
           <p className="mt-6 max-w-xl text-copy leading-relaxed text-ice drop-shadow-[0_2px_12px_rgb(0_0_0_/_0.7)]">

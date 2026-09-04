@@ -32,7 +32,7 @@ function Chip({
         "inline-flex min-h-11 items-center rounded-none border px-3 font-label text-ui tracking-[0.16em] uppercase",
         active
           ? "border-frost bg-frost text-black"
-          : "border-gunmetal text-ice hover:border-ice",
+          : "border-gunmetal text-ice hover:border-gold hover:text-gold",
       )}
     >
       {children}

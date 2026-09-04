@@ -25,7 +25,7 @@ export const socialPlatforms = [
     href: "https://www.instagram.com/banditgeneticsvault",
   },
   { id: "discord", label: "Discord", href: null },
-  { id: "facebook", label: "Facebook", href: null },
+  { id: "facebook", label: "Facebook", href: "https://www.facebook.com/banditgenetics" },
   { id: "x", label: "X", href: "https://x.com/banditgenetics" },
   {
     id: "reddit",
@@ -50,7 +50,7 @@ export const homeHero: {
   primaryCta: { href: string; label: string };
   /** Bandit Genetics Frost Queen brand artwork. */
   artwork?: StrainImage;
-  /** Existing atmospheric cannabis photograph for the homepage field. */
+  /** Atmospheric cannabis photograph used on the Contact page. */
   background?: StrainImage;
 } = {
   primaryCta: { href: "/vault", label: "ENTER THE VAULT" },

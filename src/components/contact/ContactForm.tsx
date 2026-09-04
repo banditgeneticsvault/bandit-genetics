@@ -205,7 +205,7 @@ function Field({
     <div className="grid gap-2">
       <label
         htmlFor={id}
-        className="font-label text-ui tracking-[0.22em] text-ice/70 uppercase"
+        className="font-label text-ui tracking-[0.22em] text-gold uppercase"
       >
         {label}
       </label>

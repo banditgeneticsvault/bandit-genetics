@@ -14,7 +14,7 @@ const variants: Record<ButtonVariant, string> = {
   primary:
     "border-frost bg-frost text-black hover:bg-ice hover:border-ice",
   secondary:
-    "border-gunmetal bg-transparent text-ice hover:border-ice hover:text-frost",
+    "border-gunmetal bg-transparent text-ice hover:border-gold hover:text-gold",
 };
 
 export function Button({
