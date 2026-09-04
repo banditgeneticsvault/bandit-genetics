@@ -49,6 +49,9 @@ export async function beginPendingOrder(input: {
     subtotalCents: input.subtotalCents,
     totalCents: input.subtotalCents,
     lines: linesFromResolved(input.lines),
+    paymentMethod: "card",
+    status: "pending",
+    paymentStatus: "unpaid",
   });
 }
 
@@ -81,35 +84,6 @@ async function persistStatus(
   return saved;
 }
 
-function asOrderStatus(value: string | undefined) {
-  if (
-    value === "pending" ||
-    value === "paid" ||
-    value === "payment_failed" ||
-    value === "cancelled"
-  ) {
-    return value;
-  }
-  return null;
-}
-
-function asPaymentStatus(status: ReturnType<typeof asOrderStatus>) {
-  if (status === "paid") return "paid" as const;
-  if (status === "payment_failed") return "failed" as const;
-  if (status === "cancelled") return "cancelled" as const;
-  return "unpaid" as const;
-}
-
-function pickStatus(
-  existing: Order["status"] | null | undefined,
-  meta: Order["status"] | null,
-): Order["status"] {
-  if (existing === "paid" || meta === "paid") return "paid";
-  if (existing) return existing;
-  if (meta) return meta;
-  return "pending";
-}
-
 function orderFromSession(
   session: Stripe.Checkout.Session,
   existing: Order | null,
@@ -118,7 +92,7 @@ function orderFromSession(
   const orderId = metadata?.orderId ?? existing?.id;
   if (!orderId) return existing;
   const snapshot = decodeOrderSnapshot(metadata);
-  const status = pickStatus(existing?.status, asOrderStatus(metadata?.orderStatus));
+  const status = existing?.status ?? "pending";
   const email =
     session.customer_details?.email ??
     session.customer_email ??
@@ -140,10 +114,11 @@ function orderFromSession(
       existing?.customerName ??
       "",
     status,
-    paymentStatus:
-      existing?.status === "paid" || status === "paid"
-        ? "paid"
-        : (existing?.paymentStatus ?? asPaymentStatus(status)),
+    paymentStatus: existing?.paymentStatus ?? "unpaid",
+    paymentMethod: existing?.paymentMethod ?? "card",
+    cryptocurrency: existing?.cryptocurrency ?? null,
+    receivingAddress: existing?.receivingAddress ?? null,
+    transactionHash: existing?.transactionHash ?? null,
     currency: "usd",
     subtotalCents: snapshot?.subtotalCents ?? existing?.subtotalCents ?? 0,
     totalCents: snapshot?.totalCents ?? existing?.totalCents ?? 0,

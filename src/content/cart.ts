@@ -33,12 +33,30 @@ export const cartCopy = {
   checkoutTitle: "CHECKOUT",
   checkoutKicker: "THE DESK",
   checkoutIntro:
-    "Review the strains on this ticket. Payment is not connected yet. This page will not take a card or complete a purchase.",
+    "Review the strains on this ticket. Card checkout is not connected yet. PAY LATER / PAY WITH CRYPTO is available. Submitting crypto does not mark the order paid.",
   checkoutIntroLive:
-    "Review the strains on this ticket. Continue to Stripe to pay. Card details stay on Stripe — they are never entered on this site.",
-  continueStripe: "CONTINUE TO STRIPE",
+    "Review the strains on this ticket. Pay by card on Stripe, or submit PAY LATER / PAY WITH CRYPTO. Card details stay on Stripe. Crypto is not marked paid until Bandit Genetics verifies it.",
+  continueStripe: "CHECKOUT WITH CARD",
+  checkoutWithCard: "CHECKOUT WITH CARD",
+  payLaterCrypto: "PAY LATER / PAY WITH CRYPTO",
+  cryptoNote:
+    "This is not financing and not credit. You submit the order unpaid, then send cryptocurrency to the Bandit Genetics receiving address shown for the network you select.",
+  cryptoVerifyNote:
+    "CRYPTO PAYMENT VERIFICATION IS MANUAL. A transaction hash is optional customer information only. It does not mark the order paid.",
+  cryptoAmountNote:
+    "The amount due is the USD order total from this ticket. This site does not convert USD into BTC, ETH, or SOL. Confirm the crypto amount through Bandit Genetics payment instructions before sending.",
+  invalidCrypto: "Choose Bitcoin, Ethereum, or Solana.",
+  cryptoSubmitted: "ORDER SUBMITTED",
+  cryptoPaymentRequired: "PAYMENT REQUIRED",
+  cryptoUnpaid:
+    "Payment has not been verified. This order is unpaid.",
+  cryptoVerified:
+    "Bandit Genetics marked this order paid after manual verification.",
+  cryptoHashLabel: "Transaction hash (optional)",
+  cryptoCopy: "COPY ADDRESS",
+  cryptoCopied: "COPIED",
   stripeAddressNote:
-    "Delivery address is collected on Stripe Checkout. Shipping rates are not configured, so no shipping charge is added.",
+    "For card checkout, delivery address is collected on Stripe Checkout. Shipping rates are not configured, so no shipping charge is added.",
   cancelledCheckout:
     "Checkout was not completed. Nothing was charged. Your cart is still here.",
   invalidItems:

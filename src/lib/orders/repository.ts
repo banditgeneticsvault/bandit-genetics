@@ -22,7 +22,12 @@ async function readStore(): Promise<StoreFile> {
     const parsed = JSON.parse(raw) as StoreFile;
     if (!parsed || typeof parsed !== "object") return { ...EMPTY };
     return {
-      orders: parsed.orders ?? {},
+      orders: Object.fromEntries(
+        Object.entries(parsed.orders ?? {}).map(([id, order]) => [
+          id,
+          hydrateOrder(order),
+        ]),
+      ),
       events: parsed.events ?? {},
     };
   } catch {
@@ -48,6 +53,16 @@ function nowIso() {
   return new Date().toISOString();
 }
 
+function hydrateOrder(order: Order): Order {
+  return {
+    ...order,
+    paymentMethod: order.paymentMethod === "crypto" ? "crypto" : "card",
+    cryptocurrency: order.cryptocurrency ?? null,
+    receivingAddress: order.receivingAddress ?? null,
+    transactionHash: order.transactionHash ?? null,
+  };
+}
+
 export function createOrderId() {
   return `bg_${randomUUID()}`;
 }
@@ -60,8 +75,12 @@ export async function createPendingOrder(input: NewOrderInput): Promise<Order> {
     stripePaymentIntentId: null,
     customerEmail: input.customerEmail,
     customerName: input.customerName,
-    status: "pending",
-    paymentStatus: "unpaid",
+    paymentMethod: input.paymentMethod ?? "card",
+    cryptocurrency: input.cryptocurrency ?? null,
+    receivingAddress: input.receivingAddress ?? null,
+    transactionHash: input.transactionHash ?? null,
+    status: input.status ?? "pending",
+    paymentStatus: input.paymentStatus ?? "unpaid",
     currency: "usd",
     subtotalCents: input.subtotalCents,
     totalCents: input.totalCents,
@@ -82,6 +101,12 @@ export async function saveOrder(order: Order): Promise<Order> {
   store.orders[next.id] = next;
   await writeStore(store);
   return next;
+}
+
+export function isInternalOrderId(value: string) {
+  return /^bg_[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+    value,
+  );
 }
 
 export async function getOrderById(id: string): Promise<Order | null> {

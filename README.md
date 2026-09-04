@@ -20,7 +20,9 @@ Copy `.env.example` to `.env.local` and set:
 - `STRIPE_WEBHOOK_SECRET` — webhook signing secret (`whsec_...`). Server-only.
 - `NEXT_PUBLIC_SITE_URL` — public origin, for example `http://localhost:3000` locally or `https://www.banditgenetics.com` in production.
 
-If `STRIPE_SECRET_KEY` is missing, checkout stays in the existing payment-disabled state and no Checkout Session is created.
+If `STRIPE_SECRET_KEY` is missing, checkout still loads. The cart still works. **CHECKOUT WITH CARD** stays visible when the cart has items, but it is disabled and the page explains that card processing is unavailable. **PAY LATER / PAY WITH CRYPTO** remains available.
+
+The checkout button submits the existing cart to the `startCheckout` server action. Card checkout creates an internal pending order and a Stripe Checkout Session, then redirects to Stripe-hosted Checkout. Crypto checkout creates an unpaid internal order and shows receiving-address instructions. Crypto verification is manual. Website email sending is not configured.
 
 ### Local webhook forwarding (optional)
 

@@ -1,5 +1,7 @@
 export const ORDER_STATUSES = [
   "pending",
+  "pending_payment",
+  "payment_submitted",
   "paid",
   "payment_failed",
   "cancelled",
@@ -15,6 +17,12 @@ export const PAYMENT_STATUSES = [
 ] as const;
 
 export type OrderPaymentStatus = (typeof PAYMENT_STATUSES)[number];
+
+export const PAYMENT_METHODS = ["card", "crypto"] as const;
+
+export type PaymentMethod = (typeof PAYMENT_METHODS)[number];
+
+export type CryptoAssetId = "btc" | "eth" | "sol";
 
 export type OrderLine = {
   productId: string;
@@ -34,6 +42,10 @@ export type Order = {
   stripePaymentIntentId: string | null;
   customerEmail: string;
   customerName: string;
+  paymentMethod: PaymentMethod;
+  cryptocurrency: CryptoAssetId | null;
+  receivingAddress: string | null;
+  transactionHash: string | null;
   status: OrderStatus;
   paymentStatus: OrderPaymentStatus;
   currency: "usd";
@@ -51,4 +63,10 @@ export type NewOrderInput = {
   subtotalCents: number;
   totalCents: number;
   lines: OrderLine[];
+  paymentMethod?: PaymentMethod;
+  cryptocurrency?: CryptoAssetId | null;
+  receivingAddress?: string | null;
+  transactionHash?: string | null;
+  status?: OrderStatus;
+  paymentStatus?: OrderPaymentStatus;
 };

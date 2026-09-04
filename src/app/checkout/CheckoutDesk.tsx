@@ -3,6 +3,7 @@
 import { useActionState, useId, useState, type FormEvent, type HTMLAttributes } from "react";
 import { useSearchParams } from "next/navigation";
 import { startCheckout } from "@/app/checkout/actions";
+import { CopyAddress } from "@/app/checkout/crypto/CopyAddress";
 import { CartLineVisual } from "@/components/cart/CartLineVisual";
 import { PaymentUnavailableNotice } from "@/components/cart/PaymentUnavailableNotice";
 import { QuantityStepper } from "@/components/cart/QuantityStepper";
@@ -17,6 +18,7 @@ import {
   parseCheckout,
   type CheckoutFieldErrors,
 } from "@/lib/checkout";
+import { CRYPTO_WALLETS, type CryptoAsset } from "@/lib/crypto/wallets";
 import { cn } from "@/lib/cn";
 
 const fieldClassName =
@@ -33,19 +35,36 @@ export function CheckoutDesk({ paymentEnabled }: { paymentEnabled: boolean }) {
     initialCheckoutState,
   );
   const [clientErrors, setClientErrors] = useState<CheckoutFieldErrors>({});
+  const [asset, setAsset] = useState<CryptoAsset | "">("");
   const formId = useId();
   const fieldErrors = pending
     ? {}
     : Object.keys(clientErrors).length > 0
       ? clientErrors
       : (state?.fieldErrors ?? {});
-  const paymentOff =
+  const cardUnavailable =
     !paymentEnabled || (!pending && state?.status === "payment_unavailable");
   const showError =
     !pending && state?.status === "error" && Object.keys(fieldErrors).length === 0;
+  const selectedWallet = asset ? CRYPTO_WALLETS[asset] : null;
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     const form = event.currentTarget;
+    const native = event.nativeEvent as SubmitEvent;
+    const submitter = native.submitter;
+    const intent =
+      submitter instanceof HTMLButtonElement ? submitter.value : "";
+
+    if (intent === "card" && cardUnavailable) {
+      event.preventDefault();
+      return;
+    }
+    if (intent === "crypto" && !asset) {
+      event.preventDefault();
+      setClientErrors({ cryptocurrency: cartCopy.invalidCrypto });
+      return;
+    }
+
     const parsed = parseCheckout(
       {
         name: String(new FormData(form).get("name") ?? ""),
@@ -88,7 +107,7 @@ export function CheckoutDesk({ paymentEnabled }: { paymentEnabled: boolean }) {
   }
 
   return (
-    <div className="grid gap-10 lg:grid-cols-12">
+    <div className="grid gap-10 pb-40 lg:grid-cols-12 lg:pb-0">
       <section className="lg:col-span-7" aria-labelledby={`${formId}-summary`}>
         <p className="section-kicker">{cartCopy.summary}</p>
         <h2
@@ -147,10 +166,11 @@ export function CheckoutDesk({ paymentEnabled }: { paymentEnabled: boolean }) {
       </section>
 
       <form
+        id="checkout-form"
         action={formAction}
         onSubmit={handleSubmit}
         noValidate
-        className="border border-white/10 bg-charcoal/95 lg:col-span-5"
+        className="border border-white/10 bg-charcoal/95 lg:col-span-5 lg:sticky lg:top-28 lg:self-start"
       >
         <div className="grid gap-6 px-5 py-6 md:px-7 md:py-8">
           <input type="hidden" name="items" value={JSON.stringify(lines)} />
@@ -191,42 +211,131 @@ export function CheckoutDesk({ paymentEnabled }: { paymentEnabled: boolean }) {
 
           <div className="border-t border-white/10 pt-6">
             <p className="section-kicker">{cartCopy.payment}</p>
-            <div className="mt-3">
-              {paymentEnabled ? (
+            <div className="mt-3 grid gap-3">
+              {cardUnavailable ? (
+                <div id="checkout-payment-unavailable">
+                  <PaymentUnavailableNotice />
+                </div>
+              ) : (
                 <p className="text-copy text-ice/80">
                   Card details are entered on Stripe Checkout. This site never
-                  handles raw card numbers.
+                  handles raw card numbers. Visa, Mastercard, American Express,
+                  and Discover appear when Stripe makes them available on the
+                  connected account.
                 </p>
-              ) : (
-                <PaymentUnavailableNotice />
               )}
+              <p className="text-copy text-ice/80">{cartCopy.cryptoNote}</p>
+              <p className="text-copy text-ice/80">{cartCopy.cryptoAmountNote}</p>
+              <fieldset>
+                <legend className="font-label text-ui tracking-[0.22em] text-gold uppercase">
+                  Cryptocurrency
+                </legend>
+                <div className="mt-3 grid gap-2">
+                  {(Object.values(CRYPTO_WALLETS) as Array<(typeof CRYPTO_WALLETS)[CryptoAsset]>).map(
+                    (wallet) => {
+                      const active = asset === wallet.id;
+                      return (
+                        <label
+                          key={wallet.id}
+                          className={cn(
+                            "flex min-h-11 cursor-pointer items-center border px-3 py-3 font-label text-ui tracking-[0.14em] uppercase",
+                            active
+                              ? "border-frost bg-frost text-black"
+                              : "border-gunmetal text-ice hover:border-gold hover:text-gold",
+                          )}
+                        >
+                          <input
+                            type="radio"
+                            name="cryptocurrency"
+                            value={wallet.id}
+                            checked={active}
+                            onChange={() => setAsset(wallet.id)}
+                            className="sr-only"
+                          />
+                          {wallet.label}
+                        </label>
+                      );
+                    },
+                  )}
+                </div>
+              </fieldset>
+              {fieldErrors.cryptocurrency ? (
+                <p role="alert" className="text-copy text-gold">
+                  {fieldErrors.cryptocurrency}
+                </p>
+              ) : null}
+              {selectedWallet ? (
+                <div className="grid gap-3 border border-white/10 px-4 py-4">
+                  <p className="font-label text-ui tracking-[0.18em] text-gold uppercase">
+                    {selectedWallet.label}
+                  </p>
+                  <CopyAddress value={selectedWallet.address} />
+                </div>
+              ) : null}
+              <p className="text-copy text-ice/70">{cartCopy.cryptoVerifyNote}</p>
+              <Field
+                id={`${formId}-hash`}
+                name="transactionHash"
+                label={cartCopy.cryptoHashLabel}
+                maxLength={128}
+                disabled={pending}
+              />
             </div>
           </div>
 
-          {paymentOff && paymentEnabled ? (
-            <div role="status" className="border border-white/10 px-4 py-3">
-              <PaymentUnavailableNotice />
-            </div>
-          ) : null}
           {showError ? (
             <p role="alert" className="border border-white/10 px-4 py-3 text-copy text-gold">
               {cartCopy.network}
             </p>
           ) : null}
 
-          <button
+          <Button
             type="submit"
-            disabled={pending}
-            className="inline-flex min-h-12 w-full items-center justify-center border border-frost px-6 font-label text-ui tracking-[0.22em] text-frost uppercase hover:bg-frost hover:text-black disabled:cursor-wait disabled:opacity-60"
+            name="intent"
+            value="card"
+            disabled={pending || cardUnavailable}
+            aria-describedby={
+              cardUnavailable ? "checkout-payment-unavailable" : undefined
+            }
+            className="w-full sm:w-full"
           >
-            {pending
-              ? "CHECKING"
-              : paymentEnabled
-                ? cartCopy.continueStripe
-                : "CONTINUE"}
-          </button>
+            {pending ? "CHECKING" : cartCopy.checkoutWithCard}
+          </Button>
+          <Button
+            type="submit"
+            name="intent"
+            value="crypto"
+            variant="secondary"
+            disabled={pending}
+            className="w-full sm:w-full"
+          >
+            {pending ? "CHECKING" : cartCopy.payLaterCrypto}
+          </Button>
         </div>
       </form>
+      <div className="fixed inset-x-0 bottom-0 z-30 grid gap-2 border-t border-white/10 bg-black/95 p-4 lg:hidden">
+        <Button
+          type="submit"
+          form="checkout-form"
+          name="intent"
+          value="card"
+          disabled={pending || cardUnavailable}
+          className="w-full sm:w-full"
+        >
+          {pending ? "CHECKING" : cartCopy.checkoutWithCard}
+        </Button>
+        <Button
+          type="submit"
+          form="checkout-form"
+          name="intent"
+          value="crypto"
+          variant="secondary"
+          disabled={pending}
+          className="w-full sm:w-full"
+        >
+          {pending ? "CHECKING" : cartCopy.payLaterCrypto}
+        </Button>
+      </div>
     </div>
   );
 }

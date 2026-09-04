@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import { CheckoutDesk } from "@/app/checkout/CheckoutDesk";
-import { PaymentUnavailableNotice } from "@/components/cart/PaymentUnavailableNotice";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { cartCopy } from "@/content/cart";
 import { siteUrl } from "@/content/site";
@@ -40,11 +39,6 @@ export default function CheckoutPage() {
         <Suspense fallback={<p className="text-copy text-ice/60">Loading checkout.</p>}>
           <CheckoutDesk paymentEnabled={paymentEnabled} />
         </Suspense>
-        {!paymentEnabled ? (
-          <div className="mt-10 max-w-3xl border border-white/10 bg-charcoal px-5 py-6">
-            <PaymentUnavailableNotice />
-          </div>
-        ) : null}
       </PageContainer>
     </main>
   );

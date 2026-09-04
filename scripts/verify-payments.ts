@@ -3,7 +3,12 @@ import {
   parseCheckoutCartPayload,
   validateCheckoutCart,
 } from "../src/lib/checkout-cart.ts";
-import { parseCheckout } from "../src/lib/checkout.ts";
+import { parseCheckout, parseCheckoutIntent } from "../src/lib/checkout.ts";
+import {
+  cryptoStatusForHash,
+  sanitizeTransactionHash,
+} from "../src/lib/crypto/hash.ts";
+import { CRYPTO_WALLETS, isCryptoAsset } from "../src/lib/crypto/wallets.ts";
 
 function assert(condition: unknown, message: string) {
   if (!condition) {
@@ -123,5 +128,22 @@ assert(
   ) === "invalid_quantity",
   "quantity 0",
 );
+
+assert(CRYPTO_WALLETS.btc.address === "3Ni45Pm2qdbBmbDnCuykzCbeXo4EYRFquz", "btc address");
+assert(
+  CRYPTO_WALLETS.eth.address === "0xA3AfF13287dA2cf900208D401149e7EaE2CF8684",
+  "eth address",
+);
+assert(
+  CRYPTO_WALLETS.sol.address === "Aj2poturfv7Pr9pEzuz6xC2HNfPnVcaxD1mvNcf6MnzH",
+  "sol address",
+);
+assert(!isCryptoAsset("doge"), "unsupported crypto");
+assert(parseCheckoutIntent("crypto") === "crypto", "crypto intent");
+assert(parseCheckoutIntent("wire") === null, "invalid intent");
+assert(sanitizeTransactionHash("abc123") === "abc123", "hash keep");
+assert(cryptoStatusForHash("abc123").paymentStatus === "unpaid", "hash unpaid");
+assert(cryptoStatusForHash("abc123").status === "payment_submitted", "hash submitted");
+assert(cryptoStatusForHash(null).status === "pending_payment", "no hash pending");
 
 console.log("checkout validation checks passed");

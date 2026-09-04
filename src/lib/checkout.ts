@@ -19,6 +19,7 @@ export type CheckoutFieldErrors = Partial<{
   name: string;
   email: string;
   items: string;
+  cryptocurrency: string;
 }>;
 
 export type CheckoutParseMessages = {
@@ -26,6 +27,7 @@ export type CheckoutParseMessages = {
   invalidEmail: string;
   emptyCart: string;
   invalidItems: string;
+  invalidCrypto?: string;
 };
 
 export type CheckoutSnapshot = {
@@ -44,6 +46,11 @@ export const initialCheckoutState: CheckoutFormState = {
   status: "idle",
   fieldErrors: {},
 };
+
+export function parseCheckoutIntent(value: unknown): "card" | "crypto" | null {
+  if (value === "card" || value === "crypto") return value;
+  return null;
+}
 
 export function parseCheckout(
   input: Record<string, unknown>,

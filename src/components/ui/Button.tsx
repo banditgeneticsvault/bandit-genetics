@@ -24,7 +24,11 @@ type NativeButtonProps = SharedProps & {
   type?: "button" | "submit";
   onClick?: () => void;
   disabled?: boolean;
+  form?: string;
+  name?: string;
+  value?: string;
   "aria-label"?: string;
+  "aria-describedby"?: string;
 };
 
 type ButtonProps = LinkButtonProps | NativeButtonProps;
@@ -62,7 +66,11 @@ export function Button(props: ButtonProps) {
       type={native.type ?? "button"}
       disabled={native.disabled}
       onClick={native.onClick}
+      form={native.form}
+      name={native.name}
+      value={native.value}
       aria-label={native["aria-label"]}
+      aria-describedby={native["aria-describedby"]}
       className={classes}
     >
       {children}

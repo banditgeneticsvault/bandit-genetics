@@ -79,6 +79,7 @@ export async function createCheckout(
         shipping_address_collection: {
           allowed_countries: [...STRIPE_SHIPPING_COUNTRIES],
         },
+        payment_method_types: ["card"],
         line_items: stripeLineItems(cart.lines),
         success_url: redirects.success_url,
         cancel_url: redirects.cancel_url,
