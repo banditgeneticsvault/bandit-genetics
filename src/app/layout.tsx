@@ -3,7 +3,9 @@ import { Barlow_Condensed, Cormorant_Garamond, Figtree } from "next/font/google"
 import { AppProviders } from "@/components/layout/AppProviders";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
-import { brand, homeHero, siteUrl } from "@/content/site";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { brand, seoCopy, siteUrl } from "@/content/site";
+import { brandOgImage, organizationGraph } from "@/lib/seo";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -26,13 +28,8 @@ const figtree = Figtree({
   display: "swap",
 });
 
-const siteDescription = `${brand.sloganInline} ${brand.shortStatement}`;
-const ogImage = {
-  url: homeHero.artwork?.src ?? "/images/home/frost-queen-bandit.png",
-  width: homeHero.artwork?.width ?? 1254,
-  height: homeHero.artwork?.height ?? 1254,
-  alt: homeHero.artwork?.alt ?? "Frost Queen, the Bandit Genetics brand mark",
-};
+const siteDescription = seoCopy.homeDescription;
+const ogImage = brandOgImage();
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -41,14 +38,24 @@ export const metadata: Metadata = {
     template: `%s · ${brand.name}`,
   },
   description: siteDescription,
-  alternates: {
-    canonical: "/",
+  icons: {
+    icon: [
+      {
+        url: "/bandit-genetics-favicon.png",
+        type: "image/png",
+        sizes: "512x512",
+      },
+      {
+        url: "/favicon.ico",
+        type: "image/x-icon",
+        sizes: "48x48",
+      },
+    ],
   },
   openGraph: {
     title: brand.name,
     description: siteDescription,
     siteName: brand.name,
-    url: "/",
     locale: "en_US",
     type: "website",
     images: [ogImage],
@@ -74,6 +81,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Skip to content
         </a>
+        <JsonLd data={organizationGraph()} />
         <AppProviders>
           <SiteHeader />
           <div id="content" className="flex-1">

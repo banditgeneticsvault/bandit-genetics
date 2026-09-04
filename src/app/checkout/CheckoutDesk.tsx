@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useId, useState, type FormEvent, type HTMLAttributes } from "react";
+import { useSearchParams } from "next/navigation";
 import { startCheckout } from "@/app/checkout/actions";
 import { CartLineVisual } from "@/components/cart/CartLineVisual";
 import { PaymentUnavailableNotice } from "@/components/cart/PaymentUnavailableNotice";
@@ -21,10 +22,12 @@ import { cn } from "@/lib/cn";
 const fieldClassName =
   "min-h-12 w-full rounded-none border border-white/12 bg-black/55 px-3 py-3 font-sans text-copy text-frost outline-none placeholder:text-ice/35 focus-visible:border-gold";
 
-export function CheckoutDesk() {
+export function CheckoutDesk({ paymentEnabled }: { paymentEnabled: boolean }) {
   const { lines, setSeedTier, setLineQuantity, remove, ready } = useCart();
   const resolved = resolveCart(lines);
   const subtotal = cartSubtotalCents(resolved);
+  const searchParams = useSearchParams();
+  const cancelled = searchParams.get("checkout") === "cancelled";
   const [state, formAction, pending] = useActionState(
     startCheckout,
     initialCheckoutState,
@@ -36,7 +39,8 @@ export function CheckoutDesk() {
     : Object.keys(clientErrors).length > 0
       ? clientErrors
       : (state?.fieldErrors ?? {});
-  const paymentOff = !pending && state?.status === "payment_unavailable";
+  const paymentOff =
+    !paymentEnabled || (!pending && state?.status === "payment_unavailable");
   const showError =
     !pending && state?.status === "error" && Object.keys(fieldErrors).length === 0;
 
@@ -46,17 +50,13 @@ export function CheckoutDesk() {
       {
         name: String(new FormData(form).get("name") ?? ""),
         email: String(new FormData(form).get("email") ?? ""),
-        line1: String(new FormData(form).get("line1") ?? ""),
-        city: String(new FormData(form).get("city") ?? ""),
-        region: String(new FormData(form).get("region") ?? ""),
-        postal: String(new FormData(form).get("postal") ?? ""),
-        country: String(new FormData(form).get("country") ?? ""),
         items: JSON.stringify(lines),
       },
       {
         required: cartCopy.required,
         invalidEmail: cartCopy.invalidEmail,
         emptyCart: cartCopy.emptyCart,
+        invalidItems: cartCopy.invalidItems,
       },
     );
     if (!parsed.ok) {
@@ -154,7 +154,13 @@ export function CheckoutDesk() {
       >
         <div className="grid gap-6 px-5 py-6 md:px-7 md:py-8">
           <input type="hidden" name="items" value={JSON.stringify(lines)} />
+          {cancelled ? (
+            <p role="status" className="border border-white/10 px-4 py-3 text-copy text-ice/80">
+              {cartCopy.cancelledCheckout}
+            </p>
+          ) : null}
           <p className="section-kicker">{cartCopy.shipping}</p>
+          <p className="text-copy text-ice/70">{cartCopy.stripeAddressNote}</p>
           <Field
             id={`${formId}-name`}
             name="name"
@@ -177,56 +183,6 @@ export function CheckoutDesk() {
             disabled={pending}
             required
           />
-          <Field
-            id={`${formId}-line1`}
-            name="line1"
-            label={cartCopy.line1}
-            autoComplete="address-line1"
-            maxLength={CHECKOUT_LIMITS.line1}
-            error={fieldErrors.line1}
-            disabled={pending}
-            required
-          />
-          <Field
-            id={`${formId}-city`}
-            name="city"
-            label={cartCopy.city}
-            autoComplete="address-level2"
-            maxLength={CHECKOUT_LIMITS.city}
-            error={fieldErrors.city}
-            disabled={pending}
-            required
-          />
-          <Field
-            id={`${formId}-region`}
-            name="region"
-            label={cartCopy.region}
-            autoComplete="address-level1"
-            maxLength={CHECKOUT_LIMITS.region}
-            error={fieldErrors.region}
-            disabled={pending}
-            required
-          />
-          <Field
-            id={`${formId}-postal`}
-            name="postal"
-            label={cartCopy.postal}
-            autoComplete="postal-code"
-            maxLength={CHECKOUT_LIMITS.postal}
-            error={fieldErrors.postal}
-            disabled={pending}
-            required
-          />
-          <Field
-            id={`${formId}-country`}
-            name="country"
-            label={cartCopy.country}
-            autoComplete="country-name"
-            maxLength={CHECKOUT_LIMITS.country}
-            error={fieldErrors.country}
-            disabled={pending}
-            required
-          />
           {fieldErrors.items ? (
             <p role="alert" className="text-copy text-gold">
               {fieldErrors.items}
@@ -236,11 +192,18 @@ export function CheckoutDesk() {
           <div className="border-t border-white/10 pt-6">
             <p className="section-kicker">{cartCopy.payment}</p>
             <div className="mt-3">
-              <PaymentUnavailableNotice />
+              {paymentEnabled ? (
+                <p className="text-copy text-ice/80">
+                  Card details are entered on Stripe Checkout. This site never
+                  handles raw card numbers.
+                </p>
+              ) : (
+                <PaymentUnavailableNotice />
+              )}
             </div>
           </div>
 
-          {paymentOff ? (
+          {paymentOff && paymentEnabled ? (
             <div role="status" className="border border-white/10 px-4 py-3">
               <PaymentUnavailableNotice />
             </div>
@@ -256,7 +219,11 @@ export function CheckoutDesk() {
             disabled={pending}
             className="inline-flex min-h-12 w-full items-center justify-center border border-frost px-6 font-label text-ui tracking-[0.22em] text-frost uppercase hover:bg-frost hover:text-black disabled:cursor-wait disabled:opacity-60"
           >
-            {pending ? "CHECKING" : "CONTINUE"}
+            {pending
+              ? "CHECKING"
+              : paymentEnabled
+                ? cartCopy.continueStripe
+                : "CONTINUE"}
           </button>
         </div>
       </form>

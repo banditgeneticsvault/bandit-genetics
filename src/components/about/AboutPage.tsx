@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/Button";
 import { PageContainer } from "@/components/layout/PageContainer";
+import { SiteBreadcrumb } from "@/components/seo/SiteBreadcrumb";
 import { aboutCopy } from "@/content/about";
 
 function Atmosphere() {
@@ -44,6 +45,12 @@ export function AboutPage() {
         width="wide"
         className="relative pt-28 pb-20 md:pt-36 md:pb-28"
       >
+        <SiteBreadcrumb
+          items={[
+            { name: "Home", href: "/" },
+            { name: "About" },
+          ]}
+        />
         <header className="grid grid-cols-1 gap-x-12 gap-y-0 border-b border-white/10 pb-10 md:pb-12 lg:grid-cols-2 lg:grid-rows-[auto_auto_auto] lg:items-start lg:gap-y-3">
           <Kicker>{aboutCopy.kicker}</Kicker>
           <h1 className="mt-3 font-display text-[clamp(2.6rem,8vw,5.6rem)] leading-[0.86] text-frost lg:col-start-1 lg:row-start-2 lg:mt-0">

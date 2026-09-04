@@ -9,6 +9,7 @@ import { RelatedGenetics } from "@/components/dossier/RelatedGenetics";
 import { StrainMedia } from "@/components/vault/StrainMedia";
 import { Button } from "@/components/ui/Button";
 import { PageContainer } from "@/components/layout/PageContainer";
+import { SiteBreadcrumb } from "@/components/seo/SiteBreadcrumb";
 import { dossierCopy } from "@/content/dossier";
 import { getParentById, getRelatedStrains } from "@/data/genetics";
 import { STRAIN_TYPE_LABELS, type StrainRecord } from "@/data/genetics/types";
@@ -72,6 +73,13 @@ export function GeneticDossier({ strain }: GeneticDossierProps) {
       />
 
       <PageContainer width="wide" className="relative pt-28 pb-16 md:pt-36 md:pb-24">
+        <SiteBreadcrumb
+          items={[
+            { name: "Home", href: "/" },
+            { name: "The Vault", href: "/vault" },
+            { name: strain.name },
+          ]}
+        />
         <header className="border-b border-white/10 pb-8">
           <h1 className="max-w-4xl font-display text-[clamp(2.6rem,8vw,5.8rem)] leading-[0.85] text-frost">
             {strain.name}

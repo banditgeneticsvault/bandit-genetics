@@ -2,16 +2,20 @@ import { ContactForm } from "@/components/contact/ContactForm";
 import { VaultAtmosphere } from "@/components/home/VaultAtmosphere";
 import { OrderEmailLink } from "@/components/layout/OrderEmailLink";
 import { PageContainer } from "@/components/layout/PageContainer";
-import { homeHero, pageCopy } from "@/content/site";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { SiteBreadcrumb } from "@/components/seo/SiteBreadcrumb";
+import { homeHero, pageCopy, seoCopy } from "@/content/site";
 import { getStrainBySlug } from "@/data/genetics";
+import { contactBreadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
 const copy = pageCopy.contact;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Contact",
-  description: copy.body,
-};
+  description: seoCopy.contactDescription,
+  path: "/contact",
+});
 
 type ContactPageProps = {
   searchParams: Promise<{ strain?: string | string[] }>;
@@ -25,6 +29,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
 
   return (
     <main className="relative isolate min-h-[100dvh] overflow-x-clip bg-black">
+      <JsonLd data={contactBreadcrumbJsonLd()} />
       <VaultAtmosphere
         softened
         tone="page"
@@ -32,6 +37,12 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
       />
 
       <PageContainer width="wide" className="relative pt-28 pb-20 md:pt-36 md:pb-28">
+        <SiteBreadcrumb
+          items={[
+            { name: "Home", href: "/" },
+            { name: "Contact" },
+          ]}
+        />
         <header className="mb-12 max-w-3xl">
           <p className="section-kicker">{copy.kicker}</p>
           <h1 className="mt-4 font-display text-[clamp(2.4rem,7vw,5.2rem)] leading-[0.9] font-medium tracking-tight text-frost drop-shadow-[0_2px_16px_rgb(0_0_0_/_0.72)]">

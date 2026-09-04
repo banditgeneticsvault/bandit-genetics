@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { GeneticDossier } from "@/components/dossier/GeneticDossier";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { getStrainBySlug, getStrainSlugs } from "@/data/genetics";
+import { strainJsonLd, strainPageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
 type StrainPageProps = PageProps<"/strain/[slug]">;
@@ -15,12 +17,9 @@ export async function generateMetadata({
   const { slug } = await params;
   const strain = getStrainBySlug(slug);
   if (!strain) {
-    return { title: "File missing" };
+    return { title: "File missing", robots: { index: false, follow: false } };
   }
-  return {
-    title: strain.seoTitle,
-    description: strain.seoDescription,
-  };
+  return strainPageMetadata(strain);
 }
 
 export default async function StrainPage({ params }: StrainPageProps) {
@@ -30,6 +29,7 @@ export default async function StrainPage({ params }: StrainPageProps) {
 
   return (
     <main>
+      <JsonLd data={strainJsonLd(strain)} />
       <GeneticDossier strain={strain} />
     </main>
   );

@@ -1,12 +1,20 @@
 import { AboutPage } from "@/components/about/AboutPage";
-import { aboutCopy } from "@/content/about";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { seoCopy } from "@/content/site";
+import { aboutBreadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "About",
-  description: `${aboutCopy.slogan} ${aboutCopy.opening[0]}`,
-};
+  description: seoCopy.aboutDescription,
+  path: "/about",
+});
 
 export default function About() {
-  return <AboutPage />;
+  return (
+    <>
+      <JsonLd data={aboutBreadcrumbJsonLd()} />
+      <AboutPage />
+    </>
+  );
 }

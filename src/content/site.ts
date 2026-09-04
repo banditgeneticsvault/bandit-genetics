@@ -126,3 +126,17 @@ export const pageCopy = {
     honeypotLabel: "Leave this field blank",
   },
 } as const;
+
+/** Search metadata composed from existing brand and page copy. Not a second catalog. */
+export const seoCopy = {
+  homeTitle: "Bandit Genetics · Cannabis Genetics",
+  homeDescription:
+    "Bandit Genetics is a cannabis genetics and seed brand. Taken from the best. Bred for the rest. The Vault is a curated collection of named cultivars — fewer strains, higher standards.",
+  homeIdentity: "Bandit Genetics is a cannabis genetics and seed brand.",
+  vaultDescription:
+    "The Vault is Bandit Genetics’ curated library of cannabis genetics. Twelve named Bandit cultivars. Lineage stays accurate. The keeper hunt comes later. Fewer strains. Higher standards.",
+  aboutDescription:
+    "Bandit Genetics is a cannabis genetics and seed brand. An underground luxury operation built around finding exceptional genetics, studying them, and breeding with restraint. Taken from the best. Bred for the rest.",
+  contactDescription:
+    "Contact Bandit Genetics about genetics, releases, The Vault, or a custom bulk order. Email banditgeneticsvault@proton.me. The website form cannot deliver mail yet.",
+} as const;

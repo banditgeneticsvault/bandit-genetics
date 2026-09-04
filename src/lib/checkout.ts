@@ -1,26 +1,23 @@
-import { CHECKOUT_LIMITS, parseCartPayload, resolveCart, type ResolvedCartLine } from "@/lib/cart";
+import { CHECKOUT_LIMITS } from "@/lib/cart";
+import {
+  checkoutCartMessage,
+  parseCheckoutCartPayload,
+  validateCheckoutCart,
+  type CheckoutCartError,
+} from "@/lib/checkout-cart";
 import type { CartLine } from "@/data/order";
+import type { ResolvedCartLine } from "@/lib/cart";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export type CheckoutCustomer = {
   name: string;
   email: string;
-  line1: string;
-  city: string;
-  region: string;
-  postal: string;
-  country: string;
 };
 
 export type CheckoutFieldErrors = Partial<{
   name: string;
   email: string;
-  line1: string;
-  city: string;
-  region: string;
-  postal: string;
-  country: string;
   items: string;
 }>;
 
@@ -28,12 +25,14 @@ export type CheckoutParseMessages = {
   required: string;
   invalidEmail: string;
   emptyCart: string;
+  invalidItems: string;
 };
 
 export type CheckoutSnapshot = {
   customer: CheckoutCustomer;
   lines: ResolvedCartLine[];
-  subtotalCents?: number;
+  subtotalCents: number;
+  cartLines: CartLine[];
 };
 
 export type CheckoutFormState = {
@@ -55,47 +54,58 @@ export function parseCheckout(
   const customer: CheckoutCustomer = {
     name: normalize(input.name, CHECKOUT_LIMITS.name),
     email: normalize(input.email, CHECKOUT_LIMITS.email).toLowerCase(),
-    line1: normalize(input.line1, CHECKOUT_LIMITS.line1),
-    city: normalize(input.city, CHECKOUT_LIMITS.city),
-    region: normalize(input.region, CHECKOUT_LIMITS.region),
-    postal: normalize(input.postal, CHECKOUT_LIMITS.postal),
-    country: normalize(input.country, CHECKOUT_LIMITS.country),
   };
 
   const fieldErrors: CheckoutFieldErrors = {};
   if (!customer.name) fieldErrors.name = messages.required;
   if (!customer.email) fieldErrors.email = messages.required;
   else if (!EMAIL_PATTERN.test(customer.email)) fieldErrors.email = messages.invalidEmail;
-  if (!customer.line1) fieldErrors.line1 = messages.required;
-  if (!customer.city) fieldErrors.city = messages.required;
-  if (!customer.region) fieldErrors.region = messages.required;
-  if (!customer.postal) fieldErrors.postal = messages.required;
-  if (!customer.country) fieldErrors.country = messages.required;
 
-  const payload = parseCartPayload(input.items);
-  if (!payload || payload.length === 0) {
-    fieldErrors.items = messages.emptyCart;
+  const parsedItems = parseCheckoutCartPayload(input.items);
+  if (!parsedItems.ok) {
+    fieldErrors.items = checkoutCartMessage(parsedItems.reason, messages);
     return { ok: false, fieldErrors };
   }
 
-  const lines = resolveCart(payload);
-  if (lines.length === 0) {
-    fieldErrors.items = messages.emptyCart;
+  const cart = validateCheckoutCart(parsedItems.lines);
+  if (!cart.ok) {
+    fieldErrors.items = checkoutCartMessage(cart.reason, messages);
+    return { ok: false, fieldErrors };
   }
 
   if (Object.keys(fieldErrors).length > 0) {
     return { ok: false, fieldErrors };
   }
 
-  const subtotalCents = lines.every((line) => line.lineTotalCents != null)
-    ? lines.reduce((sum, line) => sum + (line.lineTotalCents ?? 0), 0)
-    : undefined;
-
-  return { ok: true, data: { customer, lines, subtotalCents } };
+  return {
+    ok: true,
+    data: {
+      customer,
+      lines: cart.lines,
+      subtotalCents: cart.subtotalCents,
+      cartLines: cart.lines.map((line) => ({
+        productId: line.productId,
+        variantId: line.variantId,
+        quantity: line.quantity,
+      })),
+    },
+  };
 }
 
 export function cartLinesFromUnknown(raw: unknown): CartLine[] {
-  return parseCartPayload(typeof raw === "string" ? raw : "") ?? [];
+  const parsed = parseCheckoutCartPayload(typeof raw === "string" ? raw : "");
+  return parsed.ok ? parsed.lines : [];
+}
+
+export function isCheckoutCartError(value: string): value is CheckoutCartError {
+  return (
+    value === "empty" ||
+    value === "malformed" ||
+    value === "invalid_product" ||
+    value === "invalid_variant" ||
+    value === "invalid_quantity" ||
+    value === "unavailable"
+  );
 }
 
 function normalize(value: unknown, max: number) {

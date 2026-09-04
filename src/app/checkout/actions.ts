@@ -1,5 +1,6 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import { cartCopy } from "@/content/cart";
 import { parseCheckout, type CheckoutFormState } from "@/lib/checkout";
 import { createCheckout } from "@/lib/payment";
@@ -12,17 +13,13 @@ export async function startCheckout(
     {
       name: formData.get("name"),
       email: formData.get("email"),
-      line1: formData.get("line1"),
-      city: formData.get("city"),
-      region: formData.get("region"),
-      postal: formData.get("postal"),
-      country: formData.get("country"),
       items: formData.get("items"),
     },
     {
       required: cartCopy.required,
       invalidEmail: cartCopy.invalidEmail,
       emptyCart: cartCopy.emptyCart,
+      invalidItems: cartCopy.invalidItems,
     },
   );
 
@@ -31,13 +28,29 @@ export async function startCheckout(
   }
 
   const payment = await createCheckout({
-    productIds: parsed.data.lines.map((line) => line.productId),
-    variantIds: parsed.data.lines.map((line) => line.variantId),
+    name: parsed.data.customer.name,
+    email: parsed.data.customer.email,
+    items: parsed.data.cartLines,
   });
 
   if (!payment.ok) {
-    return { status: "payment_unavailable", fieldErrors: {} };
+    if (payment.reason === "payment_unavailable") {
+      return { status: "payment_unavailable", fieldErrors: {} };
+    }
+    if (payment.reason === "empty") {
+      return {
+        status: "error",
+        fieldErrors: { items: cartCopy.emptyCart },
+      };
+    }
+    if (payment.reason === "invalid_cart") {
+      return {
+        status: "error",
+        fieldErrors: { items: cartCopy.invalidItems },
+      };
+    }
+    return { status: "error", fieldErrors: {} };
   }
 
-  return { status: "payment_unavailable", fieldErrors: {} };
+  redirect(payment.url);
 }

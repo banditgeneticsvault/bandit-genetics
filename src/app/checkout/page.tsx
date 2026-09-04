@@ -1,16 +1,26 @@
+import { Suspense } from "react";
 import { CheckoutDesk } from "@/app/checkout/CheckoutDesk";
 import { PaymentUnavailableNotice } from "@/components/cart/PaymentUnavailableNotice";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { cartCopy } from "@/content/cart";
+import { siteUrl } from "@/content/site";
+import { isPaymentEnabled } from "@/lib/payment";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Checkout",
   description: cartCopy.checkoutIntro,
   robots: { index: false, follow: false },
+  alternates: {
+    canonical: `${siteUrl}/checkout`,
+  },
 };
 
+export const dynamic = "force-dynamic";
+
 export default function CheckoutPage() {
+  const paymentEnabled = isPaymentEnabled();
+
   return (
     <main className="relative overflow-x-clip bg-black">
       <div
@@ -24,13 +34,17 @@ export default function CheckoutPage() {
             {cartCopy.checkoutTitle}
           </h1>
           <p className="mt-6 max-w-2xl text-copy leading-relaxed text-ice/75">
-            {cartCopy.checkoutIntro}
+            {paymentEnabled ? cartCopy.checkoutIntroLive : cartCopy.checkoutIntro}
           </p>
         </header>
-        <CheckoutDesk />
-        <div className="mt-10 max-w-3xl border border-white/10 bg-charcoal px-5 py-6">
-          <PaymentUnavailableNotice />
-        </div>
+        <Suspense fallback={<p className="text-copy text-ice/60">Loading checkout.</p>}>
+          <CheckoutDesk paymentEnabled={paymentEnabled} />
+        </Suspense>
+        {!paymentEnabled ? (
+          <div className="mt-10 max-w-3xl border border-white/10 bg-charcoal px-5 py-6">
+            <PaymentUnavailableNotice />
+          </div>
+        ) : null}
       </PageContainer>
     </main>
   );

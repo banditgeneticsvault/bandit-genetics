@@ -34,6 +34,25 @@ export const cartCopy = {
   checkoutKicker: "THE DESK",
   checkoutIntro:
     "Review the strains on this ticket. Payment is not connected yet. This page will not take a card or complete a purchase.",
+  checkoutIntroLive:
+    "Review the strains on this ticket. Continue to Stripe to pay. Card details stay on Stripe — they are never entered on this site.",
+  continueStripe: "CONTINUE TO STRIPE",
+  stripeAddressNote:
+    "Delivery address is collected on Stripe Checkout. Shipping rates are not configured, so no shipping charge is added.",
+  cancelledCheckout:
+    "Checkout was not completed. Nothing was charged. Your cart is still here.",
+  invalidItems:
+    "One or more items in the cart could not be checked out. Remove unavailable strains and try again.",
+  successTitle: "CHECKOUT RETURN",
+  successKicker: "THE DESK",
+  successPending:
+    "You returned from Stripe. Payment is still being confirmed. This page does not mark an order as paid by itself.",
+  successPaid:
+    "Stripe confirmed the payment and the internal order is marked paid.",
+  successMissing:
+    "This checkout return could not be matched to a Stripe session. No payment is assumed.",
+  successFailed:
+    "Payment did not complete. You can return to checkout and try again. Nothing is marked paid.",
   placeOrder: "PLACE ORDER",
   placeOrderDisabled: "PAYMENT NOT ENABLED",
   name: "Name",
@@ -49,7 +68,7 @@ export const cartCopy = {
   summary: "ORDER SUMMARY",
   shipping: "SHIPPING",
   payment: "PAYMENT",
-  taxNote: "Tax and shipping are calculated when a payment provider is connected.",
+  taxNote: "Tax is not calculated on this site. Shipping rates are not configured.",
   network: "The checkout could not continue. Check the connection and try again.",
   chooseSeeds:
     "Choose how many seeds this option includes. This is not how many cart items you want.",

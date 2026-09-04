@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
-import { brand, homeHero } from "@/content/site";
+import { brand, homeHero, seoCopy } from "@/content/site";
 import { hasArtworkSrc } from "@/lib/artwork";
 
 export function HomeHero() {
@@ -32,6 +32,9 @@ export function HomeHero() {
             </p>
             <p className="mt-6 max-w-sm text-copy leading-relaxed text-ice/75">
               {brand.shortStatement}
+            </p>
+            <p className="mt-4 max-w-sm text-copy leading-relaxed text-ice/75">
+              {seoCopy.homeIdentity}
             </p>
             <div className="mt-8">
               <Button href={homeHero.primaryCta.href}>
