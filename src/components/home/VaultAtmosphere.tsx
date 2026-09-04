@@ -5,13 +5,17 @@ import type { StrainImage } from "@/data/genetics/types";
 type VaultAtmosphereProps = {
   softened?: boolean;
   background?: StrainImage;
+  /** Hero keeps type over the garden; page adds a bit more contrast for forms. */
+  tone?: "hero" | "page";
 };
 
 export function VaultAtmosphere({
   softened = false,
   background,
+  tone = "hero",
 }: VaultAtmosphereProps) {
   const showBackground = hasArtworkSrc(background);
+  const pageTone = tone === "page";
 
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
@@ -23,26 +27,50 @@ export function VaultAtmosphere({
             alt=""
             fill
             priority
-            quality={70}
+            quality={80}
             sizes="100vw"
-            className="object-cover object-[center_62%] opacity-[0.5] brightness-[0.42] contrast-[0.62] saturate-[0.7] md:opacity-[0.4] md:brightness-[0.38]"
+            className={
+              pageTone
+                ? "object-cover object-[center_48%] opacity-100 brightness-[0.95] contrast-[1.08] saturate-[1.02]"
+                : "object-cover object-[center_48%] opacity-100 brightness-[1] contrast-[1.1] saturate-[1.05]"
+            }
           />
         ) : null}
       </div>
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_14%,rgb(7_8_10_/_0.22)_52%,rgb(7_8_10_/_0.74)_100%)]" />
-      <div className="absolute inset-0 bg-linear-to-b from-black/72 via-black/14 to-black/80" />
-      <div className="absolute inset-0 bg-linear-to-r from-black/38 via-black/12 to-black/34 md:from-black/58 md:via-black/16 md:to-black/48" />
+      {/* ~30% extra darkness vs the previous treatment; garden still shows through. */}
+      <div className="absolute inset-0 bg-black/30" />
+      <div
+        className={
+          pageTone
+            ? "absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_48%,rgb(7_8_10_/_0.1)_78%,rgb(7_8_10_/_0.42)_100%)]"
+            : "absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_52%,rgb(7_8_10_/_0.06)_80%,rgb(7_8_10_/_0.32)_100%)]"
+        }
+      />
+      <div
+        className={
+          pageTone
+            ? "absolute inset-0 bg-linear-to-b from-black/22 via-transparent to-black/40"
+            : "absolute inset-0 bg-linear-to-b from-black/18 via-transparent to-black/28"
+        }
+      />
+      <div
+        className={
+          pageTone
+            ? "absolute inset-0 bg-linear-to-r from-black/36 via-black/8 to-black/12 md:from-black/40 md:via-black/10 md:to-black/16"
+            : "absolute inset-0 bg-linear-to-r from-black/22 via-transparent to-black/10 md:from-black/28 md:via-transparent md:to-black/12"
+        }
+      />
       <div
         className={
           softened
-            ? "absolute inset-0 bg-[radial-gradient(ellipse_at_18%_12%,rgb(42_23_51_/_0.35),transparent_42%),radial-gradient(ellipse_at_88%_8%,rgb(199_216_228_/_0.06),transparent_34%),radial-gradient(ellipse_at_70%_90%,rgb(11_36_31_/_0.55),transparent_46%)]"
+            ? "absolute inset-0 bg-[radial-gradient(ellipse_at_18%_12%,rgb(42_23_51_/_0.14),transparent_42%),radial-gradient(ellipse_at_88%_8%,rgb(199_216_228_/_0.04),transparent_34%),radial-gradient(ellipse_at_70%_90%,rgb(11_36_31_/_0.18),transparent_46%)]"
             : "absolute inset-0 bg-[radial-gradient(ellipse_at_18%_12%,rgb(42_23_51_/_0.7),transparent_42%),radial-gradient(ellipse_at_88%_8%,rgb(199_216_228_/_0.12),transparent_34%),radial-gradient(ellipse_at_70%_90%,rgb(11_36_31_/_0.9),transparent_46%)]"
         }
       />
       <div
         className={
           softened
-            ? "vault-grate absolute inset-0 opacity-20"
+            ? "vault-grate absolute inset-0 opacity-[0.08]"
             : "vault-grate absolute inset-0 opacity-70"
         }
       />
@@ -70,7 +98,7 @@ export function VaultAtmosphere({
         </>
       ) : null}
       <div className="vault-grain absolute inset-0" />
-      <div className="absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-black to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-20 bg-linear-to-t from-black/70 to-transparent" />
     </div>
   );
 }

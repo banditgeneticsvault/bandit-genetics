@@ -18,6 +18,34 @@ export const navItems = [
   { href: "/contact", label: "CONTACT" },
 ] as const;
 
+export const socialPlatforms = [
+  {
+    id: "instagram",
+    label: "Instagram",
+    href: "https://www.instagram.com/banditgeneticsvault",
+  },
+  { id: "discord", label: "Discord", href: null },
+  { id: "facebook", label: "Facebook", href: null },
+  { id: "x", label: "X", href: "https://x.com/banditgenetics" },
+  {
+    id: "reddit",
+    label: "Reddit",
+    href: "https://www.reddit.com/r/BanditGenetics/",
+  },
+  {
+    id: "threads",
+    label: "Threads",
+    href: "https://www.threads.com/@banditgeneticsvault",
+  },
+  {
+    id: "tiktok",
+    label: "TikTok",
+    href: "https://www.tiktok.com/@banditgenetics",
+  },
+] as const;
+
+export type SocialPlatformId = (typeof socialPlatforms)[number]["id"];
+
 export const homeHero: {
   primaryCta: { href: string; label: string };
   /** Bandit Genetics Frost Queen brand artwork. */

@@ -16,7 +16,7 @@ import { cn } from "@/lib/cn";
 const copy = pageCopy.contact;
 
 const fieldClassName =
-  "min-h-12 w-full rounded-none border border-white/12 bg-black/40 px-3 py-3 font-sans text-copy text-frost outline-none placeholder:text-ice/35 focus-visible:border-gold";
+  "min-h-12 w-full rounded-none border border-white/12 bg-black/55 px-3 py-3 font-sans text-copy text-frost outline-none placeholder:text-ice/35 focus-visible:border-gold";
 
 export function ContactForm() {
   const [state, formAction, pending] = useActionState(
@@ -64,7 +64,7 @@ export function ContactForm() {
       action={formAction}
       onSubmit={handleSubmit}
       noValidate
-      className="border border-white/10 bg-charcoal"
+      className="border border-white/10 bg-charcoal/95"
       aria-busy={pending}
       aria-describedby={showDeliveryError || showSuccess ? statusId : undefined}
     >

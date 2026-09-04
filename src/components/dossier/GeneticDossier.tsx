@@ -4,7 +4,6 @@ import {
   DossierSection,
   dossierKickerClass,
 } from "@/components/dossier/DossierSection";
-import { LineagePanel } from "@/components/dossier/LineagePanel";
 import { RelatedGenetics } from "@/components/dossier/RelatedGenetics";
 import { StrainMedia } from "@/components/vault/StrainMedia";
 import { Button } from "@/components/ui/Button";
@@ -13,6 +12,7 @@ import { dossierCopy } from "@/content/dossier";
 import { getParentById, getRelatedStrains } from "@/data/genetics";
 import { STRAIN_TYPE_LABELS, type StrainRecord } from "@/data/genetics/types";
 import { hasArtworkSrc } from "@/lib/artwork";
+import { cn } from "@/lib/cn";
 import { isPendingCopy } from "@/lib/pending";
 
 function CharacterSection({
@@ -73,15 +73,17 @@ export function GeneticDossier({ strain }: GeneticDossierProps) {
           <p className={dossierKickerClass}>
             {dossierCopy.classified} · {dossierCopy.restricted}
           </p>
-          <div className="mt-3 flex flex-wrap items-start gap-x-8 gap-y-3 font-label text-ui tracking-[0.16em] text-ice/55 uppercase">
-            <span>{STRAIN_TYPE_LABELS[strain.type]}</span>
-          </div>
-
-          <h1 className="mt-6 max-w-4xl font-display text-[clamp(2.6rem,8vw,5.8rem)] leading-[0.85] text-frost">
+          <h1 className="mt-4 max-w-4xl font-display text-[clamp(2.6rem,8vw,5.8rem)] leading-[0.85] text-frost">
             {strain.name}
           </h1>
-          <p className="mt-4 max-w-2xl font-label text-copy leading-relaxed tracking-[0.07em] text-ice uppercase">
-            {strain.lineage}
+          <p className="mt-4 font-label text-ui tracking-[0.16em] text-ice/55 uppercase">
+            {STRAIN_TYPE_LABELS[strain.type]}
+          </p>
+          <p className={cn("mt-5", dossierKickerClass)}>
+            {dossierCopy.parentsLineage}
+          </p>
+          <p className="mt-2 max-w-2xl font-label text-copy leading-relaxed tracking-[0.07em] text-ice uppercase">
+            {parentOne.name} × {parentTwo.name}
           </p>
         </header>
 
@@ -128,11 +130,6 @@ export function GeneticDossier({ strain }: GeneticDossierProps) {
         ) : null}
 
         <div className="mt-10 flex flex-col gap-10 md:mt-12 md:gap-12">
-          <LineagePanel
-            parentOne={parentOne}
-            parentTwo={parentTwo}
-          />
-
           <DossierPair>
             <CharacterSection
               id="plant"

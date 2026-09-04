@@ -2,6 +2,7 @@ export const dossierCopy = {
   classified: "CLASSIFIED GENETIC FILE",
   restricted: "RESTRICTED READ",
   lineagePanel: "THE LINEAGE",
+  parentsLineage: "PARENTS / LINEAGE",
   parentOne: "PARENT ONE",
   parentTwo: "PARENT TWO",
   combined: "COMBINED DIRECTION",
