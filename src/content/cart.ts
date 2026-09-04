@@ -76,10 +76,14 @@ export const cartCopy = {
     "One or more items in the cart could not be checked out. Remove unavailable strains and try again.",
   successTitle: "CHECKOUT RETURN",
   successKicker: "THE DESK",
+  orderConfirmed: "ORDER CONFIRMED",
+  paymentConfirmed: "Payment confirmed.",
+  orderLabel: "Order",
+  paidMerchandise: "Paid merchandise",
   successPending:
-    "You returned from Stripe. Payment is still being confirmed. This page does not mark an order as paid by itself.",
+    "You returned from Stripe. Payment is still being confirmed.",
   successPaid:
-    "Stripe confirmed the payment and the internal order is marked paid.",
+    "Payment confirmed.",
   successMissing:
     "This checkout return could not be matched to a Stripe session. No payment is assumed.",
   successFailed:

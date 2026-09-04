@@ -2,12 +2,13 @@ import "server-only";
 
 import { NextResponse } from "next/server";
 import { lookupOrderForSession } from "@/lib/stripe/webhooks";
+import { isStripeCheckoutSessionId } from "@/lib/stripe/association";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 function isSessionId(value: string) {
-  return /^cs_(test|live)_[A-Za-z0-9]+$/.test(value);
+  return isStripeCheckoutSessionId(value);
 }
 
 export async function GET(request: Request) {

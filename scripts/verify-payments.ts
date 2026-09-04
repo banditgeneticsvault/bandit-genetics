@@ -11,6 +11,10 @@ import {
 import { CRYPTO_WALLETS, isCryptoAsset } from "../src/lib/crypto/wallets.ts";
 import { eligiblePromotionalProductIds } from "../src/lib/promotional-catalog.ts";
 import {
+  sessionBelongsToOrder,
+  stripeSessionOrderId,
+} from "../src/lib/stripe/association.ts";
+import {
   assignPromotionalProductId,
   formatPromotionProgress,
   PROMOTION_THRESHOLD_CENTS,
@@ -248,6 +252,42 @@ assert(
     justUnder.subtotalCents === 8750 &&
     !quoteShippingPromotion(justUnder.subtotalCents).promotionalGiftApplied,
   "$87.50 does not include a phantom gift toward threshold",
+);
+
+const orderId = "bg_8e01e882-9879-4b2b-b3bb-d7f2fe984f6c";
+const session = {
+  id: "cs_test_abc123",
+  metadata: { orderId },
+  client_reference_id: orderId,
+};
+assert(stripeSessionOrderId(session) === orderId, "metadata orderId");
+assert(
+  sessionBelongsToOrder(session, {
+    id: orderId,
+    stripeCheckoutSessionId: null,
+  }),
+  "session matches order before session id is stored",
+);
+assert(
+  sessionBelongsToOrder(session, {
+    id: orderId,
+    stripeCheckoutSessionId: "cs_test_abc123",
+  }),
+  "session matches stored session id",
+);
+assert(
+  !sessionBelongsToOrder(session, {
+    id: orderId,
+    stripeCheckoutSessionId: "cs_test_other",
+  }),
+  "stored session mismatch is rejected",
+);
+assert(
+  !sessionBelongsToOrder(
+    { ...session, metadata: { orderId: "bg_11111111-1111-1111-1111-111111111111" } },
+    { id: orderId, stripeCheckoutSessionId: "cs_test_abc123" },
+  ),
+  "metadata order mismatch is rejected",
 );
 
 console.log("checkout validation checks passed");

@@ -1,10 +1,13 @@
 import { ClearPaidCart } from "@/app/checkout/success/ClearPaidCart";
 import { ConfirmPaymentPoll } from "@/app/checkout/success/ConfirmPaymentPoll";
+import { OrderConfirmedSummary } from "@/app/checkout/success/OrderConfirmedSummary";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { Button } from "@/components/ui/Button";
 import { cartCopy } from "@/content/cart";
 import { siteUrl } from "@/content/site";
-import { lookupOrderForSession } from "@/lib/stripe/webhooks";
+import { readPendingOrderCookie } from "@/lib/orders/pending-cookie";
+import { isStripeCheckoutSessionId } from "@/lib/stripe/association";
+import { confirmCheckoutReturn } from "@/lib/stripe/webhooks";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -18,10 +21,6 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-function isSessionId(value: string) {
-  return /^cs_(test|live)_[A-Za-z0-9]+$/.test(value);
-}
-
 export default async function CheckoutSuccessPage({
   searchParams,
 }: {
@@ -30,19 +29,26 @@ export default async function CheckoutSuccessPage({
   const params = await searchParams;
   const sessionIdRaw = params.session_id;
   const sessionId = Array.isArray(sessionIdRaw) ? sessionIdRaw[0] : sessionIdRaw;
-  const validSession = sessionId && isSessionId(sessionId) ? sessionId : null;
-  const lookup = validSession
-    ? await lookupOrderForSession(validSession)
-    : { order: null, sessionFound: false, sessionPaid: false };
+  const validSession =
+    sessionId && isStripeCheckoutSessionId(sessionId) ? sessionId : null;
+  const cookieOrderId = await readPendingOrderCookie();
+  const result = validSession
+    ? await confirmCheckoutReturn(validSession, cookieOrderId)
+    : {
+        order: null,
+        sessionFound: false,
+        sessionPaid: false,
+        view: "missing" as const,
+      };
 
-  const paid = lookup.order?.status === "paid";
-  const failed = lookup.order?.status === "payment_failed";
-  const body = !validSession || !lookup.sessionFound
+  const confirmed = result.view === "confirmed" && result.order;
+  const title = confirmed ? cartCopy.orderConfirmed : cartCopy.successTitle;
+  const body = !validSession || result.view === "missing"
     ? cartCopy.successMissing
-    : failed
+    : result.view === "failed"
       ? cartCopy.successFailed
-      : paid
-        ? cartCopy.successPaid
+      : result.view === "confirmed"
+        ? cartCopy.paymentConfirmed
         : cartCopy.successPending;
 
   return (
@@ -55,20 +61,27 @@ export default async function CheckoutSuccessPage({
         <header className="mb-12 max-w-3xl">
           <p className="section-kicker">{cartCopy.successKicker}</p>
           <h1 className="mt-4 font-display text-[clamp(2.6rem,8vw,5.8rem)] leading-[0.85] text-frost">
-            {cartCopy.successTitle}
+            {title}
           </h1>
           <p className="mt-6 max-w-2xl text-copy leading-relaxed text-ice/75">
             {body}
           </p>
         </header>
-        {paid && lookup.order ? <ClearPaidCart orderId={lookup.order.id} /> : null}
-        {validSession && lookup.sessionFound && !paid && !failed ? (
+        {confirmed && result.order ? (
+          <>
+            <ClearPaidCart orderId={result.order.id} />
+            <OrderConfirmedSummary order={result.order} />
+          </>
+        ) : null}
+        {validSession && result.view === "pending" ? (
           <ConfirmPaymentPoll sessionId={validSession} />
         ) : null}
-        <div className="flex flex-wrap gap-3">
-          <Button href="/checkout" variant="secondary">
-            Return to checkout
-          </Button>
+        <div className="mt-8 flex flex-wrap gap-3">
+          {confirmed ? null : (
+            <Button href="/checkout" variant="secondary">
+              Return to checkout
+            </Button>
+          )}
           <Button href="/vault">{cartCopy.continue}</Button>
         </div>
       </PageContainer>
