@@ -20,10 +20,15 @@ Copy `.env.example` to `.env.local` and set:
 - `STRIPE_WEBHOOK_SECRET` — webhook signing secret (`whsec_...`). Server-only.
 - `NEXT_PUBLIC_SITE_URL` — public origin, for example `http://localhost:3000` locally or `https://www.banditgenetics.com` in production.
 - `DATABASE_URL` — Postgres connection string (Neon or Vercel Postgres). Server-only. Orders and Stripe webhook event IDs are stored here, not in `.data/orders.json`.
+- `CONTACT_SMTP_HOST` — Proton SMTP host. Server-only.
+- `CONTACT_SMTP_PORT` — Proton SMTP port (`587` for STARTTLS). Server-only.
+- `CONTACT_SMTP_USER` — SMTP username (`support@banditgenetics.com`). Server-only.
+- `CONTACT_SMTP_PASSWORD` — Proton-generated SMTP token, not the account password. Server-only. Never use `NEXT_PUBLIC_*` for this value.
+- `CONTACT_DESTINATION_EMAIL` — mailbox that receives Contact form messages. Server-only.
 
 If `STRIPE_SECRET_KEY` is missing, checkout still loads. The cart still works. **CHECKOUT WITH CARD** stays visible when the cart has items, but it is disabled and the page explains that card processing is unavailable. **PAY LATER / PAY WITH CRYPTO** remains available.
 
-The checkout button submits the existing cart to the `startCheckout` server action. Card checkout creates an internal pending order and a Stripe Checkout Session, then redirects to Stripe-hosted Checkout. Crypto checkout creates an unpaid internal order and shows receiving-address instructions. Crypto verification is manual. Website email sending is not configured.
+The checkout button submits the existing cart to the `startCheckout` server action. Card checkout creates an internal pending order and a Stripe Checkout Session, then redirects to Stripe-hosted Checkout. Crypto checkout creates an unpaid internal order and shows receiving-address instructions. Crypto verification is manual. The Contact form sends mail through Proton SMTP when the `CONTACT_SMTP_*` variables are set.
 
 ### Local webhook forwarding (optional)
 
@@ -40,7 +45,7 @@ Use Stripe test payment methods only (for example `ACCT-000015`). Do not use rea
 
 ### Vercel (after code review)
 
-Set `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_SITE_URL`, and `DATABASE_URL` on the Vercel project (Production). Register the production webhook in Stripe:
+Set `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_SITE_URL`, `DATABASE_URL`, `CONTACT_SMTP_HOST`, `CONTACT_SMTP_PORT`, `CONTACT_SMTP_USER`, `CONTACT_SMTP_PASSWORD`, and `CONTACT_DESTINATION_EMAIL` on the Vercel project (Production). Mark `CONTACT_SMTP_PASSWORD` as a secret. Register the production webhook in Stripe:
 
 `https://www.banditgenetics.com/api/stripe/webhook`
 

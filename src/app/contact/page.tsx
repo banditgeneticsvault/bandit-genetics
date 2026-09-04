@@ -54,9 +54,6 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
           <p className="mt-6 max-w-xl break-words text-copy leading-relaxed text-ice drop-shadow-[0_2px_12px_rgb(0_0_0_/_0.7)]">
             Email us at <OrderEmailLink />.
           </p>
-          <p className="mt-3 max-w-xl text-copy leading-relaxed text-ice drop-shadow-[0_2px_12px_rgb(0_0_0_/_0.7)]">
-            {copy.mailboxOff}
-          </p>
         </header>
 
         <div className="max-w-xl">

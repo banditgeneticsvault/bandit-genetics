@@ -1,10 +1,10 @@
 import Image from "next/image";
+import { RotatingQuote } from "@/components/home/RotatingQuote";
 import { Button } from "@/components/ui/Button";
 import { brand, homeHero, seoCopy } from "@/content/site";
 import { hasArtworkSrc } from "@/lib/artwork";
 
 export function HomeHero() {
-  const [firstLine, secondLine] = brand.slogan.split("\n");
   const artwork = homeHero.artwork;
   const showArtwork = hasArtworkSrc(artwork);
 
@@ -26,10 +26,7 @@ export function HomeHero() {
               BANDIT
               <span className="block text-ice/90">GENETICS</span>
             </h1>
-            <p className="mt-8 max-w-md font-display text-[clamp(1.65rem,3.4vw,2.7rem)] leading-[1.05] text-gold">
-              {firstLine}
-              <span className="mt-1 block">{secondLine}</span>
-            </p>
+            <RotatingQuote />
             <p className="mt-6 max-w-sm text-copy leading-relaxed text-ice/75">
               {brand.shortStatement}
             </p>

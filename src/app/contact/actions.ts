@@ -2,11 +2,11 @@
 
 import { pageCopy } from "@/content/site";
 import {
-  deliverContactMessage,
   isHoneypotFilled,
   parseContactForm,
   type ContactFormState,
 } from "@/lib/contact";
+import { deliverContactMessage } from "@/lib/contact-delivery";
 
 export async function submitContact(
   _prev: ContactFormState,
@@ -14,7 +14,7 @@ export async function submitContact(
 ): Promise<ContactFormState> {
   if (isHoneypotFilled(formData.get("website"))) {
     console.info("contact.submit.ignored");
-    return { status: "unconfigured", fieldErrors: {} };
+    return { status: "idle", fieldErrors: {} };
   }
 
   const parsed = parseContactForm(
@@ -37,10 +37,13 @@ export async function submitContact(
   try {
     const delivered = await deliverContactMessage(parsed.data);
     if (!delivered.ok) {
-      console.info("contact.delivery.unconfigured");
-      return { status: "unconfigured", fieldErrors: {} };
+      if (delivered.reason === "unconfigured") {
+        console.info("contact.delivery.unconfigured");
+        return { status: "unconfigured", fieldErrors: {} };
+      }
+      return { status: "error", fieldErrors: {} };
     }
-    return { status: "unconfigured", fieldErrors: {} };
+    return { status: "success", fieldErrors: {} };
   } catch {
     console.error("contact.submit.failed");
     return { status: "error", fieldErrors: {} };

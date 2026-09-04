@@ -43,18 +43,22 @@ export function ContactForm({
       ? clientErrors
       : (state?.fieldErrors ?? {});
   const showFieldErrors = hasFieldErrors(fieldErrors);
+  const sent = !pending && state?.status === "success";
+  const locked = pending || sent;
   const showUnconfigured =
     !pending && state?.status === "unconfigured" && !showFieldErrors;
   const showUnexpectedError =
     !pending && state?.status === "error" && !showFieldErrors;
-  const statusMessage = showUnconfigured
-    ? copy.unconfigured
-    : showUnexpectedError
-      ? copy.error
-      : null;
+  const statusMessage = sent
+    ? copy.success
+    : showUnconfigured
+      ? copy.unconfigured
+      : showUnexpectedError
+        ? copy.error
+        : null;
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    if (pending) {
+    if (pending || sent) {
       event.preventDefault();
       return;
     }
@@ -108,7 +112,7 @@ export function ContactForm({
           autoComplete="name"
           maxLength={CONTACT_LIMITS.name}
           error={fieldErrors.name}
-          disabled={pending}
+          disabled={locked}
           value={values.name}
           onChange={(value) => setValues((current) => ({ ...current, name: value }))}
           required
@@ -123,7 +127,7 @@ export function ContactForm({
           inputMode="email"
           maxLength={CONTACT_LIMITS.email}
           error={fieldErrors.email}
-          disabled={pending}
+          disabled={locked}
           value={values.email}
           onChange={(value) => setValues((current) => ({ ...current, email: value }))}
           required
@@ -136,7 +140,7 @@ export function ContactForm({
           autoComplete="off"
           maxLength={CONTACT_LIMITS.subject}
           error={fieldErrors.subject}
-          disabled={pending}
+          disabled={locked}
           value={values.subject}
           onChange={(value) => setValues((current) => ({ ...current, subject: value }))}
           required
@@ -149,7 +153,7 @@ export function ContactForm({
           as="textarea"
           maxLength={CONTACT_LIMITS.message}
           error={fieldErrors.message}
-          disabled={pending}
+          disabled={locked}
           value={values.message}
           onChange={(value) => setValues((current) => ({ ...current, message: value }))}
           required
@@ -173,18 +177,24 @@ export function ContactForm({
             aria-live={showUnexpectedError ? "assertive" : "polite"}
             className="break-words border border-white/10 bg-black/40 px-4 py-3 text-copy leading-relaxed text-ice"
           >
-            {statusMessage} <OrderEmailLink />.
+            {sent ? (
+              statusMessage
+            ) : (
+              <>
+                {statusMessage} <OrderEmailLink />.
+              </>
+            )}
           </p>
         ) : null}
 
         <button
           type="submit"
-          disabled={pending}
-          aria-disabled={pending}
+          disabled={locked}
+          aria-disabled={locked}
           className={cn(
             "inline-flex min-h-12 w-full items-center justify-center border px-6 font-label text-ui font-semibold tracking-[0.22em] uppercase transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold sm:w-auto sm:min-w-[12.5rem]",
-            pending
-              ? "cursor-wait border-gunmetal bg-gunmetal text-ice/70"
+            locked
+              ? "cursor-not-allowed border-gunmetal bg-gunmetal text-ice/70"
               : "border-frost bg-frost text-black hover:border-ice hover:bg-ice",
           )}
         >

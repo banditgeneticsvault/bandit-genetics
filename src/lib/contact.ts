@@ -14,7 +14,7 @@ export type ContactFields = {
 
 export type ContactFieldErrors = Partial<Record<keyof ContactFields, string>>;
 
-export type ContactFormStatus = "idle" | "unconfigured" | "error";
+export type ContactFormStatus = "idle" | "success" | "unconfigured" | "error";
 
 export type ContactFormState = {
   status: ContactFormStatus;
@@ -54,17 +54,6 @@ export function parseContactForm(
 
 export function isHoneypotFilled(value: unknown) {
   return typeof value === "string" && value.trim().length > 0;
-}
-
-/**
- * Email delivery is not wired. Keep this function as the single server-side
- * seam so a provider can be added without changing the form.
- */
-export async function deliverContactMessage(
-  payload: ContactFields,
-): Promise<{ ok: true } | { ok: false; reason: "unconfigured" }> {
-  void payload.name;
-  return { ok: false, reason: "unconfigured" };
 }
 
 function normalizeLine(value: unknown, max: number) {
