@@ -3,7 +3,7 @@ import { Barlow_Condensed, Cormorant_Garamond, Figtree } from "next/font/google"
 import { AppProviders } from "@/components/layout/AppProviders";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
-import { brand, homeHero } from "@/content/site";
+import { brand, homeHero, siteUrl } from "@/content/site";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -35,15 +35,21 @@ const ogImage = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     default: brand.name,
     template: `%s · ${brand.name}`,
   },
   description: siteDescription,
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: brand.name,
     description: siteDescription,
     siteName: brand.name,
+    url: "/",
+    locale: "en_US",
     type: "website",
     images: [ogImage],
   },

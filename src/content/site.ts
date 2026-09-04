@@ -1,6 +1,9 @@
 import type { StrainImage } from "@/data/genetics/types";
 import { homeArtworkSrc } from "@/lib/artwork";
 
+/** Preferred production origin. Used for metadata, canonical URLs, and Open Graph. */
+export const siteUrl = "https://www.banditgenetics.com";
+
 export const brand = {
   name: "Bandit Genetics",
   wordmark: "BANDIT GENETICS",
