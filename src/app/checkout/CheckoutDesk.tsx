@@ -2,9 +2,11 @@
 
 import { useActionState, useId, useState, type FormEvent, type HTMLAttributes } from "react";
 import { startCheckout } from "@/app/checkout/actions";
+import { CartLineVisual } from "@/components/cart/CartLineVisual";
+import { PaymentUnavailableNotice } from "@/components/cart/PaymentUnavailableNotice";
+import { QuantityStepper } from "@/components/cart/QuantityStepper";
 import { SeedQuantityPicker } from "@/components/cart/PackPicker";
 import { useCart } from "@/components/cart/CartProvider";
-import { StrainMedia } from "@/components/vault/StrainMedia";
 import { Button } from "@/components/ui/Button";
 import { cartCopy } from "@/content/cart";
 import { SEED_TIERS } from "@/data/order";
@@ -20,7 +22,7 @@ const fieldClassName =
   "min-h-12 w-full rounded-none border border-white/12 bg-black/55 px-3 py-3 font-sans text-copy text-frost outline-none placeholder:text-ice/35 focus-visible:border-gold";
 
 export function CheckoutDesk() {
-  const { lines, setSeedTier, remove, ready } = useCart();
+  const { lines, setSeedTier, setLineQuantity, remove, ready } = useCart();
   const resolved = resolveCart(lines);
   const subtotal = cartSubtotalCents(resolved);
   const [state, formAction, pending] = useActionState(
@@ -99,31 +101,9 @@ export function CheckoutDesk() {
           {resolved.map((line) => (
             <li
               key={`${line.productId}-${line.variantId}`}
-              className="border border-white/10 bg-charcoal px-4 py-4"
+              className="min-w-0 border border-white/10 bg-charcoal px-4 py-4"
             >
-              <div className="flex min-w-0 items-start gap-4">
-                <div className="w-20 shrink-0 sm:w-24">
-                  <StrainMedia
-                    image={line.image}
-                    theme={line.theme}
-                    name={line.name}
-                    className="px-0 py-0"
-                    sizes="96px"
-                    imageClassName="max-h-24"
-                  />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="font-display text-[clamp(1.3rem,3vw,1.8rem)] leading-tight text-frost">
-                    {line.name}
-                  </p>
-                  <p className="mt-2 font-label text-ui tracking-[0.12em] text-ice uppercase">
-                    {cartCopy.seedQuantity}: {line.seedLabel}
-                  </p>
-                  <p className="mt-2 text-copy text-ice">
-                    {cartCopy.lineTotal}: {formatUsd(line.lineTotalCents)}
-                  </p>
-                </div>
-              </div>
+              <CartLineVisual line={line} />
               <div className="mt-4">
                 <SeedQuantityPicker
                   name={`${formId}-${line.productId}-${line.variantId}`}
@@ -131,6 +111,15 @@ export function CheckoutDesk() {
                   options={SEED_TIERS}
                   onChange={(next) =>
                     setSeedTier(line.productId, line.variantId, next)
+                  }
+                />
+              </div>
+              <div className="mt-4">
+                <QuantityStepper
+                  name={`${formId}-qty-${line.productId}-${line.variantId}`}
+                  value={line.quantity}
+                  onChange={(next) =>
+                    setLineQuantity(line.productId, line.variantId, next)
                   }
                 />
               </div>
@@ -246,15 +235,15 @@ export function CheckoutDesk() {
 
           <div className="border-t border-white/10 pt-6">
             <p className="section-kicker">{cartCopy.payment}</p>
-            <p className="mt-3 text-copy leading-relaxed text-ice/75">
-              {cartCopy.paymentOff}
-            </p>
+            <div className="mt-3">
+              <PaymentUnavailableNotice />
+            </div>
           </div>
 
           {paymentOff ? (
-            <p role="status" className="border border-white/10 px-4 py-3 text-copy text-ice">
-              {cartCopy.paymentOff}
-            </p>
+            <div role="status" className="border border-white/10 px-4 py-3">
+              <PaymentUnavailableNotice />
+            </div>
           ) : null}
           {showError ? (
             <p role="alert" className="border border-white/10 px-4 py-3 text-copy text-gold">

@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useId } from "react";
+import { QuantityStepper } from "@/components/cart/QuantityStepper";
 import { SeedQuantityPicker } from "@/components/cart/PackPicker";
+import { CartLineVisual } from "@/components/cart/CartLineVisual";
 import { useCart } from "@/components/cart/CartProvider";
 import { Button } from "@/components/ui/Button";
 import { cartCopy } from "@/content/cart";
 import { SEED_TIERS } from "@/data/order";
 import { cartSubtotalCents, formatUsd, resolveCart } from "@/lib/cart";
+import { useEffect, useId } from "react";
 
 export function CartDrawer() {
   const {
@@ -15,6 +17,7 @@ export function CartDrawer() {
     open,
     closeCart,
     setSeedTier,
+    setLineQuantity,
     remove,
     clear,
   } = useCart();
@@ -52,7 +55,7 @@ export function CartDrawer() {
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="absolute inset-y-0 right-0 flex w-full max-w-md flex-col overflow-y-auto border-l border-white/10 bg-charcoal"
+        className="absolute inset-y-0 right-0 flex w-full max-w-md flex-col overflow-x-hidden overflow-y-auto border-l border-white/10 bg-charcoal"
       >
         <div className="flex items-center justify-between border-b border-white/10 px-5 py-5">
           <h2
@@ -83,17 +86,9 @@ export function CartDrawer() {
               {resolved.map((line) => (
                 <li
                   key={`${line.productId}-${line.variantId}`}
-                  className="border border-white/10 px-4 py-4"
+                  className="min-w-0 border border-white/10 px-4 py-4"
                 >
-                  <p className="font-display text-[clamp(1.3rem,3vw,1.7rem)] leading-tight text-frost">
-                    {line.name}
-                  </p>
-                  <p className="mt-2 font-label text-ui tracking-[0.12em] text-ice uppercase">
-                    {cartCopy.seedQuantity}: {line.seedLabel}
-                  </p>
-                  <p className="mt-2 text-copy text-ice">
-                    {formatUsd(line.lineTotalCents)}
-                  </p>
+                  <CartLineVisual line={line} />
                   <div className="mt-4">
                     <SeedQuantityPicker
                       name={`cart-${line.productId}-${line.variantId}`}
@@ -101,6 +96,15 @@ export function CartDrawer() {
                       options={SEED_TIERS}
                       onChange={(next) =>
                         setSeedTier(line.productId, line.variantId, next)
+                      }
+                    />
+                  </div>
+                  <div className="mt-4">
+                    <QuantityStepper
+                      name={`qty-${line.productId}-${line.variantId}`}
+                      value={line.quantity}
+                      onChange={(next) =>
+                        setLineQuantity(line.productId, line.variantId, next)
                       }
                     />
                   </div>

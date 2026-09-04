@@ -2,6 +2,7 @@
 
 import { useActionState, useId, useState, type FormEvent, type HTMLAttributes } from "react";
 import { submitContact } from "@/app/contact/actions";
+import { OrderEmailLink } from "@/components/layout/OrderEmailLink";
 import { pageCopy } from "@/content/site";
 import {
   CONTACT_LIMITS,
@@ -141,23 +142,13 @@ export function ContactForm({
           />
         </div>
 
-        {showSuccess ? (
+        {showSuccess || showDeliveryError ? (
           <p
             id={statusId}
-            role="status"
+            role={showDeliveryError ? "alert" : "status"}
             className="border border-white/10 bg-black/40 px-4 py-3 text-copy leading-relaxed text-ice"
           >
-            {copy.success}
-          </p>
-        ) : null}
-
-        {showDeliveryError ? (
-          <p
-            id={statusId}
-            role="alert"
-            className="border border-white/10 bg-black/40 px-4 py-3 text-copy leading-relaxed text-ice"
-          >
-            {copy.error}
+            {copy.mailboxOff} Email us at <OrderEmailLink />.
           </p>
         ) : null}
 

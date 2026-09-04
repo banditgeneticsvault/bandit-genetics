@@ -17,7 +17,12 @@ export type SeedTier = {
   id: VariantId;
   seeds: number;
   label: string;
+  /** Package price for this seed option. */
   priceCents: number;
+  /** Display per-seed amount for this option. */
+  perSeedCents: number;
+  /** Savings versus buying that many seeds at the 1-seed price. */
+  saveCents?: number;
 };
 
 /** @deprecated Use SeedTier. */
@@ -38,4 +43,6 @@ export type OrderListing = {
 export type CartLine = {
   productId: string;
   variantId: VariantId;
+  /** Number of this seed option in the cart. Distinct from seeds in the option. */
+  quantity: number;
 };

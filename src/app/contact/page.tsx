@@ -1,5 +1,6 @@
 import { ContactForm } from "@/components/contact/ContactForm";
 import { VaultAtmosphere } from "@/components/home/VaultAtmosphere";
+import { OrderEmailLink } from "@/components/layout/OrderEmailLink";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { homeHero, pageCopy } from "@/content/site";
 import { getStrainBySlug } from "@/data/genetics";
@@ -38,6 +39,12 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
           </h1>
           <p className="mt-6 max-w-xl text-copy leading-relaxed text-ice drop-shadow-[0_2px_12px_rgb(0_0_0_/_0.7)]">
             {copy.body}
+          </p>
+          <p className="mt-6 max-w-xl text-copy leading-relaxed text-ice drop-shadow-[0_2px_12px_rgb(0_0_0_/_0.7)]">
+            Email us at <OrderEmailLink />.
+          </p>
+          <p className="mt-3 max-w-xl text-copy leading-relaxed text-ice drop-shadow-[0_2px_12px_rgb(0_0_0_/_0.7)]">
+            {copy.mailboxOff}
           </p>
         </header>
 

@@ -57,6 +57,7 @@ export function SeedQuantityPicker({
                 )}
               >
                 {formatUsd(perSeedCents(tier))} {cartCopy.perSeed}
+                {tier.saveCents ? ` · Save ${formatUsd(tier.saveCents)}` : ""}
               </span>
             </label>
           );

@@ -1,5 +1,12 @@
-"use client";
-
+import {
+  canAddToCart,
+  clampCartQuantity,
+  isVariantId,
+  toOrderListing,
+  type CartLine,
+  type VariantId,
+} from "@/data/order";
+import { resolveCartLine } from "@/lib/cart";
 import {
   createContext,
   useCallback,
@@ -9,16 +16,9 @@ import {
   useSyncExternalStore,
   type ReactNode,
 } from "react";
-import {
-  canAddToCart,
-  isVariantId,
-  toOrderListing,
-  type CartLine,
-  type VariantId,
-} from "@/data/order";
-import { resolveCartLine } from "@/lib/cart";
 
-const STORAGE_KEY = "bandit-cart-v3";
+const STORAGE_KEY = "bandit-cart-v4";
+const LEGACY_STORAGE_KEY = "bandit-cart-v3";
 const EMPTY: CartLine[] = [];
 
 type Notice = { message: string } | null;
@@ -36,6 +36,11 @@ type CartContextValue = {
     currentVariantId: VariantId,
     nextVariantId: VariantId,
   ) => void;
+  setLineQuantity: (
+    productId: string,
+    variantId: VariantId,
+    quantity: number,
+  ) => void;
   remove: (productId: string, variantId: VariantId) => void;
   clear: () => void;
   beginAdd: (productId: string, name: string) => void;
@@ -49,7 +54,7 @@ type CartContextValue = {
 const CartContext = createContext<CartContextValue | null>(null);
 
 function sanitize(lines: CartLine[]): CartLine[] {
-  const next: CartLine[] = [];
+  const merged = new Map<string, CartLine>();
   for (const line of lines) {
     if (!isVariantId(line.variantId)) continue;
     const listing = toOrderListing(line.productId);
@@ -57,24 +62,28 @@ function sanitize(lines: CartLine[]): CartLine[] {
     const resolved = resolveCartLine({
       productId: listing.productId,
       variantId: line.variantId,
+      quantity: clampCartQuantity(line.quantity),
     });
     if ("error" in resolved) continue;
-    const exists = next.some(
-      (item) =>
-        item.productId === listing.productId && item.variantId === line.variantId,
-    );
-    if (exists) continue;
-    next.push({
+    const key = `${listing.productId}:${line.variantId}`;
+    const existing = merged.get(key);
+    const quantity = existing
+      ? clampCartQuantity(existing.quantity + resolved.quantity)
+      : resolved.quantity;
+    merged.set(key, {
       productId: listing.productId,
       variantId: line.variantId,
+      quantity,
     });
   }
-  return next;
+  return [...merged.values()];
 }
 
 function readStorage(): CartLine[] {
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const raw =
+      window.localStorage.getItem(STORAGE_KEY) ??
+      window.localStorage.getItem(LEGACY_STORAGE_KEY);
     if (!raw) return EMPTY;
     const parsed = JSON.parse(raw) as unknown;
     if (!Array.isArray(parsed)) return EMPTY;
@@ -156,25 +165,46 @@ export function CartProvider({ children }: { children: ReactNode }) {
     emit();
   }, []);
 
-  const add = useCallback((productId: string, variantId: VariantId) => {
-    const listing = toOrderListing(productId);
-    if (!listing || !canAddToCart(listing.orderState)) return false;
-    if (!isVariantId(variantId)) return false;
-    const current = memory.hydrated ? memory.lines : readStorage();
-    const match = current.find(
-      (line) =>
-        line.productId === listing.productId && line.variantId === variantId,
-    );
-    if (!match) {
-      persist(
-        sanitize([...current, { productId: listing.productId, variantId }]),
+  const add = useCallback(
+    (productId: string, variantId: VariantId) => {
+      const listing = toOrderListing(productId);
+      if (!listing || !canAddToCart(listing.orderState)) return false;
+      if (!isVariantId(variantId)) return false;
+      const current = memory.hydrated ? memory.lines : readStorage();
+      const match = current.find(
+        (line) =>
+          line.productId === listing.productId && line.variantId === variantId,
       );
-    }
-    memory.notice = { message: listing.name };
-    memory.pendingAdd = null;
-    emit();
-    return true;
-  }, [persist]);
+      if (match) {
+        persist(
+          current.map((line) =>
+            line.productId === listing.productId && line.variantId === variantId
+              ? {
+                  ...line,
+                  quantity: clampCartQuantity(line.quantity + 1),
+                }
+              : line,
+          ),
+        );
+      } else {
+        persist(
+          sanitize([
+            ...current,
+            {
+              productId: listing.productId,
+              variantId,
+              quantity: 1,
+            },
+          ]),
+        );
+      }
+      memory.notice = { message: listing.name };
+      memory.pendingAdd = null;
+      emit();
+      return true;
+    },
+    [persist],
+  );
 
   const setSeedTier = useCallback(
     (
@@ -185,18 +215,56 @@ export function CartProvider({ children }: { children: ReactNode }) {
       if (!isVariantId(nextVariantId)) return;
       if (currentVariantId === nextVariantId) return;
       const current = memory.hydrated ? memory.lines : readStorage();
+      const moving = current.find(
+        (line) =>
+          line.productId === productId && line.variantId === currentVariantId,
+      );
+      const movingQty = clampCartQuantity(moving?.quantity);
       const withoutCurrent = current.filter(
         (line) =>
           !(line.productId === productId && line.variantId === currentVariantId),
       );
-      const hasNext = withoutCurrent.some(
+      const existingNext = withoutCurrent.find(
         (line) =>
           line.productId === productId && line.variantId === nextVariantId,
       );
       persist(
-        hasNext
-          ? withoutCurrent
-          : [...withoutCurrent, { productId, variantId: nextVariantId }],
+        existingNext
+          ? withoutCurrent.map((line) =>
+              line.productId === productId && line.variantId === nextVariantId
+                ? {
+                    ...line,
+                    quantity: clampCartQuantity(line.quantity + movingQty),
+                  }
+                : line,
+            )
+          : [
+              ...withoutCurrent,
+              { productId, variantId: nextVariantId, quantity: movingQty },
+            ],
+      );
+    },
+    [persist],
+  );
+
+  const setLineQuantity = useCallback(
+    (productId: string, variantId: VariantId, quantity: number) => {
+      const current = memory.hydrated ? memory.lines : readStorage();
+      if (quantity < 1) {
+        persist(
+          current.filter(
+            (line) =>
+              !(line.productId === productId && line.variantId === variantId),
+          ),
+        );
+        return;
+      }
+      persist(
+        current.map((line) =>
+          line.productId === productId && line.variantId === variantId
+            ? { ...line, quantity: clampCartQuantity(quantity) }
+            : line,
+        ),
       );
     },
     [persist],
@@ -246,6 +314,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       pendingAdd,
       add,
       setSeedTier,
+      setLineQuantity,
       remove,
       clear,
       beginAdd,
@@ -253,7 +322,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       openCart,
       closeCart,
       dismissNotice,
-      itemCount: lines.length,
+      itemCount: lines.reduce((sum, line) => sum + line.quantity, 0),
     }),
     [
       add,
@@ -269,6 +338,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       pendingAdd,
       ready,
       remove,
+      setLineQuantity,
       setSeedTier,
     ],
   );

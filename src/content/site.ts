@@ -7,6 +7,7 @@ export const brand = {
   slogan: "TAKEN FROM THE BEST.\nBRED FOR THE REST.",
   sloganInline: "TAKEN FROM THE BEST. BRED FOR THE REST.",
   philosophy: "Fewer Strains. Higher Standards.",
+  email: "banditgeneticsvault@proton.me",
   shortStatement:
     "A curated genetics operation. We take exceptional plants, study them in the dark, and release only what belongs in the vault. Quality over volume, always.",
 } as const;
@@ -24,7 +25,11 @@ export const socialPlatforms = [
     label: "Instagram",
     href: "https://www.instagram.com/banditgeneticsvault",
   },
-  { id: "discord", label: "Discord", href: null },
+  {
+    id: "discord",
+    label: "Discord",
+    href: "https://discord.gg/R4q63fbWNc",
+  },
   { id: "facebook", label: "Facebook", href: "https://www.facebook.com/banditgenetics" },
   { id: "x", label: "X", href: "https://x.com/banditgenetics" },
   {
@@ -100,11 +105,15 @@ export const pageCopy = {
   contact: {
     title: "CONTACT BANDIT GENETICS",
     kicker: "Direct line",
-    body: "Questions about our genetics, releases, or the Bandit Vault? Have a custom bulk order in mind? Send us a message.",
+    body: "Questions about our genetics, releases, or the Bandit Vault? Have a custom bulk order in mind? Email us directly — the website form cannot deliver mail yet.",
+    emailPrompt: "Email us at banditgeneticsvault@proton.me.",
+    mailboxOff: "Contact page mailbox is not configured at this time.",
     submit: "SEND MESSAGE",
     submitting: "SENDING",
-    success: "Message sent. We'll be in touch.",
-    error: "Something went wrong sending your message. Please try again.",
+    success:
+      "The contact page mailbox is not configured at this time. Email us at banditgeneticsvault@proton.me.",
+    error:
+      "The contact page mailbox is not configured at this time. Email us at banditgeneticsvault@proton.me.",
     nameLabel: "Name",
     emailLabel: "Email",
     subjectLabel: "Subject",

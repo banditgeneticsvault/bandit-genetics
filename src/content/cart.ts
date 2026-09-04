@@ -11,8 +11,10 @@ export const cartCopy = {
   remove: "REMOVE",
   clear: "CLEAR CART",
   cancel: "CANCEL",
-  seedQuantity: "SEED QUANTITY",
-  perSeed: "PER SEED",
+  seedQuantity: "SEEDS IN THIS OPTION",
+  perSeed: "each",
+  optionPrice: "Option price",
+  cartOptions: "OPTIONS IN CART",
   subtotal: "Subtotal",
   orderTotal: "Order total",
   lineTotal: "Line total",
@@ -23,11 +25,11 @@ export const cartCopy = {
   fileStatus: "FILE STATUS",
   bulkTitle: "LOOKING FOR A CUSTOM QUANTITY?",
   bulkBody:
-    "Standard storefront quantities are 1, 2, 3, or 5 seeds. Tell Bandit Genetics what you need for a custom bulk run. Custom bulk stays on the Contact line, not in the seed quantity selector.",
+    "Standard storefront options are 1, 2, 3, or 5 seeds. Tell Bandit Genetics what you need for a custom bulk run. Custom bulk stays on the Contact line, not in the seed option selector.",
   bulkCta: "REQUEST A CUSTOM BULK ORDER",
   toastView: "VIEW CART",
   paymentOff:
-    "Payment processing is not currently enabled. Nothing will be charged.",
+    "Payment processing is not currently enabled. Nothing will be charged. Email us at banditgeneticsvault@proton.me to place your first order. Payment system is not configured at this time.",
   checkoutTitle: "CHECKOUT",
   checkoutKicker: "THE DESK",
   checkoutIntro:
@@ -49,5 +51,6 @@ export const cartCopy = {
   payment: "PAYMENT",
   taxNote: "Tax and shipping are calculated when a payment provider is connected.",
   network: "The checkout could not continue. Check the connection and try again.",
-  chooseSeeds: "Choose how many individual seeds to add.",
+  chooseSeeds:
+    "Choose how many seeds this option includes. This is not how many cart items you want.",
 } as const;

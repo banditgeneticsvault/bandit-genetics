@@ -8,7 +8,7 @@ function SocialIcon({ id }: { id: SocialPlatformId }) {
     height: 20,
     "aria-hidden": true as const,
     focusable: false as const,
-    className: "h-5 w-5 shrink-0",
+    className: "pointer-events-none h-5 w-5 shrink-0 overflow-visible",
   };
 
   switch (id) {
@@ -66,32 +66,18 @@ export function SocialLinks() {
       <ul className="flex flex-wrap justify-start gap-2 sm:gap-3">
         {socialPlatforms.map((platform) => (
           <li key={platform.id}>
-            {platform.href ? (
-              <a
-                href={platform.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={platform.label}
-                className={cn(
-                  controlClassName,
-                  "border-white/12 hover:border-gold hover:bg-gold/10 hover:text-gold focus-visible:border-gold",
-                )}
-              >
-                <SocialIcon id={platform.id} />
-              </a>
-            ) : (
-              <span
-                aria-disabled="true"
-                aria-label="Discord (pending)"
-                title="Discord — pending"
-                className={cn(
-                  controlClassName,
-                  "cursor-default border-white/8 text-gold/40",
-                )}
-              >
-                <SocialIcon id={platform.id} />
-              </span>
-            )}
+            <a
+              href={platform.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={platform.label}
+              className={cn(
+                controlClassName,
+                "border-white/12 hover:border-gold hover:bg-gold/10 hover:text-gold focus-visible:border-gold",
+              )}
+            >
+              <SocialIcon id={platform.id} />
+            </a>
           </li>
         ))}
       </ul>

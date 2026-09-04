@@ -52,7 +52,7 @@ export function StrainMedia({
           width={width}
           height={height}
           sizes={sizes}
-          quality={85}
+          quality={90}
           priority={priority}
           className={cn(
             "h-auto w-auto max-w-full object-contain",

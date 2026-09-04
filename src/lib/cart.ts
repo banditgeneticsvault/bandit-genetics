@@ -3,6 +3,7 @@ import { getStrainById } from "@/data/genetics";
 import type { StrainImage, StrainTheme } from "@/data/genetics/types";
 import {
   canAddToCart,
+  clampCartQuantity,
   getSeedTier,
   isVariantId,
   toOrderListing,
@@ -16,13 +17,19 @@ export type ResolvedCartLine = {
   slug: string;
   name: string;
   variantId: VariantId;
+  quantity: number;
   seedCount: number;
   seedLabel: string;
+  totalSeeds: number;
   priceCents: number;
   lineTotalCents: number;
   image?: StrainImage;
   theme: StrainTheme;
 };
+
+function parseQuantity(value: unknown): number {
+  return clampCartQuantity(value);
+}
 
 export function parseCartPayload(raw: unknown): CartLine[] | null {
   if (typeof raw !== "string") return null;
@@ -50,6 +57,7 @@ export function parseCartPayload(raw: unknown): CartLine[] | null {
       lines.push({
         productId: productId.trim(),
         variantId,
+        quantity: parseQuantity(record.quantity),
       });
     }
     return lines;
@@ -68,6 +76,7 @@ export function resolveCartLine(
   const tier = getSeedTier(line.variantId);
   if (!tier) return { error: "variant" };
 
+  const quantity = clampCartQuantity(line.quantity);
   const strain = getStrainById(listing.productId);
   const image = strain ? pickVaultImage(strain) : undefined;
 
@@ -76,10 +85,12 @@ export function resolveCartLine(
     slug: listing.slug,
     name: listing.name,
     variantId: tier.id,
+    quantity,
     seedCount: tier.seeds,
     seedLabel: tier.label,
+    totalSeeds: tier.seeds * quantity,
     priceCents: tier.priceCents,
-    lineTotalCents: tier.priceCents,
+    lineTotalCents: tier.priceCents * quantity,
     image,
     theme: strain?.theme ?? "METAL",
   };
