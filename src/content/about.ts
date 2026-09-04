@@ -3,8 +3,7 @@ export const aboutCopy = {
   title: "ABOUT BANDIT GENETICS",
   slogan: "TAKEN FROM THE BEST. BRED FOR THE REST.",
   opening: [
-    "Bandit Genetics exists to find traits worth chasing, make thoughtful crosses, and release files growers actually want to run.",
-    "This is a female-founded company. That belongs in the story. It is not the whole story. The work is still the work: limited releases, chosen on purpose, with quality ahead of a crowded catalog.",
+    "Our entire philosophy at Bandit Genetics revolves around tracking down rare genetics and meticulously combining them to craft something exceptional for the community. Sourced from the elite and bred for the people, we focus our energy on doing the work that actually matters. We refuse to pad out a massive seed catalog just to take up space or chase industry trends. By keeping our drops small and incredibly focused, we guarantee that elite quality always takes precedence over a sprawling inventory. Ultimately, we exist to liberate top-tier traits so that you can confidently pop seeds you actually want to run in your own room.",
   ],
   focusKicker: "BREEDING FOCUS",
   focusTitle: "WHAT WE BREED FOR",

@@ -13,7 +13,8 @@ export async function submitContact(
   formData: FormData,
 ): Promise<ContactFormState> {
   if (isHoneypotFilled(formData.get("website"))) {
-    return { status: "success", fieldErrors: {} };
+    console.info("contact.submit.ignored");
+    return { status: "unconfigured", fieldErrors: {} };
   }
 
   const parsed = parseContactForm(
@@ -36,10 +37,12 @@ export async function submitContact(
   try {
     const delivered = await deliverContactMessage(parsed.data);
     if (!delivered.ok) {
-      return { status: "error", fieldErrors: {} };
+      console.info("contact.delivery.unconfigured");
+      return { status: "unconfigured", fieldErrors: {} };
     }
-    return { status: "success", fieldErrors: {} };
+    return { status: "unconfigured", fieldErrors: {} };
   } catch {
+    console.error("contact.submit.failed");
     return { status: "error", fieldErrors: {} };
   }
 }

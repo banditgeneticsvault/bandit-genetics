@@ -108,15 +108,14 @@ export const pageCopy = {
   contact: {
     title: "CONTACT BANDIT GENETICS",
     kicker: "Direct line",
-    body: "Questions about our genetics, releases, or the Bandit Vault? Have a custom bulk order in mind? Email us directly — the website form cannot deliver mail yet.",
+    body: "Questions about our genetics, releases, or the Bandit Vault? Have a custom bulk order in mind? Send us a message.",
     emailPrompt: "Email us at banditgeneticsvault@proton.me.",
-    mailboxOff: "Contact page mailbox is not configured at this time.",
+    mailboxOff: "The website form cannot send mail.",
     submit: "SEND MESSAGE",
     submitting: "SENDING",
-    success:
-      "The contact page mailbox is not configured at this time. Email us at banditgeneticsvault@proton.me.",
-    error:
-      "The contact page mailbox is not configured at this time. Email us at banditgeneticsvault@proton.me.",
+    unconfigured:
+      "This form cannot send mail from the website. Email us at",
+    error: "We could not process this message. Email us at",
     nameLabel: "Name",
     emailLabel: "Email",
     subjectLabel: "Subject",

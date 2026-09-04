@@ -14,8 +14,10 @@ export type ContactFields = {
 
 export type ContactFieldErrors = Partial<Record<keyof ContactFields, string>>;
 
+export type ContactFormStatus = "idle" | "unconfigured" | "error";
+
 export type ContactFormState = {
-  status: "idle" | "success" | "error";
+  status: ContactFormStatus;
   fieldErrors: ContactFieldErrors;
 };
 
@@ -30,10 +32,10 @@ export function parseContactForm(
   input: Record<string, unknown>,
   messages: { required: string; invalidEmail: string },
 ): { ok: true; data: ContactFields } | { ok: false; fieldErrors: ContactFieldErrors } {
-  const name = normalize(input.name, CONTACT_LIMITS.name);
-  const email = normalize(input.email, CONTACT_LIMITS.email).toLowerCase();
-  const subject = normalize(input.subject, CONTACT_LIMITS.subject);
-  const message = normalize(input.message, CONTACT_LIMITS.message);
+  const name = normalizeLine(input.name, CONTACT_LIMITS.name);
+  const email = normalizeLine(input.email, CONTACT_LIMITS.email).toLowerCase();
+  const subject = normalizeLine(input.subject, CONTACT_LIMITS.subject);
+  const message = normalizeMessage(input.message, CONTACT_LIMITS.message);
 
   const fieldErrors: ContactFieldErrors = {};
 
@@ -55,17 +57,22 @@ export function isHoneypotFilled(value: unknown) {
 }
 
 /**
- * Email delivery is not wired yet. Keep this function as the single server-side
+ * Email delivery is not wired. Keep this function as the single server-side
  * seam so a provider can be added without changing the form.
  */
 export async function deliverContactMessage(
   payload: ContactFields,
-): Promise<{ ok: boolean }> {
-  void payload;
-  return { ok: false };
+): Promise<{ ok: true } | { ok: false; reason: "unconfigured" }> {
+  void payload.name;
+  return { ok: false, reason: "unconfigured" };
 }
 
-function normalize(value: unknown, max: number) {
+function normalizeLine(value: unknown, max: number) {
   if (typeof value !== "string") return "";
-  return value.replace(/\s+/g, " ").trim().slice(0, max);
+  return value.replace(/[\r\n]+/g, " ").replace(/\s+/g, " ").trim().slice(0, max);
+}
+
+function normalizeMessage(value: unknown, max: number) {
+  if (typeof value !== "string") return "";
+  return value.replace(/\r\n/g, "\n").replace(/\r/g, "\n").trim().slice(0, max);
 }
