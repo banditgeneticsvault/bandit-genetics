@@ -19,6 +19,12 @@ import {
   stripeSessionOrderId,
 } from "../src/lib/stripe/association.ts";
 import {
+  checkoutReturnAllows,
+  checkoutReturnPresentation,
+  signCheckoutReturnAuth,
+  verifyCheckoutReturnAuth,
+} from "../src/lib/stripe/return-auth.ts";
+import {
   assignPromotionalProductId,
   formatPromotionProgress,
   PROMOTION_THRESHOLD_CENTS,
@@ -343,6 +349,74 @@ assert(
     { id: orderId, stripeCheckoutSessionId: "cs_test_abc123" },
   ),
   "metadata order mismatch is rejected",
+);
+
+const returnSecret = "test_checkout_return_secret";
+const otherOrderId = "bg_11111111-1111-1111-1111-111111111111";
+const otherSessionId = "cs_test_othercustomer";
+const returnToken = signCheckoutReturnAuth(
+  { sessionId: session.id, orderId },
+  returnSecret,
+);
+assert(returnToken, "return token created");
+const verified = verifyCheckoutReturnAuth(returnToken, returnSecret);
+assert(verified?.sessionId === session.id, "return token session");
+assert(verified?.orderId === orderId, "return token order");
+assert(
+  checkoutReturnAllows(verified, session.id, orderId),
+  "A: legitimate return is authorized",
+);
+assert(
+  checkoutReturnPresentation({
+    authorized: true,
+    sessionPaid: true,
+    orderFailed: false,
+    sessionExpired: false,
+  }) === "confirmed",
+  "A: legitimate paid return is confirmed",
+);
+assert(
+  checkoutReturnPresentation({
+    authorized: true,
+    sessionPaid: true,
+    orderFailed: false,
+    sessionExpired: false,
+  }) === "confirmed",
+  "B/C: refresh and revisit stay confirmed without creating another order",
+);
+assert(
+  !checkoutReturnAllows(verified, otherSessionId, otherOrderId),
+  "D: different session/order is not authorized",
+);
+assert(
+  checkoutReturnPresentation({
+    authorized: false,
+    sessionPaid: true,
+    orderFailed: false,
+    sessionExpired: false,
+  }) === "missing",
+  "D: paid session without matching auth hides order details",
+);
+assert(
+  checkoutReturnPresentation({
+    authorized: false,
+    sessionPaid: true,
+    orderFailed: false,
+    sessionExpired: false,
+  }) === "missing",
+  "E: missing confirmation authorization hides order details",
+);
+assert(
+  verifyCheckoutReturnAuth(returnToken, "wrong_secret") === null,
+  "E: invalid signature is rejected",
+);
+assert(
+  verifyCheckoutReturnAuth(returnToken, returnSecret, 4_000_000_000) === null,
+  "E: expired confirmation authorization is rejected",
+);
+assert(
+  checkoutReturnAllows(null, session.id, orderId) === false,
+  "E: absent confirmation authorization is rejected",
 );
 
 console.log("checkout validation checks passed");

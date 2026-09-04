@@ -4,13 +4,14 @@ import type Stripe from "stripe";
 import {
   applyOrderStatus,
   attachStripeSession,
+  claimWebhookEvent,
+  completeWebhookEvent,
   createPendingOrder,
   getOrderById,
   getOrderByPaymentIntentId,
   getOrderBySessionId,
-  hasProcessedEvent,
   isInternalOrderId,
-  markProcessedEvent,
+  releaseWebhookEvent,
   saveOrder,
 } from "@/lib/orders/repository";
 import type { Order, OrderLine } from "@/lib/orders/types";
@@ -19,6 +20,11 @@ import {
   sessionBelongsToOrder,
   stripeSessionOrderId,
 } from "@/lib/stripe/association";
+import {
+  checkoutReturnAllows,
+  checkoutReturnPresentation,
+  type CheckoutReturnAuth,
+} from "@/lib/stripe/return-auth";
 import { encodeOrderMetadata } from "@/lib/stripe/session";
 import { getStripe } from "@/lib/stripe/client";
 
@@ -143,7 +149,7 @@ export type CheckoutReturnView = "missing" | "pending" | "failed" | "confirmed";
 
 export async function confirmCheckoutReturn(
   sessionId: string,
-  cookieOrderId?: string | null,
+  returnAuth?: CheckoutReturnAuth | null,
 ): Promise<{
   sessionFound: boolean;
   sessionPaid: boolean;
@@ -172,35 +178,26 @@ export async function confirmCheckoutReturn(
       };
     }
 
-    if (session.payment_status === "paid") {
-      const saved = await markOrderPaidFromSession(order, session, stripe);
-      return {
-        sessionFound: true,
-        sessionPaid: true,
-        view: "confirmed",
-        order: saved,
-      };
+    const authorized = checkoutReturnAllows(returnAuth, session.id, order.id);
+    const sessionPaid = session.payment_status === "paid";
+    let stored = order;
+    if (sessionPaid) {
+      stored = await markOrderPaidFromSession(order, session, stripe);
     }
 
-    if (cookieOrderId && cookieOrderId !== order.id) {
-      return {
-        sessionFound: true,
-        sessionPaid: false,
-        view: "missing",
-        order: null,
-      };
-    }
-
-    const failed =
-      order.status === "payment_failed" ||
-      order.paymentStatus === "failed" ||
-      session.status === "expired";
+    const view = checkoutReturnPresentation({
+      authorized,
+      sessionPaid,
+      orderFailed:
+        stored.status === "payment_failed" || stored.paymentStatus === "failed",
+      sessionExpired: session.status === "expired",
+    });
 
     return {
       sessionFound: true,
-      sessionPaid: false,
-      view: failed ? "failed" : "pending",
-      order: null,
+      sessionPaid,
+      view,
+      order: view === "confirmed" ? stored : null,
     };
   } catch {
     return {
@@ -224,36 +221,25 @@ async function isStaleSessionEvent(
 
 async function requireStoredOrder(
   session: Stripe.Checkout.Session,
-  eventId: string,
-): Promise<Order | null> {
+): Promise<Order | "stale"> {
   const order = await resolveStoredOrderForSession(session);
   if (order) return order;
-  if (await isStaleSessionEvent(session)) {
-    await markProcessedEvent(eventId);
-    return null;
-  }
+  if (await isStaleSessionEvent(session)) return "stale";
   throw new Error("order_not_ready");
 }
 
-export async function handleStripeEvent(event: Stripe.Event): Promise<void> {
-  if (await hasProcessedEvent(event.id)) {
-    return;
-  }
-
-  const stripe = getStripe();
-  if (!stripe) {
-    throw new Error("stripe_unconfigured");
-  }
-
+async function applyCheckoutSessionEvent(
+  event: Stripe.Event,
+  stripe: Stripe,
+): Promise<string | null> {
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session;
-      const order = await requireStoredOrder(session, event.id);
-      if (!order) return;
+      const order = await requireStoredOrder(session);
+      if (order === "stale") return null;
       if (session.payment_status === "paid") {
         const saved = await markOrderPaidFromSession(order, session, stripe);
-        await markProcessedEvent(event.id, saved.id);
-        return;
+        return saved.id;
       }
       const next = applyOrderStatus(
         withSessionPointers(order, session),
@@ -264,21 +250,19 @@ export async function handleStripeEvent(event: Stripe.Event): Promise<void> {
         },
       );
       await persistStatus(next, stripe);
-      await markProcessedEvent(event.id, next.id);
-      return;
+      return next.id;
     }
     case "checkout.session.async_payment_succeeded": {
       const session = event.data.object as Stripe.Checkout.Session;
-      const order = await requireStoredOrder(session, event.id);
-      if (!order) return;
+      const order = await requireStoredOrder(session);
+      if (order === "stale") return null;
       const saved = await markOrderPaidFromSession(order, session, stripe);
-      await markProcessedEvent(event.id, saved.id);
-      return;
+      return saved.id;
     }
     case "checkout.session.async_payment_failed": {
       const session = event.data.object as Stripe.Checkout.Session;
-      const order = await requireStoredOrder(session, event.id);
-      if (!order) return;
+      const order = await requireStoredOrder(session);
+      if (order === "stale") return null;
       const next = applyOrderStatus(
         withSessionPointers(order, session),
         "payment_failed",
@@ -288,13 +272,12 @@ export async function handleStripeEvent(event: Stripe.Event): Promise<void> {
         },
       );
       await persistStatus(next, stripe);
-      await markProcessedEvent(event.id, next.id);
-      return;
+      return next.id;
     }
     case "checkout.session.expired": {
       const session = event.data.object as Stripe.Checkout.Session;
-      const order = await requireStoredOrder(session, event.id);
-      if (!order) return;
+      const order = await requireStoredOrder(session);
+      if (order === "stale") return null;
       const next = applyOrderStatus(
         withSessionPointers(order, session),
         "cancelled",
@@ -304,8 +287,7 @@ export async function handleStripeEvent(event: Stripe.Event): Promise<void> {
         },
       );
       await persistStatus(next, stripe);
-      await markProcessedEvent(event.id, next.id);
-      return;
+      return next.id;
     }
     case "payment_intent.payment_failed": {
       const intent = event.data.object as Stripe.PaymentIntent;
@@ -331,25 +313,52 @@ export async function handleStripeEvent(event: Stripe.Event): Promise<void> {
         if (orderId) {
           throw new Error("order_not_ready");
         }
-        await markProcessedEvent(event.id);
-        return;
+        return null;
       }
       const next = applyOrderStatus(order, "payment_failed", "failed", {
         stripePaymentIntentId: intent.id,
       });
       await persistStatus(next, stripe);
-      await markProcessedEvent(event.id, next.id);
-      return;
+      return next.id;
     }
     default:
-      await markProcessedEvent(event.id);
+      return null;
+  }
+}
+
+export async function handleStripeEvent(event: Stripe.Event): Promise<void> {
+  const stripe = getStripe();
+  if (!stripe) {
+    throw new Error("stripe_unconfigured");
+  }
+
+  const claim = await claimWebhookEvent(event.id);
+  if (claim.kind === "completed") return;
+  if (claim.kind === "busy") {
+    throw new Error("webhook_event_busy");
+  }
+
+  try {
+    const orderId = await applyCheckoutSessionEvent(event, stripe);
+    const completed = await completeWebhookEvent(
+      event.id,
+      claim.token,
+      orderId ?? undefined,
+    );
+    if (!completed) {
+      throw new Error("webhook_event_complete_failed");
+    }
+  } catch (error) {
+    await releaseWebhookEvent(event.id, claim.token);
+    throw error;
   }
 }
 
 export async function lookupOrderForSession(
   sessionId: string,
+  returnAuth?: CheckoutReturnAuth | null,
 ): Promise<{ order: Order | null; sessionPaid: boolean; sessionFound: boolean }> {
-  const result = await confirmCheckoutReturn(sessionId);
+  const result = await confirmCheckoutReturn(sessionId, returnAuth);
   return {
     order: result.order,
     sessionFound: result.sessionFound,

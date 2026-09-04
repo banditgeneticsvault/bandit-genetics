@@ -5,7 +5,7 @@ import { PageContainer } from "@/components/layout/PageContainer";
 import { Button } from "@/components/ui/Button";
 import { cartCopy } from "@/content/cart";
 import { siteUrl } from "@/content/site";
-import { readPendingOrderCookie } from "@/lib/orders/pending-cookie";
+import { readCheckoutReturnAuth } from "@/lib/orders/return-cookie";
 import { isStripeCheckoutSessionId } from "@/lib/stripe/association";
 import { confirmCheckoutReturn } from "@/lib/stripe/webhooks";
 import type { Metadata } from "next";
@@ -31,9 +31,9 @@ export default async function CheckoutSuccessPage({
   const sessionId = Array.isArray(sessionIdRaw) ? sessionIdRaw[0] : sessionIdRaw;
   const validSession =
     sessionId && isStripeCheckoutSessionId(sessionId) ? sessionId : null;
-  const cookieOrderId = await readPendingOrderCookie();
+  const returnAuth = await readCheckoutReturnAuth();
   const result = validSession
-    ? await confirmCheckoutReturn(validSession, cookieOrderId)
+    ? await confirmCheckoutReturn(validSession, returnAuth)
     : {
         order: null,
         sessionFound: false,

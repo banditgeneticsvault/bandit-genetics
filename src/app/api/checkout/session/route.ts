@@ -3,6 +3,7 @@ import "server-only";
 import { NextResponse } from "next/server";
 import { lookupOrderForSession } from "@/lib/stripe/webhooks";
 import { isStripeCheckoutSessionId } from "@/lib/stripe/association";
+import { readCheckoutReturnAuth } from "@/lib/orders/return-cookie";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -18,7 +19,10 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "invalid" }, { status: 400 });
   }
 
-  const result = await lookupOrderForSession(sessionId);
+  const result = await lookupOrderForSession(
+    sessionId,
+    await readCheckoutReturnAuth(),
+  );
   if (!result.sessionFound) {
     return NextResponse.json({ error: "not_found" }, { status: 404 });
   }

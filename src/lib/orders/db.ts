@@ -54,6 +54,22 @@ async function createSchema(sql: Sql) {
       received_at TIMESTAMPTZ NOT NULL
     )
   `;
+  await sql`
+    ALTER TABLE stripe_webhook_events
+    ADD COLUMN IF NOT EXISTS processing_status TEXT
+  `;
+  await sql`
+    ALTER TABLE stripe_webhook_events
+    ADD COLUMN IF NOT EXISTS lease_token TEXT
+  `;
+  await sql`
+    ALTER TABLE stripe_webhook_events
+    ADD COLUMN IF NOT EXISTS lease_expires_at TIMESTAMPTZ
+  `;
+  await sql`
+    ALTER TABLE stripe_webhook_events
+    ADD COLUMN IF NOT EXISTS completed_at TIMESTAMPTZ
+  `;
 }
 
 export async function withOrderDb(): Promise<Sql> {

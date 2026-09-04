@@ -174,12 +174,27 @@ export async function attachStripeSession(
   });
 }
 
+const WEBHOOK_LEASE_MS = 90_000;
+
+export type WebhookEventClaim =
+  | { kind: "claimed"; token: string }
+  | { kind: "busy" }
+  | { kind: "completed" };
+
+function webhookRowIsCompleted(status: unknown) {
+  return status === "completed" || status == null;
+}
+
 export async function hasProcessedEvent(eventId: string): Promise<boolean> {
   const sql = await withOrderDb();
   const rows = await sql`
-    SELECT event_id FROM stripe_webhook_events WHERE event_id = ${eventId} LIMIT 1
+    SELECT processing_status
+    FROM stripe_webhook_events
+    WHERE event_id = ${eventId}
+    LIMIT 1
   `;
-  return rows.length > 0;
+  if (!rows[0]) return false;
+  return webhookRowIsCompleted(rows[0].processing_status);
 }
 
 export async function markProcessedEvent(
@@ -187,10 +202,118 @@ export async function markProcessedEvent(
   orderId?: string,
 ): Promise<void> {
   const sql = await withOrderDb();
+  const completedAt = nowIso();
   await sql`
-    INSERT INTO stripe_webhook_events (event_id, order_id, received_at)
-    VALUES (${eventId}, ${orderId ?? null}, ${nowIso()}::timestamptz)
-    ON CONFLICT (event_id) DO NOTHING
+    INSERT INTO stripe_webhook_events (
+      event_id,
+      order_id,
+      received_at,
+      processing_status,
+      completed_at
+    )
+    VALUES (
+      ${eventId},
+      ${orderId ?? null},
+      ${completedAt}::timestamptz,
+      'completed',
+      ${completedAt}::timestamptz
+    )
+    ON CONFLICT (event_id) DO UPDATE SET
+      processing_status = 'completed',
+      order_id = COALESCE(EXCLUDED.order_id, stripe_webhook_events.order_id),
+      completed_at = COALESCE(
+        stripe_webhook_events.completed_at,
+        EXCLUDED.completed_at
+      ),
+      lease_token = NULL,
+      lease_expires_at = NULL
+    WHERE stripe_webhook_events.processing_status IS DISTINCT FROM 'processing'
+  `;
+}
+
+export async function claimWebhookEvent(
+  eventId: string,
+): Promise<WebhookEventClaim> {
+  const sql = await withOrderDb();
+  const token = randomUUID();
+  const receivedAt = nowIso();
+  const leaseExpiresAt = new Date(Date.now() + WEBHOOK_LEASE_MS).toISOString();
+
+  const claimed = await sql`
+    INSERT INTO stripe_webhook_events (
+      event_id,
+      order_id,
+      received_at,
+      processing_status,
+      lease_token,
+      lease_expires_at
+    )
+    VALUES (
+      ${eventId},
+      NULL,
+      ${receivedAt}::timestamptz,
+      'processing',
+      ${token},
+      ${leaseExpiresAt}::timestamptz
+    )
+    ON CONFLICT (event_id) DO UPDATE SET
+      processing_status = 'processing',
+      lease_token = EXCLUDED.lease_token,
+      lease_expires_at = EXCLUDED.lease_expires_at
+    WHERE stripe_webhook_events.processing_status = 'processing'
+      AND stripe_webhook_events.lease_expires_at < NOW()
+    RETURNING lease_token
+  `;
+
+  if (claimed[0]?.lease_token === token) {
+    return { kind: "claimed", token };
+  }
+
+  const existing = await sql`
+    SELECT processing_status
+    FROM stripe_webhook_events
+    WHERE event_id = ${eventId}
+    LIMIT 1
+  `;
+  if (existing[0] && webhookRowIsCompleted(existing[0].processing_status)) {
+    return { kind: "completed" };
+  }
+  return { kind: "busy" };
+}
+
+export async function completeWebhookEvent(
+  eventId: string,
+  token: string,
+  orderId?: string,
+): Promise<boolean> {
+  const sql = await withOrderDb();
+  const completedAt = nowIso();
+  const rows = await sql`
+    UPDATE stripe_webhook_events
+    SET
+      processing_status = 'completed',
+      order_id = COALESCE(${orderId ?? null}, order_id),
+      completed_at = ${completedAt}::timestamptz,
+      lease_token = NULL,
+      lease_expires_at = NULL
+    WHERE event_id = ${eventId}
+      AND lease_token = ${token}
+      AND processing_status = 'processing'
+    RETURNING event_id
+  `;
+  return rows.length > 0;
+}
+
+export async function releaseWebhookEvent(
+  eventId: string,
+  token: string,
+): Promise<void> {
+  const sql = await withOrderDb();
+  await sql`
+    DELETE FROM stripe_webhook_events
+    WHERE event_id = ${eventId}
+      AND lease_token = ${token}
+      AND processing_status = 'processing'
   `;
 }
 

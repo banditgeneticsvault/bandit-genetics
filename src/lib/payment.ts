@@ -3,6 +3,7 @@ import "server-only";
 import { createHash, randomUUID } from "node:crypto";
 import type { CartLine } from "@/data/order";
 import { syncCheckoutPromotion } from "@/lib/checkout-promotion";
+import { writeCheckoutReturnCookie } from "@/lib/orders/return-cookie";
 import { recordCheckoutSession } from "@/lib/stripe/webhooks";
 import { getStripe, isStripeConfigured } from "@/lib/stripe/client";
 import type { Order } from "@/lib/orders/types";
@@ -150,6 +151,10 @@ export async function createCheckout(
     }
 
     await recordCheckoutSession(order.id, session.id);
+    await writeCheckoutReturnCookie({
+      sessionId: session.id,
+      orderId: order.id,
+    });
     return {
       ok: true,
       status: "processing",
