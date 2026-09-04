@@ -6,7 +6,7 @@ export const brand = {
   wordmark: "BANDIT GENETICS",
   slogan: "TAKEN FROM THE BEST.\nBRED FOR THE REST.",
   sloganInline: "TAKEN FROM THE BEST. BRED FOR THE REST.",
-  philosophy: "FEW STRAINS. NO FILLER.",
+  philosophy: "Fewer Strains. Higher Standards.",
   shortStatement:
     "A curated genetics operation. We take exceptional plants, study them in the dark, and release only what belongs in the vault. Quality over volume, always.",
 } as const;
@@ -19,18 +19,24 @@ export const navItems = [
 ] as const;
 
 export const homeHero: {
-  classified: string;
   primaryCta: { href: string; label: string };
   /** Bandit Genetics Frost Queen brand artwork. */
   artwork?: StrainImage;
+  /** Existing atmospheric cannabis photograph for the homepage field. */
+  background?: StrainImage;
 } = {
-  classified: "FILE // BG 00  ·  VAULT ACCESS",
   primaryCta: { href: "/vault", label: "ENTER THE VAULT" },
   artwork: {
     src: homeArtworkSrc("frost-queen-bandit.png"),
     alt: "Frost Queen, the Bandit Genetics brand mark",
     width: 1254,
     height: 1254,
+  },
+  background: {
+    src: homeArtworkSrc("background.jpg"),
+    alt: "",
+    width: 1376,
+    height: 768,
   },
 };
 
@@ -66,7 +72,7 @@ export const pageCopy = {
   contact: {
     title: "CONTACT BANDIT GENETICS",
     kicker: "Direct line",
-    body: "Questions about our genetics, releases, or the Bandit vault? Send us a message.",
+    body: "Questions about our genetics, releases, or the Bandit Vault? Have a custom bulk order in mind? Send us a message.",
     submit: "SEND MESSAGE",
     submitting: "SENDING",
     success: "Message sent. We'll be in touch.",

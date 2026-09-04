@@ -2,6 +2,7 @@ import Link from "next/link";
 import { DossierSection } from "@/components/dossier/DossierSection";
 import { dossierCopy } from "@/content/dossier";
 import type { RelatedStrainLink } from "@/data/genetics";
+import { STRAIN_TYPE_LABELS } from "@/data/genetics/types";
 
 type RelatedGeneticsProps = {
   related: RelatedStrainLink[];
@@ -23,7 +24,7 @@ export function RelatedGenetics({ related }: RelatedGeneticsProps) {
                 className="block h-full border border-white/10 bg-charcoal px-4 py-5 transition-colors hover:border-ice/40"
               >
                 <p className="font-label text-kicker tracking-[0.2em] text-gold uppercase">
-                  File {entry.item.fileCode}
+                  {STRAIN_TYPE_LABELS[entry.item.type]}
                 </p>
                 <h3 className="mt-2 font-display text-2xl leading-tight text-frost">
                   {entry.item.name}

@@ -136,7 +136,7 @@ export function SiteHeader() {
             </ul>
           </nav>
 
-          <p className="pb-10 font-label text-ui tracking-[0.28em] text-ice/50 uppercase">
+          <p className="pb-10 font-label text-ui tracking-[0.18em] text-ice/50">
             {brand.philosophy}
           </p>
         </div>

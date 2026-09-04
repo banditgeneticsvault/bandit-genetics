@@ -1,8 +1,37 @@
-export function VaultAtmosphere({ softened = false }: { softened?: boolean }) {
+import Image from "next/image";
+import { hasArtworkSrc } from "@/lib/artwork";
+import type { StrainImage } from "@/data/genetics/types";
+
+type VaultAtmosphereProps = {
+  softened?: boolean;
+  background?: StrainImage;
+};
+
+export function VaultAtmosphere({
+  softened = false,
+  background,
+}: VaultAtmosphereProps) {
+  const showBackground = hasArtworkSrc(background);
+
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
       <div className="absolute inset-0 bg-black" />
-      <div data-artwork-slot="" className="absolute inset-0" />
+      <div data-artwork-slot="" className="absolute inset-0">
+        {showBackground ? (
+          <Image
+            src={background.src}
+            alt=""
+            fill
+            priority
+            quality={70}
+            sizes="100vw"
+            className="object-cover object-[center_62%] opacity-[0.5] brightness-[0.42] contrast-[0.62] saturate-[0.7] md:opacity-[0.4] md:brightness-[0.38]"
+          />
+        ) : null}
+      </div>
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_14%,rgb(7_8_10_/_0.22)_52%,rgb(7_8_10_/_0.74)_100%)]" />
+      <div className="absolute inset-0 bg-linear-to-b from-black/72 via-black/14 to-black/80" />
+      <div className="absolute inset-0 bg-linear-to-r from-black/38 via-black/12 to-black/34 md:from-black/58 md:via-black/16 md:to-black/48" />
       <div
         className={
           softened
@@ -13,7 +42,7 @@ export function VaultAtmosphere({ softened = false }: { softened?: boolean }) {
       <div
         className={
           softened
-            ? "vault-grate absolute inset-0 opacity-25"
+            ? "vault-grate absolute inset-0 opacity-20"
             : "vault-grate absolute inset-0 opacity-70"
         }
       />

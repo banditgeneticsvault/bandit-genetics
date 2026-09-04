@@ -37,7 +37,7 @@ export default function VaultPage() {
             <p className="text-copy leading-relaxed text-ice/75">
               {vaultCopy.intro}
             </p>
-            <p className="mt-6 font-label text-ui tracking-[0.28em] text-ice/40 uppercase">
+            <p className="mt-6 font-label text-ui tracking-[0.18em] text-ice/40">
               {brand.philosophy}
             </p>
           </div>

@@ -13,10 +13,7 @@ export function StrainCard({ strain }: StrainCardProps) {
   return (
     <article className="flex h-full flex-col border border-white/10 bg-charcoal">
       <header className="flex items-start justify-between gap-4 border-b border-white/8 px-4 py-3">
-        <p className="font-label text-meta tracking-[0.22em] text-gold uppercase">
-          File {strain.fileCode}
-        </p>
-        <p className="font-label text-meta tracking-[0.18em] text-ice/55 uppercase">
+        <p className="font-label text-meta tracking-[0.18em] text-gold uppercase">
           {STRAIN_TYPE_LABELS[strain.type]}
         </p>
       </header>
@@ -32,7 +29,6 @@ export function StrainCard({ strain }: StrainCardProps) {
 
       <StrainMedia
         image={pickVaultImage(strain)}
-        fileCode={strain.fileCode}
         theme={strain.theme}
         name={strain.name}
         className="px-3 py-3"

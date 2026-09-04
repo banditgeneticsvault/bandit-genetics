@@ -11,21 +11,21 @@ export function HomeHero() {
 
   return (
     <section className="relative isolate min-h-[100dvh] overflow-hidden bg-black">
-      <VaultAtmosphere softened={showArtwork} />
+      <VaultAtmosphere
+        softened={showArtwork}
+        background={homeHero.background}
+      />
 
       <div className="page-gutter relative mx-auto flex min-h-[100dvh] max-w-[92rem] flex-col justify-start pt-28 pb-10 md:justify-center md:pt-32 md:pb-16">
         <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-8">
           <div className="min-w-0 lg:col-span-6 lg:pb-6">
-            <p className="font-label text-kicker tracking-[0.32em] text-gold uppercase">
-              {homeHero.classified}
-            </p>
-            <h1 className="mt-5 pr-4 font-display text-[clamp(3.1rem,12vw,8.4rem)] leading-[0.82] font-medium tracking-[-0.03em] text-frost lg:pr-8">
+            <h1 className="pr-4 font-display text-[clamp(3.1rem,12vw,8.4rem)] leading-[0.82] font-medium tracking-[-0.03em] text-frost lg:pr-8">
               BANDIT
               <span className="block text-ice/90">GENETICS</span>
             </h1>
-            <p className="mt-8 max-w-md font-display text-[clamp(1.65rem,3.4vw,2.7rem)] leading-[1.05] text-frost">
+            <p className="mt-8 max-w-md font-display text-[clamp(1.65rem,3.4vw,2.7rem)] leading-[1.05] text-gold">
               {firstLine}
-              <span className="mt-1 block text-ice">{secondLine}</span>
+              <span className="mt-1 block text-gold-dim">{secondLine}</span>
             </p>
             <p className="mt-6 max-w-sm text-copy leading-relaxed text-ice/75">
               {brand.shortStatement}
@@ -53,7 +53,7 @@ export function HomeHero() {
           ) : null}
         </div>
 
-        <p className="mt-14 font-label text-ui tracking-[0.34em] text-ice/45 uppercase md:mt-20">
+        <p className="mt-14 font-label text-ui tracking-[0.18em] text-ice/45 md:mt-20">
           {brand.philosophy}
         </p>
       </div>

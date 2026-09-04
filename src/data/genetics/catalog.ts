@@ -259,10 +259,6 @@ export function getRelatedStrains(
         ),
       ];
 
-      if (reasons.length > 0 && other.collection === strain.collection) {
-        reasons.push("Same collection");
-      }
-
       const score =
         sharedParents.length * 400 +
         direct.length * 120 +

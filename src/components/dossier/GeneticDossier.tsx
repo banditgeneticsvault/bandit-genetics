@@ -74,7 +74,6 @@ export function GeneticDossier({ strain }: GeneticDossierProps) {
             {dossierCopy.classified} · {dossierCopy.restricted}
           </p>
           <div className="mt-3 flex flex-wrap items-start gap-x-8 gap-y-3 font-label text-ui tracking-[0.16em] text-ice/55 uppercase">
-            <span>File {strain.fileCode}</span>
             <span>{STRAIN_TYPE_LABELS[strain.type]}</span>
           </div>
 
@@ -89,7 +88,6 @@ export function GeneticDossier({ strain }: GeneticDossierProps) {
         <div className="mt-8 grid grid-cols-1 items-start gap-8 md:grid-cols-2 md:gap-10">
           <StrainMedia
             image={strain.heroImage}
-            fileCode={strain.fileCode}
             theme={strain.theme}
             name={strain.name}
             labelled

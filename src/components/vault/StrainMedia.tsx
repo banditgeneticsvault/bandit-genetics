@@ -15,7 +15,6 @@ const washes: Record<StrainTheme, string> = {
 
 type StrainMediaProps = {
   image?: StrainImage;
-  fileCode: string;
   theme: StrainTheme;
   name: string;
   className?: string;
@@ -28,7 +27,6 @@ type StrainMediaProps = {
 
 export function StrainMedia({
   image,
-  fileCode,
   theme,
   name,
   className,
@@ -82,9 +80,6 @@ export function StrainMedia({
       <div className="vault-grain absolute inset-0" />
       <p className="section-kicker absolute top-4 left-4">
         {dossierCopy.artworkPending}
-      </p>
-      <p className="absolute right-4 bottom-4 font-display text-4xl text-frost/25">
-        {fileCode}
       </p>
     </div>
   );
