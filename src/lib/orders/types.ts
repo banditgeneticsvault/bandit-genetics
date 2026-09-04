@@ -50,6 +50,8 @@ export type Order = {
   paymentStatus: OrderPaymentStatus;
   currency: "usd";
   subtotalCents: number;
+  shippingCents: number;
+  taxCents: number;
   totalCents: number;
   lines: OrderLine[];
   createdAt: string;
@@ -61,6 +63,8 @@ export type NewOrderInput = {
   customerEmail: string;
   customerName: string;
   subtotalCents: number;
+  shippingCents?: number;
+  taxCents?: number;
   totalCents: number;
   lines: OrderLine[];
   paymentMethod?: PaymentMethod;

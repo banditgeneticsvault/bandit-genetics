@@ -219,9 +219,8 @@ export function CheckoutDesk({ paymentEnabled }: { paymentEnabled: boolean }) {
               ) : (
                 <p className="text-copy text-ice/80">
                   Card details are entered on Stripe Checkout. This site never
-                  handles raw card numbers. Visa, Mastercard, American Express,
-                  and Discover appear when Stripe makes them available on the
-                  connected account.
+                  handles raw card numbers. Stripe chooses which payment methods
+                  to show for the connected account.
                 </p>
               )}
               <p className="text-copy text-ice/80">{cartCopy.cryptoNote}</p>

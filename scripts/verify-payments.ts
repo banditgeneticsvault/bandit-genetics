@@ -146,4 +146,11 @@ assert(cryptoStatusForHash("abc123").paymentStatus === "unpaid", "hash unpaid");
 assert(cryptoStatusForHash("abc123").status === "payment_submitted", "hash submitted");
 assert(cryptoStatusForHash(null).status === "pending_payment", "no hash pending");
 
+assert(
+  !validateCheckoutCart([
+    { productId: "gorilla-heist", variantId: "seed-1", quantity: 1.5 },
+  ]).ok,
+  "fractional quantity",
+);
+
 console.log("checkout validation checks passed");

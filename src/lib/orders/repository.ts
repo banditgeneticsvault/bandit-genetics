@@ -60,6 +60,8 @@ function hydrateOrder(order: Order): Order {
     cryptocurrency: order.cryptocurrency ?? null,
     receivingAddress: order.receivingAddress ?? null,
     transactionHash: order.transactionHash ?? null,
+    shippingCents: order.shippingCents ?? 0,
+    taxCents: order.taxCents ?? 0,
   };
 }
 
@@ -83,6 +85,8 @@ export async function createPendingOrder(input: NewOrderInput): Promise<Order> {
     paymentStatus: input.paymentStatus ?? "unpaid",
     currency: "usd",
     subtotalCents: input.subtotalCents,
+    shippingCents: input.shippingCents ?? 0,
+    taxCents: input.taxCents ?? 0,
     totalCents: input.totalCents,
     lines: input.lines,
     createdAt,

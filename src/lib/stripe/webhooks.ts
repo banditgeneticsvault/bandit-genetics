@@ -121,6 +121,8 @@ function orderFromSession(
     transactionHash: existing?.transactionHash ?? null,
     currency: "usd",
     subtotalCents: snapshot?.subtotalCents ?? existing?.subtotalCents ?? 0,
+    shippingCents: existing?.shippingCents ?? 0,
+    taxCents: existing?.taxCents ?? 0,
     totalCents: snapshot?.totalCents ?? existing?.totalCents ?? 0,
     lines: snapshot?.lines?.length
       ? snapshot.lines
@@ -155,7 +157,9 @@ export async function handleStripeEvent(event: Stripe.Event): Promise<void> {
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session;
       const order = await loadOrderForSession(session);
-      if (!order) break;
+      if (!order) {
+        throw new Error("order_not_ready");
+      }
       const paid = session.payment_status === "paid";
       const next = paid
         ? applyOrderStatus(order, "paid", "paid", {
@@ -179,7 +183,9 @@ export async function handleStripeEvent(event: Stripe.Event): Promise<void> {
     case "checkout.session.async_payment_succeeded": {
       const session = event.data.object as Stripe.Checkout.Session;
       const order = await loadOrderForSession(session);
-      if (!order) break;
+      if (!order) {
+        throw new Error("order_not_ready");
+      }
       const next = applyOrderStatus(order, "paid", "paid", {
         stripePaymentIntentId: paymentIntentId(session.payment_intent),
       });
@@ -193,7 +199,9 @@ export async function handleStripeEvent(event: Stripe.Event): Promise<void> {
     case "checkout.session.async_payment_failed": {
       const session = event.data.object as Stripe.Checkout.Session;
       const order = await loadOrderForSession(session);
-      if (!order) break;
+      if (!order) {
+        throw new Error("order_not_ready");
+      }
       const next = applyOrderStatus(order, "payment_failed", "failed", {
         stripePaymentIntentId: paymentIntentId(session.payment_intent),
       });
@@ -207,7 +215,9 @@ export async function handleStripeEvent(event: Stripe.Event): Promise<void> {
     case "checkout.session.expired": {
       const session = event.data.object as Stripe.Checkout.Session;
       const order = await loadOrderForSession(session);
-      if (!order) break;
+      if (!order) {
+        throw new Error("order_not_ready");
+      }
       const next = applyOrderStatus(order, "cancelled", "cancelled", {
         stripePaymentIntentId: paymentIntentId(session.payment_intent),
       });
@@ -238,7 +248,13 @@ export async function handleStripeEvent(event: Stripe.Event): Promise<void> {
           });
         }
       }
-      if (!order) break;
+      if (!order) {
+        if (orderId) {
+          throw new Error("order_not_ready");
+        }
+        await markProcessedEvent(event.id);
+        return;
+      }
       const next = applyOrderStatus(order, "payment_failed", "failed", {
         stripePaymentIntentId: intent.id,
       });
@@ -247,10 +263,8 @@ export async function handleStripeEvent(event: Stripe.Event): Promise<void> {
       return;
     }
     default:
-      break;
+      await markProcessedEvent(event.id);
   }
-
-  await markProcessedEvent(event.id);
 }
 
 export async function lookupOrderForSession(

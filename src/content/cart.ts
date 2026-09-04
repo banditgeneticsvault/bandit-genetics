@@ -29,11 +29,11 @@ export const cartCopy = {
   bulkCta: "REQUEST A CUSTOM BULK ORDER",
   toastView: "VIEW CART",
   paymentOff:
-    "Payment processing is not currently enabled. Nothing will be charged. Email us at banditgeneticsvault@proton.me to place your first order. Payment system is not configured at this time.",
+    "Card checkout cannot start because Stripe is not configured on this server. Nothing will be charged by card. PAY LATER / PAY WITH CRYPTO remains available. Submitting crypto does not mark the order paid.",
   checkoutTitle: "CHECKOUT",
   checkoutKicker: "THE DESK",
   checkoutIntro:
-    "Review the strains on this ticket. Card checkout is not connected yet. PAY LATER / PAY WITH CRYPTO is available. Submitting crypto does not mark the order paid.",
+    "Review the strains on this ticket. Card checkout cannot start until Stripe is configured on this server. PAY LATER / PAY WITH CRYPTO is available. Submitting crypto does not mark the order paid.",
   checkoutIntroLive:
     "Review the strains on this ticket. Pay by card on Stripe, or submit PAY LATER / PAY WITH CRYPTO. Card details stay on Stripe. Crypto is not marked paid until Bandit Genetics verifies it.",
   continueStripe: "CHECKOUT WITH CARD",
