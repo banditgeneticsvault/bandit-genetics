@@ -1,4 +1,4 @@
-import { socialPlatforms, type SocialPlatformId } from "@/content/site";
+import { brand, socialPlatforms, type SocialPlatformId } from "@/content/site";
 import { cn } from "@/lib/cn";
 
 function SocialIcon({ id }: { id: SocialPlatformId }) {
@@ -44,8 +44,16 @@ function SocialIcon({ id }: { id: SocialPlatformId }) {
       );
     case "threads":
       return (
-        <svg {...common} fill="currentColor">
-          <path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.12.569c-1.327-4.808-3.616-6.923-8.198-6.94-3.998.016-6.33 2.48-6.345 6.794v.017c.015 4.321 2.335 6.787 6.331 6.806 2.66-.014 4.333-.849 5.426-2.65 1.038-1.71 1.105-3.812.89-5.73-.116-1.048-.319-1.973-.6-2.777-1.021.248-2.126.38-3.287.403V4.15c1.136-.019 2.237-.168 3.258-.428 1.224 1.825 1.65 4.166 1.775 6.34.29 5.032-1.318 8.37-5.156 8.37h-.01c-3.201-.016-5.287-2.562-5.303-5.752v-.014c.016-3.179 2.106-5.733 5.306-5.752.847-.005 1.631.129 2.338.386v2.184a4.45 4.45 0 0 0-2.29-.56c-2.04.01-3.399 1.421-3.41 3.742v.01c.011 2.335 1.373 3.75 3.41 3.762 1.427 0 2.495-.735 3.091-2.019.428-.92.56-2.103.503-3.451a9.9 9.9 0 0 1-1.548.118c-2.15 0-3.889-.64-5.033-1.851-1.007-1.066-1.52-2.482-1.527-4.21v-.015c.01-3.538 2.686-6.016 6.56-6.03 3.905.015 6.57 2.492 6.582 6.03v.014c-.008 2.114-.62 3.99-1.82 5.58-1.287 1.705-3.18 2.64-5.628 2.655Z" />
+        <svg
+          {...common}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <circle cx="12" cy="12" r="4" />
+          <path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8" />
         </svg>
       );
     case "tiktok":
@@ -60,10 +68,41 @@ function SocialIcon({ id }: { id: SocialPlatformId }) {
 const controlClassName =
   "inline-flex h-11 w-11 items-center justify-center border text-gold transition-colors duration-200";
 
+const controlToneClassName =
+  "border-white/12 hover:border-gold hover:bg-gold/10 hover:text-gold focus-visible:border-gold";
+
+function EmailIcon() {
+  const common = {
+    viewBox: "0 0 24 24",
+    width: 20,
+    height: 20,
+    "aria-hidden": true as const,
+    focusable: false as const,
+    className: "pointer-events-none h-5 w-5 shrink-0 overflow-visible",
+  };
+
+  return (
+    <svg {...common} fill="currentColor">
+      <path d="M1.5 8.67v8.58a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V8.67l-8.928 5.493a3 3 0 0 1-3.144 0L1.5 8.67Z" />
+      <path d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z" />
+    </svg>
+  );
+}
+
 export function SocialLinks() {
   return (
-    <nav aria-label="Social media">
+    <nav aria-label="Connect">
       <ul className="flex flex-wrap justify-start gap-2 sm:gap-3">
+        <li>
+          <a
+            href={`mailto:${brand.email}`}
+            aria-label="Email Bandit Genetics"
+            title="Email Bandit Genetics"
+            className={cn(controlClassName, controlToneClassName)}
+          >
+            <EmailIcon />
+          </a>
+        </li>
         {socialPlatforms.map((platform) => (
           <li key={platform.id}>
             <a
@@ -71,10 +110,7 @@ export function SocialLinks() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={platform.label}
-              className={cn(
-                controlClassName,
-                "border-white/12 hover:border-gold hover:bg-gold/10 hover:text-gold focus-visible:border-gold",
-              )}
+              className={cn(controlClassName, controlToneClassName)}
             >
               <SocialIcon id={platform.id} />
             </a>

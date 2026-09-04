@@ -10,7 +10,7 @@ export const brand = {
   slogan: "TAKEN FROM THE BEST.\nBRED FOR THE REST.",
   sloganInline: "TAKEN FROM THE BEST. BRED FOR THE REST.",
   philosophy: "Fewer Strains. Higher Standards.",
-  email: "banditgeneticsvault@proton.me",
+  email: "support@banditgenetics.com",
   shortStatement:
     "A curated genetics operation. We take exceptional plants, study them in the dark, and release only what belongs in the vault. Quality over volume, always.",
 } as const;
@@ -109,7 +109,7 @@ export const pageCopy = {
     title: "CONTACT BANDIT GENETICS",
     kicker: "Direct line",
     body: "Questions about our genetics, releases, or the Bandit Vault? Have a custom bulk order in mind? Send us a message.",
-    emailPrompt: "Email us at banditgeneticsvault@proton.me.",
+    emailPrompt: "Email us at support@banditgenetics.com.",
     submit: "SEND MESSAGE",
     submitting: "SENDING",
     success: "Your message was sent. We will reply to the email address you provided.",
@@ -137,5 +137,5 @@ export const seoCopy = {
   aboutDescription:
     "Bandit Genetics is a cannabis genetics and seed brand. An underground luxury operation built around finding exceptional genetics, studying them, and breeding with restraint. Taken from the best. Bred for the rest.",
   contactDescription:
-    "Contact Bandit Genetics about genetics, releases, The Vault, or a custom bulk order. Email banditgeneticsvault@proton.me or use the website form.",
+    "Contact Bandit Genetics about genetics, releases, The Vault, or a custom bulk order. Email support@banditgenetics.com or use the website form.",
 } as const;
