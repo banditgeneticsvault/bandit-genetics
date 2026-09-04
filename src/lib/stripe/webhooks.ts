@@ -26,6 +26,7 @@ function paymentIntentId(
 
 function linesFromResolved(lines: ResolvedCartLine[]): OrderLine[] {
   return lines.map((line) => ({
+    kind: "paid",
     productId: line.productId,
     variantId: line.variantId,
     strainName: line.name,
@@ -120,13 +121,32 @@ function orderFromSession(
     receivingAddress: existing?.receivingAddress ?? null,
     transactionHash: existing?.transactionHash ?? null,
     currency: "usd",
-    subtotalCents: snapshot?.subtotalCents ?? existing?.subtotalCents ?? 0,
-    shippingCents: existing?.shippingCents ?? 0,
-    taxCents: existing?.taxCents ?? 0,
-    totalCents: snapshot?.totalCents ?? existing?.totalCents ?? 0,
-    lines: snapshot?.lines?.length
-      ? snapshot.lines
-      : (existing?.lines ?? []),
+    subtotalCents: existing?.subtotalCents ?? snapshot?.subtotalCents ?? 0,
+    shippingCents: existing?.shippingCents ?? snapshot?.shippingCents ?? 0,
+    taxCents: existing?.taxCents ?? snapshot?.taxCents ?? 0,
+    totalCents: existing?.totalCents ?? snapshot?.totalCents ?? 0,
+    promotionStatus:
+      existing?.promotionStatus ?? snapshot?.promotionStatus ?? "not_qualified",
+    freeShipping: existing?.freeShipping ?? snapshot?.freeShipping ?? false,
+    promotionalGiftApplied:
+      existing?.promotionalGiftApplied ??
+      snapshot?.promotionalGiftApplied ??
+      false,
+    promotionalProductId:
+      existing?.promotionalProductId ?? snapshot?.promotionalProductId ?? null,
+    promotionalStrainName:
+      existing?.promotionalStrainName ?? snapshot?.promotionalStrainName ?? null,
+    promotionalPackSize:
+      existing?.promotionalPackSize ?? snapshot?.promotionalPackSize ?? null,
+    promotionalQuantity:
+      existing?.promotionalQuantity ?? snapshot?.promotionalQuantity ?? null,
+    promotionalItemPriceCents:
+      existing?.promotionalItemPriceCents ??
+      snapshot?.promotionalItemPriceCents ??
+      0,
+    lines: existing?.lines?.length
+      ? existing.lines
+      : (snapshot?.lines ?? []),
     createdAt,
     updatedAt: new Date().toISOString(),
     paidAt:

@@ -16,7 +16,14 @@ export const cartCopy = {
   optionPrice: "Option price",
   cartOptions: "OPTIONS IN CART",
   subtotal: "Subtotal",
+  merchandiseSubtotal: "Merchandise subtotal",
   orderTotal: "Order total",
+  shippingAmount: "Shipping",
+  shippingFree: "FREE",
+  freeRandomFive: "FREE RANDOM 5 PACK",
+  freeLabel: "FREE",
+  promotionUnlocked: "FREE SHIPPING + FREE RANDOM 5 PACK",
+  spendMoreForPromotion: "SPEND {amount} MORE FOR FREE SHIPPING + A FREE RANDOM 5 PACK",
   lineTotal: "Line total",
   unavailable: "This file is not available to add.",
   comingSoon: "This release is still coming into range.",
@@ -62,7 +69,7 @@ export const cartCopy = {
   cryptoCopy: "COPY ADDRESS",
   cryptoCopied: "COPIED",
   stripeAddressNote:
-    "For card checkout, delivery address is collected on Stripe Checkout. Shipping rates are not configured, so no shipping charge is added.",
+    "For card checkout, delivery address is collected on Stripe Checkout. Shipping is calculated on this server from the paid merchandise subtotal.",
   cancelledCheckout:
     "Checkout was not completed. Nothing was charged. Your cart is still here.",
   invalidItems:
@@ -92,7 +99,7 @@ export const cartCopy = {
   summary: "ORDER SUMMARY",
   shipping: "SHIPPING",
   payment: "PAYMENT METHOD",
-  taxNote: "Tax is not calculated on this site. Shipping rates are not configured.",
+  taxNote: "Tax is not calculated on this site.",
   network: "The checkout could not continue. Check the connection and try again.",
   chooseSeeds:
     "Choose how many seeds this option includes. This is not how many cart items you want.",

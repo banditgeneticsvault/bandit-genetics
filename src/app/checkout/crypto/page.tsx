@@ -71,6 +71,24 @@ export default async function CryptoCheckoutPage({
               Order {cryptoOrder.id}
             </p>
             <p className="text-copy text-ice">
+              {cartCopy.merchandiseSubtotal}: {formatUsd(cryptoOrder.subtotalCents)}
+            </p>
+            <p className="text-copy text-ice">
+              {cartCopy.shippingAmount}:{" "}
+              {cryptoOrder.freeShipping
+                ? cartCopy.shippingFree
+                : formatUsd(cryptoOrder.shippingCents)}
+            </p>
+            {cryptoOrder.promotionalGiftApplied ? (
+              <p className="text-copy text-ice">
+                {cartCopy.freeRandomFive}
+                {cryptoOrder.promotionalStrainName
+                  ? ` — ${cryptoOrder.promotionalStrainName}`
+                  : ""}
+                : {formatUsd(cryptoOrder.promotionalItemPriceCents)}
+              </p>
+            ) : null}
+            <p className="text-copy text-ice">
               {cartCopy.orderTotal}: {formatUsd(cryptoOrder.totalCents)} USD
             </p>
             <p className="text-copy text-ice/80">{cartCopy.cryptoAmountNote}</p>

@@ -1,10 +1,11 @@
 "use client";
 
-import { useActionState, useId, useState, type FormEvent, type HTMLAttributes } from "react";
+import { useActionState, useEffect, useId, useState, type FormEvent, type HTMLAttributes } from "react";
 import { useSearchParams } from "next/navigation";
 import { startCheckout } from "@/app/checkout/actions";
 import { CopyAddress } from "@/app/checkout/crypto/CopyAddress";
 import { CartLineVisual } from "@/components/cart/CartLineVisual";
+import { PromotionalGiftLine } from "@/components/cart/PromotionalGiftLine";
 import { PaymentUnavailableNotice } from "@/components/cart/PaymentUnavailableNotice";
 import { QuantityStepper } from "@/components/cart/QuantityStepper";
 import { SeedQuantityPicker } from "@/components/cart/PackPicker";
@@ -13,6 +14,11 @@ import { Button } from "@/components/ui/Button";
 import { cartCopy } from "@/content/cart";
 import { SEED_TIERS } from "@/data/order";
 import { CHECKOUT_LIMITS, cartSubtotalCents, formatUsd, resolveCart } from "@/lib/cart";
+import type { PromotionalGiftView } from "@/lib/promotional-catalog";
+import {
+  formatPromotionProgress,
+  quoteShippingPromotion,
+} from "@/lib/shipping-promotion";
 import {
   initialCheckoutState,
   parseCheckout,
@@ -24,10 +30,23 @@ import { cn } from "@/lib/cn";
 const fieldClassName =
   "min-h-12 w-full rounded-none border border-white/12 bg-black/55 px-3 py-3 font-sans text-copy text-frost outline-none placeholder:text-ice/35 focus-visible:border-gold";
 
+type ServerQuote = {
+  merchandiseSubtotalCents: number;
+  shippingCents: number;
+  totalCents: number;
+  promotionStatus: "qualified" | "not_qualified";
+  remainingCents: number;
+  freeShipping: boolean;
+  promotionalGiftApplied: boolean;
+  gift: PromotionalGiftView | null;
+};
+
 export function CheckoutDesk({ paymentEnabled }: { paymentEnabled: boolean }) {
   const { lines, setSeedTier, setLineQuantity, remove, ready } = useCart();
   const resolved = resolveCart(lines);
-  const subtotal = cartSubtotalCents(resolved);
+  const subtotal = cartSubtotalCents(resolved) ?? 0;
+  const localQuote = quoteShippingPromotion(subtotal);
+  const [serverQuote, setServerQuote] = useState<ServerQuote | null>(null);
   const searchParams = useSearchParams();
   const cancelled = searchParams.get("checkout") === "cancelled";
   const [state, formAction, pending] = useActionState(
@@ -49,6 +68,37 @@ export function CheckoutDesk({ paymentEnabled }: { paymentEnabled: boolean }) {
   const showError =
     !pending && state?.status === "error" && Object.keys(fieldErrors).length === 0;
   const selectedWallet = asset ? CRYPTO_WALLETS[asset] : null;
+
+  useEffect(() => {
+    if (!ready || lines.length === 0) {
+      return;
+    }
+    const controller = new AbortController();
+    fetch("/api/checkout/quote", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ items: lines }),
+      signal: controller.signal,
+    })
+      .then(async (response) => {
+        if (!response.ok) return null;
+        return (await response.json()) as ServerQuote;
+      })
+      .then((quote) => {
+        if (quote) setServerQuote(quote);
+      })
+      .catch(() => undefined);
+    return () => controller.abort();
+  }, [lines, ready]);
+
+  const quote =
+    serverQuote && serverQuote.merchandiseSubtotalCents === subtotal
+      ? serverQuote
+      : localQuote;
+  const showGift =
+    Boolean(serverQuote?.promotionalGiftApplied && serverQuote.gift) &&
+    serverQuote?.merchandiseSubtotalCents === subtotal;
+  const progress = formatPromotionProgress(subtotal, formatUsd, cartCopy);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     const form = event.currentTarget;
@@ -158,16 +208,33 @@ export function CheckoutDesk({ paymentEnabled }: { paymentEnabled: boolean }) {
             </li>
           ))}
         </ul>
-        {subtotal != null ? (
-          <div className="mt-6 grid gap-2 text-copy text-ice">
-            <p>
-              {cartCopy.subtotal}: {formatUsd(subtotal)}
-            </p>
-            <p>
-              {cartCopy.orderTotal}: {formatUsd(subtotal)}
-            </p>
-          </div>
+        {showGift && serverQuote?.gift ? (
+          <ul className="mt-3 grid gap-3">
+            <PromotionalGiftLine gift={serverQuote.gift} />
+          </ul>
         ) : null}
+        <div className="mt-6 grid gap-2 text-copy text-ice">
+          <p>
+            {cartCopy.merchandiseSubtotal}: {formatUsd(subtotal)}
+          </p>
+          <p>
+            {cartCopy.shippingAmount}:{" "}
+            {quote.freeShipping
+              ? cartCopy.shippingFree
+              : formatUsd(quote.shippingCents)}
+          </p>
+          {showGift ? (
+            <p>
+              {cartCopy.freeRandomFive}: {formatUsd(0)}
+            </p>
+          ) : null}
+          <p>
+            {cartCopy.orderTotal}: {formatUsd(quote.totalCents)}
+          </p>
+          <p className="font-label text-ui tracking-[0.12em] text-gold uppercase">
+            {progress}
+          </p>
+        </div>
         <p className="mt-3 text-copy text-ice/50">{cartCopy.taxNote}</p>
       </section>
 

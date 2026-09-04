@@ -54,6 +54,8 @@ function nowIso() {
 }
 
 function hydrateOrder(order: Order): Order {
+  const promotionalProductId = order.promotionalProductId ?? null;
+  const promotionalGiftApplied = Boolean(order.promotionalGiftApplied);
   return {
     ...order,
     paymentMethod: order.paymentMethod === "crypto" ? "crypto" : "card",
@@ -62,6 +64,18 @@ function hydrateOrder(order: Order): Order {
     transactionHash: order.transactionHash ?? null,
     shippingCents: order.shippingCents ?? 0,
     taxCents: order.taxCents ?? 0,
+    promotionStatus: order.promotionStatus === "qualified" ? "qualified" : "not_qualified",
+    freeShipping: Boolean(order.freeShipping),
+    promotionalGiftApplied,
+    promotionalProductId,
+    promotionalStrainName: order.promotionalStrainName ?? null,
+    promotionalPackSize: order.promotionalPackSize ?? null,
+    promotionalQuantity: order.promotionalQuantity ?? null,
+    promotionalItemPriceCents: order.promotionalItemPriceCents ?? 0,
+    lines: (order.lines ?? []).map((line) => ({
+      ...line,
+      kind: line.kind === "promotional" ? "promotional" : "paid",
+    })),
   };
 }
 
@@ -88,6 +102,14 @@ export async function createPendingOrder(input: NewOrderInput): Promise<Order> {
     shippingCents: input.shippingCents ?? 0,
     taxCents: input.taxCents ?? 0,
     totalCents: input.totalCents,
+    promotionStatus: input.promotionStatus ?? "not_qualified",
+    freeShipping: input.freeShipping ?? false,
+    promotionalGiftApplied: input.promotionalGiftApplied ?? false,
+    promotionalProductId: input.promotionalProductId ?? null,
+    promotionalStrainName: input.promotionalStrainName ?? null,
+    promotionalPackSize: input.promotionalPackSize ?? null,
+    promotionalQuantity: input.promotionalQuantity ?? null,
+    promotionalItemPriceCents: input.promotionalItemPriceCents ?? 0,
     lines: input.lines,
     createdAt,
     updatedAt: createdAt,
@@ -111,6 +133,17 @@ export function isInternalOrderId(value: string) {
   return /^bg_[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
     value,
   );
+}
+
+export async function getReusablePendingOrder(
+  id: string | null | undefined,
+): Promise<Order | null> {
+  if (!id || !isInternalOrderId(id)) return null;
+  const order = await getOrderById(id);
+  if (!order) return null;
+  if (order.status === "paid" || order.paymentStatus === "paid") return null;
+  if (order.status === "payment_submitted") return null;
+  return order;
 }
 
 export async function getOrderById(id: string): Promise<Order | null> {

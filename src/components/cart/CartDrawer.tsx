@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { cartCopy } from "@/content/cart";
 import { SEED_TIERS } from "@/data/order";
 import { cartSubtotalCents, formatUsd, resolveCart } from "@/lib/cart";
+import { formatPromotionProgress } from "@/lib/shipping-promotion";
 import { useEffect, useId } from "react";
 
 export function CartDrawer() {
@@ -121,9 +122,18 @@ export function CartDrawer() {
           )}
 
           {subtotal != null ? (
-            <p className="mt-6 text-copy text-ice">
-              {cartCopy.subtotal}: {formatUsd(subtotal)}
-            </p>
+            <div className="mt-6 grid gap-2 text-copy text-ice">
+              <p>
+                {cartCopy.subtotal}: {formatUsd(subtotal)}
+              </p>
+              <p className="font-label text-ui tracking-[0.12em] text-gold uppercase">
+                {formatPromotionProgress(
+                  subtotal,
+                  formatUsd,
+                  cartCopy,
+                )}
+              </p>
+            </div>
           ) : null}
 
           <div className="mt-8 flex flex-col gap-3">

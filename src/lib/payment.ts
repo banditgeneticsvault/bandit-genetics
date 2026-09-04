@@ -1,16 +1,16 @@
 import "server-only";
 
+import { createHash, randomUUID } from "node:crypto";
 import type { CartLine } from "@/data/order";
-import { validateCheckoutCart } from "@/lib/checkout-cart";
-import {
-  beginPendingOrder,
-  recordCheckoutSession,
-} from "@/lib/stripe/webhooks";
+import { syncCheckoutPromotion } from "@/lib/checkout-promotion";
+import { recordCheckoutSession } from "@/lib/stripe/webhooks";
 import { getStripe, isStripeConfigured } from "@/lib/stripe/client";
+import type { Order } from "@/lib/orders/types";
 import {
   checkoutRedirectUrls,
   encodeOrderMetadata,
-  stripeLineItems,
+  stripeCheckoutLineItems,
+  stripeShippingOptions,
   STRIPE_SHIPPING_COUNTRIES,
 } from "@/lib/stripe/session";
 
@@ -39,6 +39,39 @@ export function isPaymentEnabled() {
   return isStripeConfigured();
 }
 
+function checkoutIdempotencyKey(order: Order) {
+  const payload = JSON.stringify({
+    id: order.id,
+    subtotal: order.subtotalCents,
+    shipping: order.shippingCents,
+    total: order.totalCents,
+    gift: order.promotionalProductId,
+    applied: order.promotionalGiftApplied,
+    lines: order.lines,
+  });
+  const digest = createHash("sha256").update(payload).digest("hex").slice(0, 20);
+  return `checkout_${order.id}_${digest}_${randomUUID().slice(0, 8)}`;
+}
+
+async function expirePreviousSession(order: Order) {
+  if (!order.stripeCheckoutSessionId) return;
+  const stripe = getStripe();
+  if (!stripe) return;
+  try {
+    const session = await stripe.checkout.sessions.retrieve(
+      order.stripeCheckoutSessionId,
+    );
+    if (session.status === "open") {
+      await stripe.checkout.sessions.expire(session.id);
+    }
+  } catch (error) {
+    console.error("stripe_session_expire_failed", {
+      orderId: order.id,
+      type: error instanceof Error ? error.name : "unknown",
+    });
+  }
+}
+
 export async function createCheckout(
   request: CheckoutSessionRequest,
 ): Promise<PaymentResult> {
@@ -51,20 +84,20 @@ export async function createCheckout(
     return { ok: false, status: "disconnected", reason: "payment_unavailable" };
   }
 
-  const cart = validateCheckoutCart(request.items);
-  if (!cart.ok) {
-    if (cart.reason === "empty") {
+  const synced = await syncCheckoutPromotion({
+    items: request.items,
+    name: request.name,
+    email: request.email,
+  });
+  if (!synced.ok) {
+    if (synced.reason === "empty") {
       return { ok: false, status: "failed", reason: "empty" };
     }
     return { ok: false, status: "failed", reason: "invalid_cart" };
   }
 
-  const order = await beginPendingOrder({
-    email: request.email,
-    name: request.name,
-    lines: cart.lines,
-    subtotalCents: cart.subtotalCents,
-  });
+  const { order, lines } = synced;
+  await expirePreviousSession(order);
 
   const redirects = checkoutRedirectUrls();
   const metadata = encodeOrderMetadata(order);
@@ -79,7 +112,8 @@ export async function createCheckout(
         shipping_address_collection: {
           allowed_countries: [...STRIPE_SHIPPING_COUNTRIES],
         },
-        line_items: stripeLineItems(cart.lines),
+        shipping_options: stripeShippingOptions(order.shippingCents),
+        line_items: stripeCheckoutLineItems(lines, order),
         success_url: redirects.success_url,
         cancel_url: redirects.cancel_url,
         metadata,
@@ -89,7 +123,7 @@ export async function createCheckout(
           },
         },
       },
-      { idempotencyKey: `order_${order.id}` },
+      { idempotencyKey: checkoutIdempotencyKey(order) },
     );
 
     if (!session.url) {

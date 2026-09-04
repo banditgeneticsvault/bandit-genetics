@@ -9,6 +9,15 @@ import {
   sanitizeTransactionHash,
 } from "../src/lib/crypto/hash.ts";
 import { CRYPTO_WALLETS, isCryptoAsset } from "../src/lib/crypto/wallets.ts";
+import { eligiblePromotionalProductIds } from "../src/lib/promotional-catalog.ts";
+import {
+  assignPromotionalProductId,
+  formatPromotionProgress,
+  PROMOTION_THRESHOLD_CENTS,
+  quoteShippingPromotion,
+  remainingCentsForPromotion,
+  STANDARD_SHIPPING_CENTS,
+} from "../src/lib/shipping-promotion.ts";
 
 function assert(condition: unknown, message: string) {
   if (!condition) {
@@ -151,6 +160,94 @@ assert(
     { productId: "gorilla-heist", variantId: "seed-1", quantity: 1.5 },
   ]).ok,
   "fractional quantity",
+);
+
+const cases: Array<[number, number, boolean]> = [
+  [0, STANDARD_SHIPPING_CENTS, false],
+  [1000, STANDARD_SHIPPING_CENTS, false],
+  [3500, STANDARD_SHIPPING_CENTS, false],
+  [8000, STANDARD_SHIPPING_CENTS, false],
+  [9900, STANDARD_SHIPPING_CENTS, false],
+  [9999, STANDARD_SHIPPING_CENTS, false],
+  [10000, 0, true],
+  [10001, 0, true],
+  [12500, 0, true],
+  [20000, 0, true],
+];
+for (const [subtotal, shipping, qualified] of cases) {
+  const quote = quoteShippingPromotion(subtotal);
+  assert(quote.shippingCents === shipping, `shipping at ${subtotal}`);
+  assert(quote.promotionalGiftApplied === qualified, `gift flag at ${subtotal}`);
+  assert(
+    quote.totalCents === subtotal + shipping,
+    `total excludes gift value at ${subtotal}`,
+  );
+  assert(
+    quote.merchandiseSubtotalCents === subtotal,
+    `merchandise unchanged at ${subtotal}`,
+  );
+}
+
+assert(remainingCentsForPromotion(8000) === 2000, "remaining $20");
+assert(remainingCentsForPromotion(9999) === 1, "remaining $0.01");
+assert(remainingCentsForPromotion(10000) === 0, "remaining at threshold");
+assert(
+  formatPromotionProgress(8000, (cents) => `$${(cents / 100).toFixed(2)}`, {
+    spendMoreForPromotion: "SPEND {amount} MORE FOR FREE SHIPPING + A FREE RANDOM 5 PACK",
+    promotionUnlocked: "FREE SHIPPING + FREE RANDOM 5 PACK",
+  }) === "SPEND $20.00 MORE FOR FREE SHIPPING + A FREE RANDOM 5 PACK",
+  "progress copy $80",
+);
+
+const eligible = eligiblePromotionalProductIds();
+assert(eligible.length === 12, "all purchasable catalog strains with artwork");
+assert(!eligible.includes(""), "no empty product ids");
+
+const kept = assignPromotionalProductId({
+  qualified: true,
+  persistedProductId: "getaway-girl",
+  eligibleProductIds: eligible,
+  pick: () => "gorilla-heist",
+});
+assert(kept.applied && kept.productId === "getaway-girl", "do not reroll persisted gift");
+
+const below = assignPromotionalProductId({
+  qualified: false,
+  persistedProductId: "getaway-girl",
+  eligibleProductIds: eligible,
+  pick: () => "gorilla-heist",
+});
+assert(!below.applied && below.productId === "getaway-girl", "keep assignment below threshold");
+
+const first = assignPromotionalProductId({
+  qualified: true,
+  persistedProductId: null,
+  eligibleProductIds: eligible,
+  pick: (ids) => ids[0] ?? "",
+});
+assert(first.applied && first.productId === eligible[0], "assign once when missing");
+
+const hundred = validateCheckoutCart([
+  { productId: "gorilla-heist", variantId: "seed-5", quantity: 2 },
+  { productId: "vault-robbery", variantId: "seed-1", quantity: 3 },
+]);
+assert(hundred.ok && hundred.subtotalCents === 3500 * 2 + 1000 * 3, "paid 5 pack plus other");
+assert(
+  hundred.ok && hundred.subtotalCents === PROMOTION_THRESHOLD_CENTS,
+  "$100 from paid merchandise only",
+);
+assert(quoteShippingPromotion(hundred.subtotalCents).shippingCents === 0, "free shipping at $100");
+assert(quoteShippingPromotion(hundred.subtotalCents).promotionalGiftApplied, "gift at $100");
+
+const justUnder = validateCheckoutCart([
+  { productId: "gorilla-heist", variantId: "seed-5", quantity: 2 },
+  { productId: "vault-robbery", variantId: "seed-2", quantity: 1 },
+]);
+assert(
+  justUnder.ok &&
+    justUnder.subtotalCents === 8750 &&
+    !quoteShippingPromotion(justUnder.subtotalCents).promotionalGiftApplied,
+  "$87.50 does not include a phantom gift toward threshold",
 );
 
 console.log("checkout validation checks passed");

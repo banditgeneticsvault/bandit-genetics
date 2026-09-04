@@ -24,7 +24,10 @@ export type PaymentMethod = (typeof PAYMENT_METHODS)[number];
 
 export type CryptoAssetId = "btc" | "eth" | "sol";
 
+export type OrderLineKind = "paid" | "promotional";
+
 export type OrderLine = {
+  kind?: OrderLineKind;
   productId: string;
   variantId: string;
   strainName: string;
@@ -35,6 +38,8 @@ export type OrderLine = {
   unitPriceCents: number;
   lineTotalCents: number;
 };
+
+export type PromotionStatus = "qualified" | "not_qualified";
 
 export type Order = {
   id: string;
@@ -53,6 +58,14 @@ export type Order = {
   shippingCents: number;
   taxCents: number;
   totalCents: number;
+  promotionStatus: PromotionStatus;
+  freeShipping: boolean;
+  promotionalGiftApplied: boolean;
+  promotionalProductId: string | null;
+  promotionalStrainName: string | null;
+  promotionalPackSize: number | null;
+  promotionalQuantity: number | null;
+  promotionalItemPriceCents: number;
   lines: OrderLine[];
   createdAt: string;
   updatedAt: string;
@@ -66,6 +79,14 @@ export type NewOrderInput = {
   shippingCents?: number;
   taxCents?: number;
   totalCents: number;
+  promotionStatus?: PromotionStatus;
+  freeShipping?: boolean;
+  promotionalGiftApplied?: boolean;
+  promotionalProductId?: string | null;
+  promotionalStrainName?: string | null;
+  promotionalPackSize?: number | null;
+  promotionalQuantity?: number | null;
+  promotionalItemPriceCents?: number;
   lines: OrderLine[];
   paymentMethod?: PaymentMethod;
   cryptocurrency?: CryptoAssetId | null;
