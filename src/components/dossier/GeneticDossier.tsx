@@ -4,6 +4,7 @@ import {
   DossierSection,
   dossierKickerClass,
 } from "@/components/dossier/DossierSection";
+import { AddToCartPanel } from "@/components/cart/AddToCartPanel";
 import { RelatedGenetics } from "@/components/dossier/RelatedGenetics";
 import { StrainMedia } from "@/components/vault/StrainMedia";
 import { Button } from "@/components/ui/Button";
@@ -11,6 +12,7 @@ import { PageContainer } from "@/components/layout/PageContainer";
 import { dossierCopy } from "@/content/dossier";
 import { getParentById, getRelatedStrains } from "@/data/genetics";
 import { STRAIN_TYPE_LABELS, type StrainRecord } from "@/data/genetics/types";
+import { toOrderListing } from "@/data/order";
 import { hasArtworkSrc } from "@/lib/artwork";
 import { cn } from "@/lib/cn";
 import { isPendingCopy } from "@/lib/pending";
@@ -52,6 +54,7 @@ export function GeneticDossier({ strain }: GeneticDossierProps) {
   }
 
   const related = getRelatedStrains(strain);
+  const listing = toOrderListing(strain.slug);
   const gallery = strain.galleryImages.filter(hasArtworkSrc);
   const showResin = !isPendingCopy(strain.resinExpression);
   const showColor = !isPendingCopy(strain.colorPotential);
@@ -121,6 +124,12 @@ export function GeneticDossier({ strain }: GeneticDossierProps) {
               </li>
             ))}
           </ul>
+        ) : null}
+
+        {listing ? (
+          <div className="mt-10 md:mt-12">
+            <AddToCartPanel listing={listing} />
+          </div>
         ) : null}
 
         <div className="mt-10 flex flex-col gap-10 md:mt-12 md:gap-12">

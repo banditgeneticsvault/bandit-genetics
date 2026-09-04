@@ -2,6 +2,7 @@ import { ContactForm } from "@/components/contact/ContactForm";
 import { VaultAtmosphere } from "@/components/home/VaultAtmosphere";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { homeHero, pageCopy } from "@/content/site";
+import { getStrainBySlug } from "@/data/genetics";
 import type { Metadata } from "next";
 
 const copy = pageCopy.contact;
@@ -11,7 +12,16 @@ export const metadata: Metadata = {
   description: copy.body,
 };
 
-export default function ContactPage() {
+type ContactPageProps = {
+  searchParams: Promise<{ strain?: string | string[] }>;
+};
+
+export default async function ContactPage({ searchParams }: ContactPageProps) {
+  const params = await searchParams;
+  const raw = params.strain;
+  const slug = Array.isArray(raw) ? raw[0] : raw;
+  const strain = slug ? getStrainBySlug(slug) : undefined;
+
   return (
     <main className="relative isolate min-h-[100dvh] overflow-x-clip bg-black">
       <VaultAtmosphere
@@ -32,7 +42,11 @@ export default function ContactPage() {
         </header>
 
         <div className="max-w-xl">
-          <ContactForm />
+          <ContactForm
+            selectedStrain={
+              strain ? { slug: strain.slug, name: strain.name } : undefined
+            }
+          />
         </div>
       </PageContainer>
     </main>

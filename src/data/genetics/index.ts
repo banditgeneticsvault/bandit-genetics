@@ -3,6 +3,7 @@ export { STRAIN_TYPE_LABELS } from "./types";
 export {
   getStrains,
   getStrainBySlug,
+  getStrainById,
   getParents,
   getParentById,
   getInfluencesForStrain,

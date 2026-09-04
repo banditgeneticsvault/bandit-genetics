@@ -14,6 +14,16 @@ export type ContactFields = {
 
 export type ContactFieldErrors = Partial<Record<keyof ContactFields, string>>;
 
+export type ContactFormState = {
+  status: "idle" | "success" | "error";
+  fieldErrors: ContactFieldErrors;
+};
+
+export const initialContactState: ContactFormState = {
+  status: "idle",
+  fieldErrors: {},
+};
+
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function parseContactForm(

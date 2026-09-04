@@ -5,13 +5,30 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { brand, navItems } from "@/content/site";
+import { cartCopy } from "@/content/cart";
 import { homeArtworkSrc } from "@/lib/artwork";
 import { cn } from "@/lib/cn";
+import { useCart } from "@/components/cart/CartProvider";
+
+function CartGlyph() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden className="h-5 w-5" fill="none">
+      <path
+        d="M4 5h1.6l1.2 9.2h11.1L19.6 8H8"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
+      <circle cx="10" cy="19" r="1.4" fill="currentColor" />
+      <circle cx="17" cy="19" r="1.4" fill="currentColor" />
+    </svg>
+  );
+}
 
 export function SiteHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const panelId = useId();
+  const { itemCount, ready, openCart } = useCart();
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -28,6 +45,8 @@ export function SiteHeader() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
+
+  const count = ready ? itemCount : 0;
 
   return (
     <header className="absolute inset-x-0 top-0 z-40">
@@ -72,15 +91,30 @@ export function SiteHeader() {
           </ul>
         </nav>
 
-        <button
-          type="button"
-          className="inline-flex min-h-11 shrink-0 items-center border border-gunmetal px-3 font-label text-ui tracking-[0.24em] text-ice uppercase lg:hidden"
-          aria-expanded={open}
-          aria-controls={panelId}
-          onClick={() => setOpen((value) => !value)}
-        >
-          {open ? "CLOSE" : "MENU"}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={openCart}
+            aria-label={count > 0 ? `${cartCopy.openCart}, ${count}` : cartCopy.openCart}
+            className="relative inline-flex min-h-11 min-w-11 items-center justify-center border border-gunmetal text-ice hover:border-gold hover:text-gold"
+          >
+            <CartGlyph />
+            {count > 0 ? (
+              <span className="absolute -top-1 -right-1 min-w-5 bg-gold px-1 text-center font-label text-[0.7rem] leading-5 text-black">
+                {count}
+              </span>
+            ) : null}
+          </button>
+          <button
+            type="button"
+            className="inline-flex min-h-11 shrink-0 items-center border border-gunmetal px-3 font-label text-ui tracking-[0.24em] text-ice uppercase lg:hidden"
+            aria-expanded={open}
+            aria-controls={panelId}
+            onClick={() => setOpen((value) => !value)}
+          >
+            {open ? "CLOSE" : "MENU"}
+          </button>
+        </div>
       </div>
 
       <div

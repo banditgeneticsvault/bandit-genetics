@@ -1,14 +1,33 @@
+"use client";
+
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
 type ButtonVariant = "primary" | "secondary";
 
-type ButtonProps = {
-  href: string;
-  children: React.ReactNode;
+type SharedProps = {
+  children: ReactNode;
   variant?: ButtonVariant;
   className?: string;
 };
+
+type LinkButtonProps = SharedProps & {
+  href: string;
+  type?: never;
+  onClick?: () => void;
+  disabled?: never;
+};
+
+type NativeButtonProps = SharedProps & {
+  href?: undefined;
+  type?: "button" | "submit";
+  onClick?: () => void;
+  disabled?: boolean;
+  "aria-label"?: string;
+};
+
+type ButtonProps = LinkButtonProps | NativeButtonProps;
 
 const variants: Record<ButtonVariant, string> = {
   primary:
@@ -17,22 +36,36 @@ const variants: Record<ButtonVariant, string> = {
     "border-gunmetal bg-transparent text-ice hover:border-gold hover:text-gold",
 };
 
-export function Button({
-  href,
-  children,
-  variant = "primary",
-  className,
-}: ButtonProps) {
+const baseClassName =
+  "inline-flex min-h-12 w-full items-center justify-center border px-6 text-center font-label text-ui font-semibold tracking-[0.22em] uppercase transition-colors sm:w-auto sm:min-w-[12.5rem]";
+
+export function Button(props: ButtonProps) {
+  const { children, variant = "primary", className } = props;
+  const classes = cn(
+    baseClassName,
+    variants[variant],
+    "href" in props && props.href ? undefined : props.disabled && "cursor-not-allowed opacity-50",
+    className,
+  );
+
+  if ("href" in props && props.href) {
+    return (
+      <Link href={props.href} onClick={props.onClick} className={classes}>
+        {children}
+      </Link>
+    );
+  }
+
+  const native = props as NativeButtonProps;
   return (
-    <Link
-      href={href}
-      className={cn(
-        "inline-flex min-h-12 w-full items-center justify-center border px-6 text-center font-label text-ui font-semibold tracking-[0.22em] uppercase transition-colors sm:w-auto sm:min-w-[12.5rem]",
-        variants[variant],
-        className,
-      )}
+    <button
+      type={native.type ?? "button"}
+      disabled={native.disabled}
+      onClick={native.onClick}
+      aria-label={native["aria-label"]}
+      className={classes}
     >
       {children}
-    </Link>
+    </button>
   );
 }

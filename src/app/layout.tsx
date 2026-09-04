@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Barlow_Condensed, Cormorant_Garamond, Figtree } from "next/font/google";
+import { AppProviders } from "@/components/layout/AppProviders";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { brand, homeHero } from "@/content/site";
@@ -67,11 +68,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Skip to content
         </a>
-        <SiteHeader />
-        <div id="content" className="flex-1">
-          {children}
-        </div>
-        <SiteFooter />
+        <AppProviders>
+          <SiteHeader />
+          <div id="content" className="flex-1">
+            {children}
+          </div>
+          <SiteFooter />
+        </AppProviders>
       </body>
     </html>
   );

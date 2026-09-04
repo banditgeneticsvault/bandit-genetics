@@ -80,7 +80,7 @@ export const vaultCopy = {
   empty: "NO STRAINS MATCH THIS SEARCH.",
   emptyHint: "Clear the query or filters and open the archive again.",
   clear: "CLEAR FILTERS",
-  viewDossier: "VIEW DOSSIER",
+  viewDossier: "EXPLORE GENETICS",
   comingSoon: "INFORMATION COMING SOON",
   resultOne: "STRAIN IN RANGE",
   resultMany: "STRAINS IN RANGE",

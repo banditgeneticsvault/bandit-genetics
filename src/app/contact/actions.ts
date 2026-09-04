@@ -5,18 +5,8 @@ import {
   deliverContactMessage,
   isHoneypotFilled,
   parseContactForm,
-  type ContactFieldErrors,
+  type ContactFormState,
 } from "@/lib/contact";
-
-export type ContactFormState = {
-  status: "idle" | "success" | "error";
-  fieldErrors: ContactFieldErrors;
-};
-
-export const initialContactState: ContactFormState = {
-  status: "idle",
-  fieldErrors: {},
-};
 
 export async function submitContact(
   _prev: ContactFormState,

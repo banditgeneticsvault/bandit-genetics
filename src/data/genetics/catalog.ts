@@ -86,6 +86,10 @@ export function getStrainBySlug(slug: string): StrainRecord | undefined {
   return strains.find((strain) => strain.slug === slug);
 }
 
+export function getStrainById(id: string): StrainRecord | undefined {
+  return strains.find((strain) => strain.id === id);
+}
+
 export function getParents(): ParentRecord[] {
   return parents;
 }

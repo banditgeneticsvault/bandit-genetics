@@ -1,13 +1,11 @@
 "use client";
 
 import { useActionState, useId, useState, type FormEvent, type HTMLAttributes } from "react";
-import {
-  initialContactState,
-  submitContact,
-} from "@/app/contact/actions";
+import { submitContact } from "@/app/contact/actions";
 import { pageCopy } from "@/content/site";
 import {
   CONTACT_LIMITS,
+  initialContactState,
   parseContactForm,
   type ContactFieldErrors,
 } from "@/lib/contact";
@@ -18,7 +16,11 @@ const copy = pageCopy.contact;
 const fieldClassName =
   "min-h-12 w-full rounded-none border border-white/12 bg-black/55 px-3 py-3 font-sans text-copy text-frost outline-none placeholder:text-ice/35 focus-visible:border-gold";
 
-export function ContactForm() {
+export function ContactForm({
+  selectedStrain,
+}: {
+  selectedStrain?: { slug: string; name: string };
+}) {
   const [state, formAction, pending] = useActionState(
     submitContact,
     initialContactState,
@@ -69,6 +71,11 @@ export function ContactForm() {
       aria-describedby={showDeliveryError || showSuccess ? statusId : undefined}
     >
       <div className="grid gap-6 px-5 py-6 md:px-8 md:py-8">
+        {selectedStrain ? (
+          <p className="font-label text-ui tracking-[0.16em] text-gold uppercase">
+            Selected file: {selectedStrain.name}
+          </p>
+        ) : null}
         <Field
           id={`${formId}-name`}
           name="name"
@@ -101,6 +108,9 @@ export function ContactForm() {
           maxLength={CONTACT_LIMITS.subject}
           error={fieldErrors.subject}
           disabled={pending}
+          defaultValue={
+            selectedStrain ? `Inquiry · ${selectedStrain.name}` : undefined
+          }
           required
         />
 
@@ -112,6 +122,11 @@ export function ContactForm() {
           maxLength={CONTACT_LIMITS.message}
           error={fieldErrors.message}
           disabled={pending}
+          defaultValue={
+            selectedStrain
+              ? `I want to inquire about ${selectedStrain.name}. Looking for a custom bulk seed order.`
+              : undefined
+          }
           required
         />
 
@@ -184,6 +199,7 @@ type FieldProps = {
   inputMode?: HTMLAttributes<HTMLInputElement>["inputMode"];
   maxLength?: number;
   as?: "input" | "textarea";
+  defaultValue?: string;
 };
 
 function Field({
@@ -198,6 +214,7 @@ function Field({
   inputMode,
   maxLength,
   as = "input",
+  defaultValue,
 }: FieldProps) {
   const errorId = `${id}-error`;
 
@@ -219,6 +236,7 @@ function Field({
           rows={7}
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? errorId : undefined}
+          defaultValue={defaultValue}
           className={cn(fieldClassName, "min-h-40 resize-y")}
         />
       ) : (
@@ -233,6 +251,7 @@ function Field({
           maxLength={maxLength}
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? errorId : undefined}
+          defaultValue={defaultValue}
           className={fieldClassName}
         />
       )}
