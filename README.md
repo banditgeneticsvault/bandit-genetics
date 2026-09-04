@@ -19,6 +19,7 @@ Copy `.env.example` to `.env.local` and set:
 - `STRIPE_SECRET_KEY` — Stripe secret key (`sk_test_...` for test mode). Server-only. Never use `NEXT_PUBLIC_*` for this value.
 - `STRIPE_WEBHOOK_SECRET` — webhook signing secret (`whsec_...`). Server-only.
 - `NEXT_PUBLIC_SITE_URL` — public origin, for example `http://localhost:3000` locally or `https://www.banditgenetics.com` in production.
+- `DATABASE_URL` — Postgres connection string (Neon or Vercel Postgres). Server-only. Orders and Stripe webhook event IDs are stored here, not in `.data/orders.json`.
 
 If `STRIPE_SECRET_KEY` is missing, checkout still loads. The cart still works. **CHECKOUT WITH CARD** stays visible when the cart has items, but it is disabled and the page explains that card processing is unavailable. **PAY LATER / PAY WITH CRYPTO** remains available.
 
@@ -39,7 +40,7 @@ Use Stripe test payment methods only (for example `ACCT-000015`). Do not use rea
 
 ### Vercel (after code review)
 
-Set the same three variables on the Vercel project. Register the production webhook in Stripe:
+Set `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_SITE_URL`, and `DATABASE_URL` on the Vercel project (Production). Register the production webhook in Stripe:
 
 `https://www.banditgenetics.com/api/stripe/webhook`
 

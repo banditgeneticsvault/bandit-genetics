@@ -44,6 +44,7 @@ export async function startCheckout(
       items: parsed.data.cartLines,
       cryptocurrency: formData.get("cryptocurrency"),
       transactionHash: formData.get("transactionHash"),
+      promotionalProductId: formData.get("promotionalProductId"),
     });
     if (!payment.ok) {
       if (payment.reason === "empty") {
@@ -54,6 +55,12 @@ export async function startCheckout(
           status: "error",
           fieldErrors: { cryptocurrency: cartCopy.invalidCrypto },
         };
+      }
+      if (payment.reason === "gift_required") {
+        return { status: "error", fieldErrors: { gift: cartCopy.giftRequired } };
+      }
+      if (payment.reason === "invalid_promotional_product") {
+        return { status: "error", fieldErrors: { gift: cartCopy.invalidGift } };
       }
       return {
         status: "error",
@@ -67,6 +74,7 @@ export async function startCheckout(
     name: parsed.data.customer.name,
     email: parsed.data.customer.email,
     items: parsed.data.cartLines,
+    promotionalProductId: formData.get("promotionalProductId"),
   });
 
   if (!payment.ok) {
@@ -78,6 +86,12 @@ export async function startCheckout(
         status: "error",
         fieldErrors: { items: cartCopy.emptyCart },
       };
+    }
+    if (payment.reason === "gift_required") {
+      return { status: "error", fieldErrors: { gift: cartCopy.giftRequired } };
+    }
+    if (payment.reason === "invalid_promotional_product") {
+      return { status: "error", fieldErrors: { gift: cartCopy.invalidGift } };
     }
     if (payment.reason === "invalid_cart") {
       return {

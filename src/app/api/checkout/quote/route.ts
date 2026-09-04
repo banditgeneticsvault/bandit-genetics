@@ -42,7 +42,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: parsed.reason }, { status: 400 });
   }
 
-  const synced = await syncCheckoutPromotion({ items: parsed.lines });
+  const synced = await syncCheckoutPromotion({
+    items: parsed.lines,
+    promotionalProductId: record.promotionalProductId,
+  });
   if (!synced.ok) {
     if (synced.reason === "empty") {
       return NextResponse.json({

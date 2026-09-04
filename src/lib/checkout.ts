@@ -20,6 +20,7 @@ export type CheckoutFieldErrors = Partial<{
   email: string;
   items: string;
   cryptocurrency: string;
+  gift: string;
 }>;
 
 export type CheckoutParseMessages = {

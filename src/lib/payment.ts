@@ -24,11 +24,21 @@ export type CheckoutSessionRequest = {
   name: string;
   email: string;
   items: CartLine[];
+  promotionalProductId?: unknown;
 };
 
 export type PaymentResult =
   | { ok: false; status: "disconnected"; reason: "payment_unavailable" }
-  | { ok: false; status: "failed"; reason: "empty" | "invalid_cart" | "stripe_error" }
+  | {
+      ok: false;
+      status: "failed";
+      reason:
+        | "empty"
+        | "invalid_cart"
+        | "stripe_error"
+        | "invalid_promotional_product"
+        | "gift_required";
+    }
   | { ok: true; status: "processing"; url: string; orderId: string };
 
 export function getPaymentStatus(): PaymentStatus {
@@ -88,10 +98,18 @@ export async function createCheckout(
     items: request.items,
     name: request.name,
     email: request.email,
+    promotionalProductId: request.promotionalProductId,
+    requireGiftIfQualified: true,
   });
   if (!synced.ok) {
     if (synced.reason === "empty") {
       return { ok: false, status: "failed", reason: "empty" };
+    }
+    if (
+      synced.reason === "invalid_promotional_product" ||
+      synced.reason === "gift_required"
+    ) {
+      return { ok: false, status: "failed", reason: synced.reason };
     }
     return { ok: false, status: "failed", reason: "invalid_cart" };
   }

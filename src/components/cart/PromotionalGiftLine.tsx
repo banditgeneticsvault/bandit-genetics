@@ -7,7 +7,7 @@ export function PromotionalGiftLine({ gift }: { gift: PromotionalGiftView }) {
   return (
     <li className="min-w-0 border border-gold/40 bg-charcoal px-4 py-4">
       <p className="font-label text-ui tracking-[0.18em] text-gold uppercase">
-        {cartCopy.freeRandomFive}
+        {cartCopy.promotionalGift}
       </p>
       <div className="mt-4 flex min-w-0 items-start gap-3 sm:gap-4">
         <div className="h-20 w-20 shrink-0 overflow-hidden bg-black sm:h-24 sm:w-24">

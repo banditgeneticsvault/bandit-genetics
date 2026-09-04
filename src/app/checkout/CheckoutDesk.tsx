@@ -6,6 +6,7 @@ import { startCheckout } from "@/app/checkout/actions";
 import { CopyAddress } from "@/app/checkout/crypto/CopyAddress";
 import { CartLineVisual } from "@/components/cart/CartLineVisual";
 import { PromotionalGiftLine } from "@/components/cart/PromotionalGiftLine";
+import { PromotionalGiftSelector } from "@/components/cart/PromotionalGiftSelector";
 import { PaymentUnavailableNotice } from "@/components/cart/PaymentUnavailableNotice";
 import { QuantityStepper } from "@/components/cart/QuantityStepper";
 import { SeedQuantityPicker } from "@/components/cart/PackPicker";
@@ -14,9 +15,14 @@ import { Button } from "@/components/ui/Button";
 import { cartCopy } from "@/content/cart";
 import { SEED_TIERS } from "@/data/order";
 import { CHECKOUT_LIMITS, cartSubtotalCents, formatUsd, resolveCart } from "@/lib/cart";
-import type { PromotionalGiftView } from "@/lib/promotional-catalog";
+import {
+  eligiblePromotionalListings,
+  promotionalGiftView,
+  type PromotionalGiftView,
+} from "@/lib/promotional-catalog";
 import {
   formatPromotionProgress,
+  qualifiesForShippingPromotion,
   quoteShippingPromotion,
 } from "@/lib/shipping-promotion";
 import {
@@ -47,6 +53,7 @@ export function CheckoutDesk({ paymentEnabled }: { paymentEnabled: boolean }) {
   const subtotal = cartSubtotalCents(resolved) ?? 0;
   const localQuote = quoteShippingPromotion(subtotal);
   const [serverQuote, setServerQuote] = useState<ServerQuote | null>(null);
+  const [chosenGiftId, setChosenGiftId] = useState<string | null>(null);
   const searchParams = useSearchParams();
   const cancelled = searchParams.get("checkout") === "cancelled";
   const [state, formAction, pending] = useActionState(
@@ -77,7 +84,10 @@ export function CheckoutDesk({ paymentEnabled }: { paymentEnabled: boolean }) {
     fetch("/api/checkout/quote", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ items: lines }),
+      body: JSON.stringify({
+        items: lines,
+        promotionalProductId: chosenGiftId ?? undefined,
+      }),
       signal: controller.signal,
     })
       .then(async (response) => {
@@ -89,8 +99,9 @@ export function CheckoutDesk({ paymentEnabled }: { paymentEnabled: boolean }) {
       })
       .catch(() => undefined);
     return () => controller.abort();
-  }, [lines, ready]);
+  }, [chosenGiftId, lines, ready]);
 
+  const giftProductId = chosenGiftId ?? serverQuote?.gift?.productId ?? null;
   const quote =
     serverQuote && serverQuote.merchandiseSubtotalCents === subtotal
       ? serverQuote
@@ -98,7 +109,19 @@ export function CheckoutDesk({ paymentEnabled }: { paymentEnabled: boolean }) {
   const showGift =
     Boolean(serverQuote?.promotionalGiftApplied && serverQuote.gift) &&
     serverQuote?.merchandiseSubtotalCents === subtotal;
-  const progress = formatPromotionProgress(subtotal, formatUsd, cartCopy);
+  const qualified = qualifiesForShippingPromotion(subtotal);
+  const giftOptions = qualified
+    ? eligiblePromotionalListings()
+        .map((listing) => promotionalGiftView(listing.productId))
+        .filter((gift): gift is PromotionalGiftView => Boolean(gift))
+    : [];
+  const progress = formatPromotionProgress(
+    quote.merchandiseSubtotalCents,
+    formatUsd,
+    cartCopy,
+    showGift,
+  );
+  const showSpendMore = quote.remainingCents > 0;
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     const form = event.currentTarget;
@@ -118,6 +141,12 @@ export function CheckoutDesk({ paymentEnabled }: { paymentEnabled: boolean }) {
     if (intent === "crypto" && !asset) {
       event.preventDefault();
       setClientErrors({ cryptocurrency: cartCopy.invalidCrypto });
+      return;
+    }
+
+    if (qualified && !showGift) {
+      event.preventDefault();
+      setClientErrors({ gift: cartCopy.giftRequired });
       return;
     }
 
@@ -208,6 +237,26 @@ export function CheckoutDesk({ paymentEnabled }: { paymentEnabled: boolean }) {
             </li>
           ))}
         </ul>
+        {qualified ? (
+          <PromotionalGiftSelector
+            options={giftOptions}
+            selectedProductId={giftProductId}
+            onSelect={(productId) => {
+              setClientErrors((current) => {
+                const next = { ...current };
+                delete next.gift;
+                return next;
+              });
+              setChosenGiftId(productId);
+            }}
+            disabled={pending}
+          />
+        ) : null}
+        {fieldErrors.gift ? (
+          <p role="alert" className="mt-3 text-copy text-gold">
+            {fieldErrors.gift}
+          </p>
+        ) : null}
         {showGift && serverQuote?.gift ? (
           <ul className="mt-3 grid gap-3">
             <PromotionalGiftLine gift={serverQuote.gift} />
@@ -225,15 +274,30 @@ export function CheckoutDesk({ paymentEnabled }: { paymentEnabled: boolean }) {
           </p>
           {showGift ? (
             <p>
-              {cartCopy.freeRandomFive}: {formatUsd(0)}
+              {cartCopy.promotionalGift}: {formatUsd(0)}
             </p>
           ) : null}
           <p>
             {cartCopy.orderTotal}: {formatUsd(quote.totalCents)}
           </p>
-          <p className="font-label text-ui tracking-[0.12em] text-gold uppercase">
-            {progress}
-          </p>
+          {showSpendMore ? (
+            <div className="mt-1 flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+              <p className="min-w-0 font-label text-ui tracking-[0.12em] text-gold uppercase">
+                {progress}
+              </p>
+              <Button
+                href="/vault"
+                variant="secondary"
+                className="shrink-0"
+              >
+                {cartCopy.backToTheVault}
+              </Button>
+            </div>
+          ) : (
+            <p className="font-label text-ui tracking-[0.12em] text-gold uppercase">
+              {progress}
+            </p>
+          )}
         </div>
         <p className="mt-3 text-copy text-ice/50">{cartCopy.taxNote}</p>
       </section>
@@ -247,6 +311,11 @@ export function CheckoutDesk({ paymentEnabled }: { paymentEnabled: boolean }) {
       >
         <div className="grid gap-6 px-5 py-6 md:px-7 md:py-8">
           <input type="hidden" name="items" value={JSON.stringify(lines)} />
+          <input
+            type="hidden"
+            name="promotionalProductId"
+            value={giftProductId ?? ""}
+          />
           {cancelled ? (
             <p role="status" className="border border-white/10 px-4 py-3 text-copy text-ice/80">
               {cartCopy.cancelledCheckout}

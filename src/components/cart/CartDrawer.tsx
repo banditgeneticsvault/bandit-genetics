@@ -9,7 +9,7 @@ import { cartCopy } from "@/content/cart";
 import { SEED_TIERS } from "@/data/order";
 import { cartSubtotalCents, formatUsd, resolveCart } from "@/lib/cart";
 import { formatPromotionProgress } from "@/lib/shipping-promotion";
-import { useEffect, useId } from "react";
+import { useEffect, useId, useState } from "react";
 
 export function CartDrawer() {
   const {
@@ -25,6 +25,7 @@ export function CartDrawer() {
   const titleId = useId();
   const resolved = resolveCart(lines);
   const subtotal = cartSubtotalCents(resolved);
+  const [giftSelected, setGiftSelected] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -41,6 +42,28 @@ export function CartDrawer() {
       document.body.style.overflow = "";
     };
   }, [open]);
+
+  useEffect(() => {
+    if (!open || !ready || lines.length === 0) {
+      return;
+    }
+    const controller = new AbortController();
+    fetch("/api/checkout/quote", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ items: lines }),
+      signal: controller.signal,
+    })
+      .then(async (response) => {
+        if (!response.ok) return null;
+        return (await response.json()) as { promotionalGiftApplied?: boolean };
+      })
+      .then((quote) => {
+        setGiftSelected(Boolean(quote?.promotionalGiftApplied));
+      })
+      .catch(() => undefined);
+    return () => controller.abort();
+  }, [lines, open, ready]);
 
   if (!open) return null;
 
@@ -131,6 +154,7 @@ export function CartDrawer() {
                   subtotal,
                   formatUsd,
                   cartCopy,
+                  giftSelected,
                 )}
               </p>
             </div>

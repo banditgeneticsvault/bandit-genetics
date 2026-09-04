@@ -81,7 +81,7 @@ export default async function CryptoCheckoutPage({
             </p>
             {cryptoOrder.promotionalGiftApplied ? (
               <p className="text-copy text-ice">
-                {cartCopy.freeRandomFive}
+                {cartCopy.promotionalGift}
                 {cryptoOrder.promotionalStrainName
                   ? ` — ${cryptoOrder.promotionalStrainName}`
                   : ""}

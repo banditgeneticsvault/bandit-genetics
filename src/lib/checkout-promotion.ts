@@ -16,6 +16,7 @@ import type { Order, OrderLine } from "@/lib/orders/types";
 import { promotionalGiftView } from "@/lib/promotional-catalog";
 import {
   promotionalOrderLine,
+  promotionalProductRequestFromUnknown,
   resolvePromotionalAssignment,
 } from "@/lib/promotional-gift";
 import { quoteShippingPromotion } from "@/lib/shipping-promotion";
@@ -51,9 +52,19 @@ export async function syncCheckoutPromotion(input: {
   items: CartLine[];
   name?: string;
   email?: string;
+  promotionalProductId?: unknown;
+  requireGiftIfQualified?: boolean;
 }): Promise<
   | { ok: true; quote: CheckoutPromotionQuote; order: Order; lines: ResolvedCartLine[] }
-  | { ok: false; reason: "empty" | "invalid_cart" | "promotional_catalog_empty" }
+  | {
+      ok: false;
+      reason:
+        | "empty"
+        | "invalid_cart"
+        | "promotional_catalog_empty"
+        | "invalid_promotional_product"
+        | "gift_required";
+    }
 > {
   if (input.items.length === 0) {
     return { ok: false, reason: "empty" };
@@ -65,13 +76,22 @@ export async function syncCheckoutPromotion(input: {
     return { ok: false, reason: "invalid_cart" };
   }
 
+  const requested = promotionalProductRequestFromUnknown(
+    input.promotionalProductId,
+  );
+  if (!requested.ok) {
+    return { ok: false, reason: "invalid_promotional_product" };
+  }
+
   const quote = quoteShippingPromotion(cart.subtotalCents, 0);
   const existing = await getReusablePendingOrder(await readPendingOrderCookie());
+  const qualified = quote.promotionStatus === "qualified";
   let assignment;
   try {
     assignment = resolvePromotionalAssignment({
-      qualified: quote.promotionalGiftApplied,
+      qualified,
       persistedProductId: existing?.promotionalProductId ?? null,
+      requestedProductId: requested.productId,
     });
   } catch {
     return { ok: false, reason: "promotional_catalog_empty" };
@@ -81,8 +101,11 @@ export async function syncCheckoutPromotion(input: {
     assignment.applied && assignment.productId
       ? promotionalOrderLine(assignment.productId)
       : null;
-  if (quote.promotionalGiftApplied && !giftLine) {
+  if (qualified && assignment.applied && !giftLine) {
     return { ok: false, reason: "promotional_catalog_empty" };
+  }
+  if (input.requireGiftIfQualified && qualified && !giftLine) {
+    return { ok: false, reason: "gift_required" };
   }
 
   const assignedView = assignment.productId
@@ -107,8 +130,12 @@ export async function syncCheckoutPromotion(input: {
     promotionalProductId: assignment.productId,
     promotionalStrainName:
       assignedView?.name ?? existing?.promotionalStrainName ?? null,
-    promotionalPackSize: giftLine ? giftLine.seedCount : null,
-    promotionalQuantity: giftLine ? giftLine.quantity : null,
+    promotionalPackSize: giftLine
+      ? giftLine.seedCount
+      : (existing?.promotionalPackSize ?? null),
+    promotionalQuantity: giftLine
+      ? giftLine.quantity
+      : (existing?.promotionalQuantity ?? null),
     promotionalItemPriceCents: giftLine ? giftLine.unitPriceCents : 0,
     lines,
   };

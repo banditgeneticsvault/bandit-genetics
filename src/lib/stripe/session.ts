@@ -183,7 +183,7 @@ export function stripePromotionalLineItem(
       currency: "usd",
       unit_amount: 0,
       product_data: {
-        name: `FREE RANDOM 5 PACK — ${gift.name}`,
+        name: `FREE 5 SEED PACK — ${gift.name}`,
         description:
           "Complimentary promotional 5 seed pack. $0.00. Not a paid purchase.",
         ...(image ? { images: [image] } : {}),

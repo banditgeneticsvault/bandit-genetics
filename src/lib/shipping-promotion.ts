@@ -70,10 +70,15 @@ export function quoteShippingPromotion(
 export function formatPromotionProgress(
   merchandiseSubtotalCents: number,
   formatUsd: (cents: number) => string,
-  copy: { spendMoreForPromotion: string; promotionUnlocked: string },
+  copy: {
+    spendMoreForPromotion: string;
+    promotionChooseGift: string;
+    promotionUnlocked: string;
+  },
+  giftSelected = false,
 ) {
   if (qualifiesForShippingPromotion(merchandiseSubtotalCents)) {
-    return copy.promotionUnlocked;
+    return giftSelected ? copy.promotionUnlocked : copy.promotionChooseGift;
   }
   return copy.spendMoreForPromotion.replace(
     "{amount}",
@@ -81,34 +86,32 @@ export function formatPromotionProgress(
   );
 }
 
+function eligibleId(
+  productId: string | null | undefined,
+  eligibleProductIds: string[],
+) {
+  if (!productId) return null;
+  return eligibleProductIds.includes(productId) ? productId : null;
+}
+
 export function assignPromotionalProductId(input: {
   qualified: boolean;
   persistedProductId: string | null;
+  requestedProductId?: string | null;
   eligibleProductIds: string[];
-  pick: (eligibleProductIds: string[]) => string;
 }): { applied: boolean; productId: string | null } {
   const eligible = input.eligibleProductIds.filter(Boolean);
-  const persisted =
-    input.persistedProductId && eligible.includes(input.persistedProductId)
-      ? input.persistedProductId
-      : input.persistedProductId && !eligible.includes(input.persistedProductId)
-        ? null
-        : input.persistedProductId;
+  const persisted = eligibleId(input.persistedProductId, eligible);
+  const requested = eligibleId(input.requestedProductId, eligible);
+  const productId = requested ?? persisted;
 
   if (!input.qualified) {
-    return {
-      applied: false,
-      productId: persisted,
-    };
+    return { applied: false, productId };
   }
 
-  if (eligible.length === 0) {
-    return { applied: false, productId: persisted };
+  if (productId && eligible.includes(productId)) {
+    return { applied: true, productId };
   }
 
-  if (persisted && eligible.includes(persisted)) {
-    return { applied: true, productId: persisted };
-  }
-
-  return { applied: true, productId: input.pick(eligible) };
+  return { applied: false, productId };
 }

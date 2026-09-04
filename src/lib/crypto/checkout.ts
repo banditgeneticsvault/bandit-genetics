@@ -14,10 +14,19 @@ export type CryptoCheckoutRequest = {
   items: CartLine[];
   cryptocurrency: unknown;
   transactionHash?: unknown;
+  promotionalProductId?: unknown;
 };
 
 export type CryptoCheckoutResult =
-  | { ok: false; reason: "empty" | "invalid_cart" | "invalid_asset" }
+  | {
+      ok: false;
+      reason:
+        | "empty"
+        | "invalid_cart"
+        | "invalid_asset"
+        | "invalid_promotional_product"
+        | "gift_required";
+    }
   | { ok: true; order: Order };
 
 export function parseCryptoAsset(value: unknown): CryptoAsset | null {
@@ -36,9 +45,17 @@ export async function createCryptoOrder(
     items: request.items,
     name: request.name,
     email: request.email,
+    promotionalProductId: request.promotionalProductId,
+    requireGiftIfQualified: true,
   });
   if (!synced.ok) {
     if (synced.reason === "empty") return { ok: false, reason: "empty" };
+    if (
+      synced.reason === "invalid_promotional_product" ||
+      synced.reason === "gift_required"
+    ) {
+      return { ok: false, reason: synced.reason };
+    }
     return { ok: false, reason: "invalid_cart" };
   }
 

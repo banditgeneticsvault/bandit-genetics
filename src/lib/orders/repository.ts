@@ -1,53 +1,8 @@
 import "server-only";
 
-import { mkdir, readFile, writeFile } from "node:fs/promises";
-import path from "node:path";
 import { randomUUID } from "node:crypto";
+import { withOrderDb } from "@/lib/orders/db";
 import type { NewOrderInput, Order, OrderPaymentStatus, OrderStatus } from "./types";
-
-type StoreFile = {
-  orders: Record<string, Order>;
-  events: Record<string, { receivedAt: string; orderId?: string }>;
-};
-
-const EMPTY: StoreFile = { orders: {}, events: {} };
-
-function storePath() {
-  return path.join(process.cwd(), ".data", "orders.json");
-}
-
-async function readStore(): Promise<StoreFile> {
-  try {
-    const raw = await readFile(storePath(), "utf8");
-    const parsed = JSON.parse(raw) as StoreFile;
-    if (!parsed || typeof parsed !== "object") return { ...EMPTY };
-    return {
-      orders: Object.fromEntries(
-        Object.entries(parsed.orders ?? {}).map(([id, order]) => [
-          id,
-          hydrateOrder(order),
-        ]),
-      ),
-      events: parsed.events ?? {},
-    };
-  } catch {
-    return { ...EMPTY, orders: {}, events: {} };
-  }
-}
-
-async function writeStore(store: StoreFile): Promise<boolean> {
-  try {
-    const dir = path.dirname(storePath());
-    await mkdir(dir, { recursive: true });
-    await writeFile(storePath(), JSON.stringify(store), "utf8");
-    return true;
-  } catch (error) {
-    console.error("order_store_write_failed", {
-      code: error instanceof Error ? error.name : "unknown",
-    });
-    return false;
-  }
-}
 
 function nowIso() {
   return new Date().toISOString();
@@ -79,8 +34,48 @@ function hydrateOrder(order: Order): Order {
   };
 }
 
+function orderFromRow(document: unknown): Order | null {
+  if (!document || typeof document !== "object") return null;
+  return hydrateOrder(document as Order);
+}
+
 export function createOrderId() {
   return `bg_${randomUUID()}`;
+}
+
+export function isInternalOrderId(value: string) {
+  return /^bg_[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+    value,
+  );
+}
+
+async function persistOrder(order: Order): Promise<Order> {
+  const sql = await withOrderDb();
+  const document = JSON.stringify(order);
+  await sql`
+    INSERT INTO orders (
+      id,
+      stripe_checkout_session_id,
+      stripe_payment_intent_id,
+      document,
+      created_at,
+      updated_at
+    )
+    VALUES (
+      ${order.id},
+      ${order.stripeCheckoutSessionId},
+      ${order.stripePaymentIntentId},
+      ${document}::jsonb,
+      ${order.createdAt}::timestamptz,
+      ${order.updatedAt}::timestamptz
+    )
+    ON CONFLICT (id) DO UPDATE SET
+      stripe_checkout_session_id = EXCLUDED.stripe_checkout_session_id,
+      stripe_payment_intent_id = EXCLUDED.stripe_payment_intent_id,
+      document = EXCLUDED.document,
+      updated_at = EXCLUDED.updated_at
+  `;
+  return order;
 }
 
 export async function createPendingOrder(input: NewOrderInput): Promise<Order> {
@@ -115,24 +110,11 @@ export async function createPendingOrder(input: NewOrderInput): Promise<Order> {
     updatedAt: createdAt,
     paidAt: null,
   };
-  const store = await readStore();
-  store.orders[order.id] = order;
-  await writeStore(store);
-  return order;
+  return persistOrder(order);
 }
 
 export async function saveOrder(order: Order): Promise<Order> {
-  const next = { ...order, updatedAt: nowIso() };
-  const store = await readStore();
-  store.orders[next.id] = next;
-  await writeStore(store);
-  return next;
-}
-
-export function isInternalOrderId(value: string) {
-  return /^bg_[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-    value,
-  );
+  return persistOrder({ ...order, updatedAt: nowIso() });
 }
 
 export async function getReusablePendingOrder(
@@ -147,61 +129,69 @@ export async function getReusablePendingOrder(
 }
 
 export async function getOrderById(id: string): Promise<Order | null> {
-  const store = await readStore();
-  return store.orders[id] ?? null;
+  const sql = await withOrderDb();
+  const rows = await sql`
+    SELECT document FROM orders WHERE id = ${id} LIMIT 1
+  `;
+  return rows[0] ? orderFromRow(rows[0].document) : null;
 }
 
 export async function getOrderBySessionId(
   sessionId: string,
 ): Promise<Order | null> {
-  const store = await readStore();
-  return (
-    Object.values(store.orders).find(
-      (order) => order.stripeCheckoutSessionId === sessionId,
-    ) ?? null
-  );
+  const sql = await withOrderDb();
+  const rows = await sql`
+    SELECT document
+    FROM orders
+    WHERE stripe_checkout_session_id = ${sessionId}
+    LIMIT 1
+  `;
+  return rows[0] ? orderFromRow(rows[0].document) : null;
 }
 
 export async function getOrderByPaymentIntentId(
   paymentIntentId: string,
 ): Promise<Order | null> {
-  const store = await readStore();
-  return (
-    Object.values(store.orders).find(
-      (order) => order.stripePaymentIntentId === paymentIntentId,
-    ) ?? null
-  );
+  const sql = await withOrderDb();
+  const rows = await sql`
+    SELECT document
+    FROM orders
+    WHERE stripe_payment_intent_id = ${paymentIntentId}
+    LIMIT 1
+  `;
+  return rows[0] ? orderFromRow(rows[0].document) : null;
 }
 
 export async function attachStripeSession(
   orderId: string,
   sessionId: string,
 ): Promise<Order | null> {
-  const store = await readStore();
-  const order = store.orders[orderId];
+  const order = await getOrderById(orderId);
   if (!order) return null;
-  const next: Order = {
+  return saveOrder({
     ...order,
     stripeCheckoutSessionId: sessionId,
-    updatedAt: nowIso(),
-  };
-  store.orders[orderId] = next;
-  await writeStore(store);
-  return next;
+  });
 }
 
 export async function hasProcessedEvent(eventId: string): Promise<boolean> {
-  const store = await readStore();
-  return Boolean(store.events[eventId]);
+  const sql = await withOrderDb();
+  const rows = await sql`
+    SELECT event_id FROM stripe_webhook_events WHERE event_id = ${eventId} LIMIT 1
+  `;
+  return rows.length > 0;
 }
 
 export async function markProcessedEvent(
   eventId: string,
   orderId?: string,
 ): Promise<void> {
-  const store = await readStore();
-  store.events[eventId] = { receivedAt: nowIso(), orderId };
-  await writeStore(store);
+  const sql = await withOrderDb();
+  await sql`
+    INSERT INTO stripe_webhook_events (event_id, order_id, received_at)
+    VALUES (${eventId}, ${orderId ?? null}, ${nowIso()}::timestamptz)
+    ON CONFLICT (event_id) DO NOTHING
+  `;
 }
 
 export function canTransition(

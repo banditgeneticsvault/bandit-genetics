@@ -46,6 +46,24 @@ export function eligiblePromotionalProductIds(): string[] {
   return eligiblePromotionalListings().map((listing) => listing.productId);
 }
 
+export function isEligiblePromotionalProductId(productId: string) {
+  return eligiblePromotionalProductIds().includes(productId);
+}
+
+export function parsePromotionalProductIdInput(
+  value: unknown,
+):
+  | { status: "omitted" }
+  | { status: "invalid" }
+  | { status: "value"; productId: string } {
+  if (value === undefined || value === null) return { status: "omitted" };
+  if (typeof value !== "string") return { status: "invalid" };
+  const productId = value.trim();
+  if (!productId) return { status: "omitted" };
+  if (productId.length > 80) return { status: "invalid" };
+  return { status: "value", productId };
+}
+
 export function promotionalGiftView(
   productId: string,
 ): PromotionalGiftView | null {

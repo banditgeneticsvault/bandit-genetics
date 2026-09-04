@@ -9,7 +9,11 @@ import {
   sanitizeTransactionHash,
 } from "../src/lib/crypto/hash.ts";
 import { CRYPTO_WALLETS, isCryptoAsset } from "../src/lib/crypto/wallets.ts";
-import { eligiblePromotionalProductIds } from "../src/lib/promotional-catalog.ts";
+import {
+  eligiblePromotionalProductIds,
+  isEligiblePromotionalProductId,
+  parsePromotionalProductIdInput,
+} from "../src/lib/promotional-catalog.ts";
 import {
   sessionBelongsToOrder,
   stripeSessionOrderId,
@@ -193,25 +197,56 @@ for (const [subtotal, shipping, qualified] of cases) {
 }
 
 assert(remainingCentsForPromotion(8000) === 2000, "remaining $20");
+assert(remainingCentsForPromotion(9000) === 1000, "remaining $10");
 assert(remainingCentsForPromotion(9999) === 1, "remaining $0.01");
 assert(remainingCentsForPromotion(10000) === 0, "remaining at threshold");
 assert(
   formatPromotionProgress(8000, (cents) => `$${(cents / 100).toFixed(2)}`, {
-    spendMoreForPromotion: "SPEND {amount} MORE FOR FREE SHIPPING + A FREE RANDOM 5 PACK",
-    promotionUnlocked: "FREE SHIPPING + FREE RANDOM 5 PACK",
-  }) === "SPEND $20.00 MORE FOR FREE SHIPPING + A FREE RANDOM 5 PACK",
+    spendMoreForPromotion: "SPEND {amount} MORE FOR FREE SHIPPING + A FREE 5 SEED PACK",
+    promotionChooseGift: "FREE SHIPPING + CHOOSE YOUR FREE 5 SEED PACK",
+    promotionUnlocked: "FREE SHIPPING + FREE 5 SEED PACK SELECTED",
+  }) === "SPEND $20.00 MORE FOR FREE SHIPPING + A FREE 5 SEED PACK",
   "progress copy $80",
+);
+assert(
+  formatPromotionProgress(10000, (cents) => `$${(cents / 100).toFixed(2)}`, {
+    spendMoreForPromotion: "SPEND {amount} MORE FOR FREE SHIPPING + A FREE 5 SEED PACK",
+    promotionChooseGift: "FREE SHIPPING + CHOOSE YOUR FREE 5 SEED PACK",
+    promotionUnlocked: "FREE SHIPPING + FREE 5 SEED PACK SELECTED",
+  }) === "FREE SHIPPING + CHOOSE YOUR FREE 5 SEED PACK",
+  "progress copy choose gift",
+);
+assert(
+  formatPromotionProgress(
+    10000,
+    (cents) => `$${(cents / 100).toFixed(2)}`,
+    {
+      spendMoreForPromotion: "SPEND {amount} MORE FOR FREE SHIPPING + A FREE 5 SEED PACK",
+      promotionChooseGift: "FREE SHIPPING + CHOOSE YOUR FREE 5 SEED PACK",
+      promotionUnlocked: "FREE SHIPPING + FREE 5 SEED PACK SELECTED",
+    },
+    true,
+  ) === "FREE SHIPPING + FREE 5 SEED PACK SELECTED",
+  "progress copy selected gift",
 );
 
 const eligible = eligiblePromotionalProductIds();
 assert(eligible.length === 12, "all purchasable catalog strains with artwork");
 assert(!eligible.includes(""), "no empty product ids");
+assert(isEligiblePromotionalProductId(eligible[0] ?? ""), "eligible id accepted");
+assert(!isEligiblePromotionalProductId("not-a-strain"), "fake gift id rejected");
+assert(parsePromotionalProductIdInput(undefined).status === "omitted", "omitted gift");
+assert(parsePromotionalProductIdInput("").status === "omitted", "empty gift omitted");
+assert(parsePromotionalProductIdInput(12).status === "invalid", "non-string gift rejected");
+assert(
+  parsePromotionalProductIdInput("gorilla-heist").status === "value",
+  "gift id parsed",
+);
 
 const kept = assignPromotionalProductId({
   qualified: true,
   persistedProductId: "getaway-girl",
   eligibleProductIds: eligible,
-  pick: () => "gorilla-heist",
 });
 assert(kept.applied && kept.productId === "getaway-girl", "do not reroll persisted gift");
 
@@ -219,7 +254,6 @@ const below = assignPromotionalProductId({
   qualified: false,
   persistedProductId: "getaway-girl",
   eligibleProductIds: eligible,
-  pick: () => "gorilla-heist",
 });
 assert(!below.applied && below.productId === "getaway-girl", "keep assignment below threshold");
 
@@ -227,9 +261,30 @@ const first = assignPromotionalProductId({
   qualified: true,
   persistedProductId: null,
   eligibleProductIds: eligible,
-  pick: (ids) => ids[0] ?? "",
 });
-assert(first.applied && first.productId === eligible[0], "assign once when missing");
+assert(!first.applied && first.productId === null, "do not auto-assign when missing");
+
+const requested = assignPromotionalProductId({
+  qualified: true,
+  persistedProductId: "getaway-girl",
+  requestedProductId: "gorilla-heist",
+  eligibleProductIds: eligible,
+});
+assert(
+  requested.applied && requested.productId === "gorilla-heist",
+  "customer selection replaces persisted gift",
+);
+
+const fake = assignPromotionalProductId({
+  qualified: true,
+  persistedProductId: "getaway-girl",
+  requestedProductId: "not-a-strain",
+  eligibleProductIds: eligible,
+});
+assert(
+  fake.applied && fake.productId === "getaway-girl",
+  "invalid requested gift is ignored by assigner",
+);
 
 const hundred = validateCheckoutCart([
   { productId: "gorilla-heist", variantId: "seed-5", quantity: 2 },
