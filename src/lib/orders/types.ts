@@ -18,7 +18,7 @@ export const PAYMENT_STATUSES = [
 
 export type OrderPaymentStatus = (typeof PAYMENT_STATUSES)[number];
 
-export const PAYMENT_METHODS = ["card", "crypto"] as const;
+export const PAYMENT_METHODS = ["crypto"] as const;
 
 export type PaymentMethod = (typeof PAYMENT_METHODS)[number];
 
@@ -43,8 +43,6 @@ export type PromotionStatus = "qualified" | "not_qualified";
 
 export type Order = {
   id: string;
-  stripeCheckoutSessionId: string | null;
-  stripePaymentIntentId: string | null;
   customerEmail: string;
   customerName: string;
   paymentMethod: PaymentMethod;

@@ -101,7 +101,7 @@ const manipulated = parseCheckout(
         quantity: 1,
         priceCents: 1,
         lineTotalCents: 1,
-        stripePriceId: "price_fake",
+        clientPriceId: "price_fake",
         subtotal: 1,
       },
     ]),

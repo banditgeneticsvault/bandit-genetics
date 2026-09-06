@@ -77,15 +77,7 @@ export const cartCopy = {
     "Checkout was not completed. Your cart is still here.",
   invalidItems:
     "One or more items in the cart could not be checked out. Remove unavailable strains and try again.",
-  successTitle: "CHECKOUT",
-  successKicker: "THE DESK",
-  orderConfirmed: "ORDER CONFIRMED",
-  paymentConfirmed: "Payment confirmed.",
   orderLabel: "Order",
-  paidItem: "PAID ITEM",
-  paidMerchandise: "Paid merchandise",
-  successMissing:
-    "This checkout page is no longer used for card payments. Email support@banditgenetics.com to place an order, or return to checkout for cryptocurrency.",
   cryptoMissing: "This crypto checkout ticket could not be found.",
   placeOrder: "PLACE ORDER",
   name: "Name",

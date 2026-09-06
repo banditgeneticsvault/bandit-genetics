@@ -12,13 +12,20 @@ function hydrateOrder(order: Order): Order {
   const promotionalProductId = order.promotionalProductId ?? null;
   const promotionalGiftApplied = Boolean(order.promotionalGiftApplied);
   return {
-    ...order,
-    paymentMethod: order.paymentMethod === "crypto" ? "crypto" : "card",
+    id: order.id,
+    customerEmail: order.customerEmail,
+    customerName: order.customerName,
+    paymentMethod: "crypto",
     cryptocurrency: order.cryptocurrency ?? null,
     receivingAddress: order.receivingAddress ?? null,
     transactionHash: order.transactionHash ?? null,
+    status: order.status,
+    paymentStatus: order.paymentStatus,
+    currency: "usd",
+    subtotalCents: order.subtotalCents,
     shippingCents: order.shippingCents ?? 0,
     taxCents: order.taxCents ?? 0,
+    totalCents: order.totalCents,
     promotionStatus: order.promotionStatus === "qualified" ? "qualified" : "not_qualified",
     freeShipping: Boolean(order.freeShipping),
     promotionalGiftApplied,
@@ -31,6 +38,9 @@ function hydrateOrder(order: Order): Order {
       ...line,
       kind: line.kind === "promotional" ? "promotional" : "paid",
     })),
+    createdAt: order.createdAt,
+    updatedAt: order.updatedAt,
+    paidAt: order.paidAt ?? null,
   };
 }
 
@@ -51,42 +61,34 @@ export function isInternalOrderId(value: string) {
 
 async function persistOrder(order: Order): Promise<Order> {
   const sql = await withOrderDb();
-  const document = JSON.stringify(order);
+  const document = JSON.stringify(hydrateOrder(order));
   await sql`
     INSERT INTO orders (
       id,
-      stripe_checkout_session_id,
-      stripe_payment_intent_id,
       document,
       created_at,
       updated_at
     )
     VALUES (
       ${order.id},
-      ${order.stripeCheckoutSessionId},
-      ${order.stripePaymentIntentId},
       ${document}::jsonb,
       ${order.createdAt}::timestamptz,
       ${order.updatedAt}::timestamptz
     )
     ON CONFLICT (id) DO UPDATE SET
-      stripe_checkout_session_id = EXCLUDED.stripe_checkout_session_id,
-      stripe_payment_intent_id = EXCLUDED.stripe_payment_intent_id,
       document = EXCLUDED.document,
       updated_at = EXCLUDED.updated_at
   `;
-  return order;
+  return hydrateOrder({ ...order, updatedAt: order.updatedAt });
 }
 
 export async function createPendingOrder(input: NewOrderInput): Promise<Order> {
   const createdAt = nowIso();
   const order: Order = {
     id: createOrderId(),
-    stripeCheckoutSessionId: null,
-    stripePaymentIntentId: null,
     customerEmail: input.customerEmail,
     customerName: input.customerName,
-    paymentMethod: input.paymentMethod ?? "crypto",
+    paymentMethod: "crypto",
     cryptocurrency: input.cryptocurrency ?? null,
     receivingAddress: input.receivingAddress ?? null,
     transactionHash: input.transactionHash ?? null,
@@ -152,28 +154,24 @@ export function applyOrderStatus(
   order: Order,
   status: OrderStatus,
   paymentStatus: OrderPaymentStatus,
-  extras: Partial<Pick<Order, "stripePaymentIntentId" | "paidAt">> = {},
+  extras: Partial<Pick<Order, "paidAt">> = {},
 ): Order {
   if (order.status === "paid") {
     return {
-      ...order,
-      stripePaymentIntentId:
-        extras.stripePaymentIntentId ?? order.stripePaymentIntentId,
+      ...hydrateOrder(order),
       updatedAt: nowIso(),
     };
   }
   if (!canTransition(order.status, status)) {
-    return { ...order, updatedAt: nowIso() };
+    return { ...hydrateOrder(order), updatedAt: nowIso() };
   }
   const paidAt =
     status === "paid" ? (extras.paidAt ?? nowIso()) : order.paidAt;
-  return {
+  return hydrateOrder({
     ...order,
     status,
     paymentStatus,
-    stripePaymentIntentId:
-      extras.stripePaymentIntentId ?? order.stripePaymentIntentId,
     paidAt,
     updatedAt: nowIso(),
-  };
+  });
 }

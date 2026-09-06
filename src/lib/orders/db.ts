@@ -30,46 +30,16 @@ async function createSchema(sql: Sql) {
   await sql`
     CREATE TABLE IF NOT EXISTS orders (
       id TEXT PRIMARY KEY,
-      stripe_checkout_session_id TEXT,
-      stripe_payment_intent_id TEXT,
       document JSONB NOT NULL,
       created_at TIMESTAMPTZ NOT NULL,
       updated_at TIMESTAMPTZ NOT NULL
     )
   `;
-  await sql`
-    CREATE UNIQUE INDEX IF NOT EXISTS orders_session_id_uidx
-    ON orders (stripe_checkout_session_id)
-    WHERE stripe_checkout_session_id IS NOT NULL
-  `;
-  await sql`
-    CREATE UNIQUE INDEX IF NOT EXISTS orders_payment_intent_uidx
-    ON orders (stripe_payment_intent_id)
-    WHERE stripe_payment_intent_id IS NOT NULL
-  `;
-  await sql`
-    CREATE TABLE IF NOT EXISTS stripe_webhook_events (
-      event_id TEXT PRIMARY KEY,
-      order_id TEXT,
-      received_at TIMESTAMPTZ NOT NULL
-    )
-  `;
-  await sql`
-    ALTER TABLE stripe_webhook_events
-    ADD COLUMN IF NOT EXISTS processing_status TEXT
-  `;
-  await sql`
-    ALTER TABLE stripe_webhook_events
-    ADD COLUMN IF NOT EXISTS lease_token TEXT
-  `;
-  await sql`
-    ALTER TABLE stripe_webhook_events
-    ADD COLUMN IF NOT EXISTS lease_expires_at TIMESTAMPTZ
-  `;
-  await sql`
-    ALTER TABLE stripe_webhook_events
-    ADD COLUMN IF NOT EXISTS completed_at TIMESTAMPTZ
-  `;
+  await sql`DROP INDEX IF EXISTS orders_session_id_uidx`;
+  await sql`DROP INDEX IF EXISTS orders_payment_intent_uidx`;
+  await sql`ALTER TABLE orders DROP COLUMN IF EXISTS stripe_checkout_session_id`;
+  await sql`ALTER TABLE orders DROP COLUMN IF EXISTS stripe_payment_intent_id`;
+  await sql`DROP TABLE IF EXISTS stripe_webhook_events`;
 }
 
 export async function withOrderDb(): Promise<Sql> {
