@@ -8,6 +8,7 @@ import { CartLineVisual } from "@/components/cart/CartLineVisual";
 import { PromotionalGiftLine } from "@/components/cart/PromotionalGiftLine";
 import { PromotionalGiftSelector } from "@/components/cart/PromotionalGiftSelector";
 import { EmailOrderCta } from "@/components/layout/EmailOrderCta";
+import { OrderEmailLink } from "@/components/layout/OrderEmailLink";
 import { QuantityStepper } from "@/components/cart/QuantityStepper";
 import { SeedQuantityPicker } from "@/components/cart/PackPicker";
 import { useCart } from "@/components/cart/CartProvider";
@@ -380,8 +381,13 @@ export function CheckoutDesk() {
           <div className="min-w-0 border-t border-white/10 pt-6">
             <p className="section-kicker">{cartCopy.paymentMethod}</p>
             <p className="mt-3 text-copy text-ice/70">{cartCopy.choosePayment}</p>
+            <p className="mt-3 text-copy text-ice/70">{cartCopy.cardComingSoon}</p>
+            <p className="mt-3 text-copy text-ice/70">
+              {cartCopy.howToOrderContact} <OrderEmailLink />{" "}
+              {cartCopy.howToOrderContactAfter}
+            </p>
             <div className="mt-4">
-              <EmailOrderCta />
+              <EmailOrderCta hideIntro />
             </div>
 
             <div className="mt-8 grid min-w-0 gap-3">
@@ -389,11 +395,11 @@ export function CheckoutDesk() {
                 {cartCopy.payWithCrypto}
               </p>
               <p className="text-copy text-ice/80">{cartCopy.cryptoNote}</p>
-              <p className="text-copy text-ice/80">{cartCopy.cryptoAmountNote}</p>
+              <p className="text-copy text-ice/80">{cartCopy.cryptoUnpaidNote}</p>
+              <p className="text-copy text-ice/80">{cartCopy.howToOrderAmount}</p>
+              <p className="text-copy text-ice/80">{cartCopy.cryptoInstructionsNote}</p>
               <fieldset>
-                <legend className="font-label text-ui tracking-[0.22em] text-gold uppercase">
-                  Cryptocurrency
-                </legend>
+                <legend className="sr-only">{cartCopy.payWithCrypto}</legend>
                 <div className="mt-3 grid gap-2">
                   {(
                     Object.values(CRYPTO_WALLETS) as Array<
@@ -438,7 +444,11 @@ export function CheckoutDesk() {
                   <CopyAddress value={selectedWallet.address} />
                 </div>
               ) : null}
-              <p className="text-copy text-ice/70">{cartCopy.cryptoVerifyNote}</p>
+              <p className="font-label text-ui tracking-[0.22em] text-gold uppercase">
+                {cartCopy.paymentVerification}
+              </p>
+              <p className="text-copy text-ice/70">{cartCopy.cryptoVerifyManual}</p>
+              <p className="text-copy text-ice/70">{cartCopy.howToOrderHashNote}</p>
               <Field
                 id={`${formId}-hash`}
                 name="transactionHash"

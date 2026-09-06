@@ -54,11 +54,25 @@ export const cartCopy = {
     "Review the strains on this ticket. Email support@banditgenetics.com to place an order, or use cryptocurrency checkout. Crypto is not marked paid until Bandit Genetics verifies it.",
   payLaterCrypto: "PAY LATER / PAY WITH CRYPTO",
   paymentMethod: "HOW TO ORDER",
-  payWithCrypto: "CRYPTO",
+  payWithCrypto: "CRYPTOCURRENCY",
   choosePayment:
-    "Email us to place an order, or complete cryptocurrency checkout below.",
+    "We're a small, independent genetics company, and we're currently expanding our payment options to make ordering easier for our customers.",
+  cardComingSoon: "Credit and debit card checkout is coming soon.",
+  howToOrderContact:
+    "Don't see your preferred payment option? No problem. Contact us at",
+  howToOrderContactAfter: "and we'll help you get your order placed.",
   cryptoNote:
-    "This is not financing and not credit. You submit the order unpaid, then send cryptocurrency to the Bandit Genetics receiving address shown for the network you select.",
+    "Cryptocurrency checkout is currently available through Bitcoin, Ethereum, and Solana.",
+  cryptoUnpaidNote:
+    "Your order is submitted first and remains unpaid until your cryptocurrency payment is received and manually verified by Bandit Genetics.",
+  howToOrderAmount:
+    "The amount due is the USD total shown for your order. The checkout does not automatically convert the USD total into BTC, ETH, or SOL.",
+  cryptoInstructionsNote:
+    "Before sending payment, follow the payment instructions shown for your selected cryptocurrency network and verify the amount carefully.",
+  paymentVerification: "PAYMENT VERIFICATION",
+  cryptoVerifyManual: "Cryptocurrency payments are verified manually.",
+  howToOrderHashNote:
+    "A transaction hash may be provided as optional information to help us locate your transaction. Submitting a transaction hash does not mark an order as paid.",
   cryptoVerifyNote:
     "CRYPTO PAYMENT VERIFICATION IS MANUAL. A transaction hash is optional customer information only. It does not mark the order paid.",
   cryptoAmountNote:

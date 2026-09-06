@@ -108,8 +108,12 @@ export const pageCopy = {
   contact: {
     title: "CONTACT BANDIT GENETICS",
     kicker: "Direct line",
-    body: "Questions about our genetics, releases, or the Bandit Vault? Want to place an order by email? Have a custom bulk order in mind? Send us a message.",
-    emailPrompt: "Email us at support@banditgenetics.com to place an order, or use cryptocurrency checkout.",
+    body: "Questions about our genetics, releases, or the Bandit Vault?",
+    orderHelp:
+      "Need help with an order or looking for an alternative payment option? No problem. Send us a message and we'll help you get everything taken care of.",
+    emailPrompt: "Email us at",
+    emailDirect:
+      "We're a small, independent genetics company, and we're always happy to work directly with our customers.",
     submit: "SEND MESSAGE",
     submitting: "SENDING",
     success: "Your message was sent. We will reply to the email address you provided.",

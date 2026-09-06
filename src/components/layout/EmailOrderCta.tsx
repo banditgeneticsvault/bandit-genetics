@@ -7,17 +7,19 @@ import { cn } from "@/lib/cn";
 type EmailOrderCtaProps = {
   strainName?: string;
   compact?: boolean;
+  hideIntro?: boolean;
   className?: string;
 };
 
 export function EmailOrderCta({
   strainName,
   compact = false,
+  hideIntro = false,
   className,
 }: EmailOrderCtaProps) {
   return (
     <div className={cn("grid min-w-0 gap-3", className)}>
-      {compact ? null : (
+      {compact || hideIntro ? null : (
         <p className="text-copy leading-relaxed text-ice/80">
           {cartCopy.emailOrderBody} <OrderEmailLink />. {cartCopy.emailOrderCryptoNote}
         </p>
