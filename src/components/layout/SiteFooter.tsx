@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { OrderEmailLink } from "@/components/layout/OrderEmailLink";
 import { SocialLinks } from "@/components/layout/SocialLinks";
 import { brand, navItems } from "@/content/site";
 
@@ -12,6 +13,9 @@ export function SiteFooter() {
           </p>
           <p className="mt-4 font-display text-[clamp(2rem,5vw,3.4rem)] leading-[0.92] text-frost">
             {brand.wordmark}
+          </p>
+          <p className="mt-5 max-w-sm break-words text-copy leading-relaxed text-ice/70">
+            Email us to place an order: <OrderEmailLink />. Cryptocurrency checkout is also available.
           </p>
         </div>
 

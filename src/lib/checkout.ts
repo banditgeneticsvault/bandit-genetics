@@ -39,7 +39,7 @@ export type CheckoutSnapshot = {
 };
 
 export type CheckoutFormState = {
-  status: "idle" | "error" | "payment_unavailable";
+  status: "idle" | "error";
   fieldErrors: CheckoutFieldErrors;
 };
 
@@ -48,8 +48,8 @@ export const initialCheckoutState: CheckoutFormState = {
   fieldErrors: {},
 };
 
-export function parseCheckoutIntent(value: unknown): "card" | "crypto" | null {
-  if (value === "card" || value === "crypto") return value;
+export function parseCheckoutIntent(value: unknown): "crypto" | null {
+  if (value === "crypto") return value;
   return null;
 }
 

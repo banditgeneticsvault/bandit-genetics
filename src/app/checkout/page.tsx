@@ -3,7 +3,6 @@ import { CheckoutDesk } from "@/app/checkout/CheckoutDesk";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { cartCopy } from "@/content/cart";
 import { siteUrl } from "@/content/site";
-import { isPaymentEnabled } from "@/lib/payment";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -18,10 +17,8 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default function CheckoutPage() {
-  const paymentEnabled = isPaymentEnabled();
-
   return (
-    <main className="relative overflow-x-clip bg-black">
+    <main className="relative bg-black">
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-[28rem] vault-grate opacity-40"
         aria-hidden
@@ -33,11 +30,11 @@ export default function CheckoutPage() {
             {cartCopy.checkoutTitle}
           </h1>
           <p className="mt-6 max-w-2xl text-copy leading-relaxed text-ice/75">
-            {paymentEnabled ? cartCopy.checkoutIntroLive : cartCopy.checkoutIntro}
+            {cartCopy.checkoutIntro}
           </p>
         </header>
         <Suspense fallback={<p className="text-copy text-ice/60">Loading checkout.</p>}>
-          <CheckoutDesk paymentEnabled={paymentEnabled} />
+          <CheckoutDesk />
         </Suspense>
       </PageContainer>
     </main>

@@ -43,23 +43,20 @@ export const cartCopy = {
     "Standard storefront options are 1, 2, 3, or 5 seeds. Tell Bandit Genetics what you need for a custom bulk run. Custom bulk stays on the Contact line, not in the seed option selector.",
   bulkCta: "REQUEST A CUSTOM BULK ORDER",
   toastView: "VIEW CART",
-  paymentOff:
-    "Card checkout cannot start because Stripe is not configured on this server. Nothing will be charged by card. PAY LATER / PAY WITH CRYPTO remains available. Submitting crypto does not mark the order paid.",
+  emailOrderCta: "EMAIL US TO PLACE AN ORDER",
+  emailOrderBody: "You can contact us at",
+  emailOrderCryptoNote:
+    "Cryptocurrency checkout remains available if you prefer to pay that way.",
+  emailOrderCompact: "Email us to place an order:",
   checkoutTitle: "CHECKOUT",
   checkoutKicker: "THE DESK",
   checkoutIntro:
-    "Review the strains on this ticket. Card checkout cannot start until Stripe is configured on this server. PAY LATER / PAY WITH CRYPTO is available. Submitting crypto does not mark the order paid.",
-  checkoutIntroLive:
-    "Review the strains on this ticket. Choose one payment method. Card details stay on Stripe Checkout. Crypto is not marked paid until Bandit Genetics verifies it.",
-  continueStripe: "CHECKOUT WITH CARD",
-  checkoutWithCard: "CHECKOUT WITH CARD",
+    "Review the strains on this ticket. Email support@banditgenetics.com to place an order, or use cryptocurrency checkout. Crypto is not marked paid until Bandit Genetics verifies it.",
   payLaterCrypto: "PAY LATER / PAY WITH CRYPTO",
-  paymentMethod: "PAYMENT METHOD",
-  payWithCard: "CREDIT / DEBIT CARD",
+  paymentMethod: "HOW TO ORDER",
   payWithCrypto: "CRYPTO",
-  choosePayment: "Choose one payment method.",
-  cardCheckoutNote:
-    "Card details are entered on Stripe Checkout. This site never handles raw card numbers. Stripe chooses which payment methods to show for the connected account.",
+  choosePayment:
+    "Email us to place an order, or complete cryptocurrency checkout below.",
   cryptoNote:
     "This is not financing and not credit. You submit the order unpaid, then send cryptocurrency to the Bandit Genetics receiving address shown for the network you select.",
   cryptoVerifyNote:
@@ -76,29 +73,21 @@ export const cartCopy = {
   cryptoHashLabel: "Transaction hash (optional)",
   cryptoCopy: "COPY ADDRESS",
   cryptoCopied: "COPIED",
-  stripeAddressNote:
-    "For card checkout, delivery address is collected on Stripe Checkout. Shipping is calculated on this server from the paid merchandise subtotal.",
   cancelledCheckout:
-    "Checkout was not completed. Nothing was charged. Your cart is still here.",
+    "Checkout was not completed. Your cart is still here.",
   invalidItems:
     "One or more items in the cart could not be checked out. Remove unavailable strains and try again.",
-  successTitle: "CHECKOUT RETURN",
+  successTitle: "CHECKOUT",
   successKicker: "THE DESK",
   orderConfirmed: "ORDER CONFIRMED",
   paymentConfirmed: "Payment confirmed.",
   orderLabel: "Order",
   paidItem: "PAID ITEM",
   paidMerchandise: "Paid merchandise",
-  successPending:
-    "You returned from Stripe. Payment is still being confirmed.",
-  successPaid:
-    "Payment confirmed.",
   successMissing:
-    "This checkout return could not be matched to a Stripe session. No payment is assumed.",
-  successFailed:
-    "Payment did not complete. You can return to checkout and try again. Nothing is marked paid.",
+    "This checkout page is no longer used for card payments. Email support@banditgenetics.com to place an order, or return to checkout for cryptocurrency.",
+  cryptoMissing: "This crypto checkout ticket could not be found.",
   placeOrder: "PLACE ORDER",
-  placeOrderDisabled: "PAYMENT NOT ENABLED",
   name: "Name",
   email: "Email",
   line1: "Street address",

@@ -2,14 +2,10 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { withOrderDb } from "../src/lib/orders/db";
 import {
-  attachStripeSession,
   createPendingOrder,
   getOrderById,
-  getOrderBySessionId,
   getReusablePendingOrder,
-  hasProcessedEvent,
   isInternalOrderId,
-  markProcessedEvent,
   saveOrder,
 } from "../src/lib/orders/repository";
 
@@ -108,7 +104,7 @@ async function main() {
         lineTotalCents: 2000,
       },
     ],
-    paymentMethod: "card",
+    paymentMethod: "crypto",
     status: "pending",
     paymentStatus: "unpaid",
   });
@@ -118,15 +114,11 @@ async function main() {
     SELECT table_name
     FROM information_schema.tables
     WHERE table_schema = 'public'
-      AND table_name IN ('orders', 'stripe_webhook_events')
+      AND table_name = 'orders'
     ORDER BY table_name
   `;
   const tableNames = tables.map((row) => String(row.table_name));
   assert(tableNames.includes("orders"), "orders table missing");
-  assert(
-    tableNames.includes("stripe_webhook_events"),
-    "stripe_webhook_events table missing",
-  );
   console.log("tables", tableNames);
 
   assert(isInternalOrderId(created.id), "created order id format");
@@ -153,28 +145,10 @@ async function main() {
   const afterSave = await getOrderById(saved.id);
   assert(afterSave?.customerName === "Order Store Test Updated", "saveOrder");
 
-  const sessionId = `cs_test_orderstore_${created.id.slice(3, 11)}`;
-  const attached = await attachStripeSession(created.id, sessionId);
-  assert(attached?.stripeCheckoutSessionId === sessionId, "attachStripeSession");
-  const bySession = await getOrderBySessionId(sessionId);
-  assert(bySession?.id === created.id, "getOrderBySessionId");
-
-  const eventId = `evt_orderstore_${created.id.slice(3, 11)}`;
-  assert(!(await hasProcessedEvent(eventId)), "event absent before mark");
-  await markProcessedEvent(eventId, created.id);
-  assert(await hasProcessedEvent(eventId), "event present after mark");
-  await markProcessedEvent(eventId, created.id);
-  assert(
-    await hasProcessedEvent(eventId),
-    "event still present after second mark",
-  );
-
-  await sql`DELETE FROM stripe_webhook_events WHERE event_id = ${eventId}`;
   await sql`DELETE FROM orders WHERE id = ${created.id}`;
 
   const gone = await getOrderById(created.id);
   assert(!gone, "test order cleaned up");
-  assert(!(await hasProcessedEvent(eventId)), "test event cleaned up");
 
   console.log("order repository checks passed");
 }

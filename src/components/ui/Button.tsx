@@ -53,8 +53,16 @@ export function Button(props: ButtonProps) {
   );
 
   if ("href" in props && props.href) {
+    const href = props.href;
+    if (/^(mailto:|tel:|https?:)/i.test(href)) {
+      return (
+        <a href={href} onClick={props.onClick} className={classes}>
+          {children}
+        </a>
+      );
+    }
     return (
-      <Link href={props.href} onClick={props.onClick} className={classes}>
+      <Link href={href} onClick={props.onClick} className={classes}>
         {children}
       </Link>
     );

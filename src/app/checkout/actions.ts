@@ -8,7 +8,6 @@ import {
   parseCheckoutIntent,
   type CheckoutFormState,
 } from "@/lib/checkout";
-import { createCheckout } from "@/lib/payment";
 
 export async function startCheckout(
   _prev: CheckoutFormState,
@@ -37,54 +36,22 @@ export async function startCheckout(
     return { status: "error", fieldErrors: parsed.fieldErrors };
   }
 
-  if (intent === "crypto") {
-    const payment = await createCryptoOrder({
-      name: parsed.data.customer.name,
-      email: parsed.data.customer.email,
-      items: parsed.data.cartLines,
-      cryptocurrency: formData.get("cryptocurrency"),
-      transactionHash: formData.get("transactionHash"),
-      promotionalProductId: formData.get("promotionalProductId"),
-    });
-    if (!payment.ok) {
-      if (payment.reason === "empty") {
-        return { status: "error", fieldErrors: { items: cartCopy.emptyCart } };
-      }
-      if (payment.reason === "invalid_asset") {
-        return {
-          status: "error",
-          fieldErrors: { cryptocurrency: cartCopy.invalidCrypto },
-        };
-      }
-      if (payment.reason === "gift_required") {
-        return { status: "error", fieldErrors: { gift: cartCopy.giftRequired } };
-      }
-      if (payment.reason === "invalid_promotional_product") {
-        return { status: "error", fieldErrors: { gift: cartCopy.invalidGift } };
-      }
-      return {
-        status: "error",
-        fieldErrors: { items: cartCopy.invalidItems },
-      };
-    }
-    redirect(`/checkout/crypto?order=${encodeURIComponent(payment.order.id)}`);
-  }
-
-  const payment = await createCheckout({
+  const payment = await createCryptoOrder({
     name: parsed.data.customer.name,
     email: parsed.data.customer.email,
     items: parsed.data.cartLines,
+    cryptocurrency: formData.get("cryptocurrency"),
+    transactionHash: formData.get("transactionHash"),
     promotionalProductId: formData.get("promotionalProductId"),
   });
-
   if (!payment.ok) {
-    if (payment.reason === "payment_unavailable") {
-      return { status: "payment_unavailable", fieldErrors: {} };
-    }
     if (payment.reason === "empty") {
+      return { status: "error", fieldErrors: { items: cartCopy.emptyCart } };
+    }
+    if (payment.reason === "invalid_asset") {
       return {
         status: "error",
-        fieldErrors: { items: cartCopy.emptyCart },
+        fieldErrors: { cryptocurrency: cartCopy.invalidCrypto },
       };
     }
     if (payment.reason === "gift_required") {
@@ -93,14 +60,10 @@ export async function startCheckout(
     if (payment.reason === "invalid_promotional_product") {
       return { status: "error", fieldErrors: { gift: cartCopy.invalidGift } };
     }
-    if (payment.reason === "invalid_cart") {
-      return {
-        status: "error",
-        fieldErrors: { items: cartCopy.invalidItems },
-      };
-    }
-    return { status: "error", fieldErrors: {} };
+    return {
+      status: "error",
+      fieldErrors: { items: cartCopy.invalidItems },
+    };
   }
-
-  redirect(payment.url);
+  redirect(`/checkout/crypto?order=${encodeURIComponent(payment.order.id)}`);
 }

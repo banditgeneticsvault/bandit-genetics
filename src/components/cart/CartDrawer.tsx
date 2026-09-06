@@ -1,5 +1,6 @@
 "use client";
 
+import { EmailOrderCta } from "@/components/layout/EmailOrderCta";
 import { QuantityStepper } from "@/components/cart/QuantityStepper";
 import { SeedQuantityPicker } from "@/components/cart/PackPicker";
 import { CartLineVisual } from "@/components/cart/CartLineVisual";
@@ -169,6 +170,7 @@ export function CartDrawer() {
                 <Button href="/checkout" onClick={closeCart}>
                   {cartCopy.checkout}
                 </Button>
+                <EmailOrderCta compact className="w-full" />
                 <button
                   type="button"
                   onClick={clear}

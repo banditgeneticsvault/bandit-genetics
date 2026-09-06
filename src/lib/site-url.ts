@@ -11,7 +11,7 @@ function originFrom(value: string): string | null {
   }
 }
 
-/** Public site origin. Never reads Stripe secrets. */
+/** Public site origin. */
 export function getPublicSiteUrl(): string {
   const fromEnv = process.env.NEXT_PUBLIC_SITE_URL?.trim();
   if (fromEnv) {

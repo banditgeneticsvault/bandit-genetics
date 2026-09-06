@@ -52,7 +52,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
             {copy.body}
           </p>
           <p className="mt-6 max-w-xl break-words text-copy leading-relaxed text-ice drop-shadow-[0_2px_12px_rgb(0_0_0_/_0.7)]">
-            Email us at <OrderEmailLink />.
+            Email us at <OrderEmailLink /> to place an order. Cryptocurrency checkout remains available if you prefer it.
           </p>
         </header>
 

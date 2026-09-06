@@ -3,6 +3,7 @@
 import { useId, useState } from "react";
 import { SeedQuantityPicker } from "@/components/cart/PackPicker";
 import { useCart } from "@/components/cart/CartProvider";
+import { EmailOrderCta } from "@/components/layout/EmailOrderCta";
 import { Button } from "@/components/ui/Button";
 import { cartCopy } from "@/content/cart";
 import {
@@ -92,6 +93,13 @@ export function AddToCartPanel({ listing }: AddToCartPanelProps) {
       ) : (
         <p className="mt-6 text-copy text-ice/70">{cartCopy.unavailable}</p>
       )}
+
+      <div className="mt-8 border-t border-white/10 pt-6">
+        <p className="section-kicker">EMAIL ORDER</p>
+        <div className="mt-5">
+          <EmailOrderCta strainName={listing.name} />
+        </div>
+      </div>
 
       <div className="mt-8 border-t border-white/10 pt-6">
         <p className="section-kicker">CUSTOM BULK</p>

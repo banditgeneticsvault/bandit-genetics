@@ -15,16 +15,6 @@ import {
   parsePromotionalProductIdInput,
 } from "../src/lib/promotional-catalog.ts";
 import {
-  sessionBelongsToOrder,
-  stripeSessionOrderId,
-} from "../src/lib/stripe/association.ts";
-import {
-  checkoutReturnAllows,
-  checkoutReturnPresentation,
-  signCheckoutReturnAuth,
-  verifyCheckoutReturnAuth,
-} from "../src/lib/stripe/return-auth.ts";
-import {
   assignPromotionalProductId,
   formatPromotionProgress,
   PROMOTION_THRESHOLD_CENTS,
@@ -120,7 +110,7 @@ const manipulated = parseCheckout(
 );
 assert(
   manipulated.ok && manipulated.data.subtotalCents === 1000,
-  "client prices and Stripe price IDs must be ignored",
+  "client extra price fields must be ignored",
 );
 
 assert(
@@ -163,6 +153,7 @@ assert(
 );
 assert(!isCryptoAsset("doge"), "unsupported crypto");
 assert(parseCheckoutIntent("crypto") === "crypto", "crypto intent");
+assert(parseCheckoutIntent("card") === null, "card intent removed");
 assert(parseCheckoutIntent("wire") === null, "invalid intent");
 assert(sanitizeTransactionHash("abc123") === "abc123", "hash keep");
 assert(cryptoStatusForHash("abc123").paymentStatus === "unpaid", "hash unpaid");
@@ -313,110 +304,6 @@ assert(
     justUnder.subtotalCents === 8750 &&
     !quoteShippingPromotion(justUnder.subtotalCents).promotionalGiftApplied,
   "$87.50 does not include a phantom gift toward threshold",
-);
-
-const orderId = "bg_8e01e882-9879-4b2b-b3bb-d7f2fe984f6c";
-const session = {
-  id: "cs_test_abc123",
-  metadata: { orderId },
-  client_reference_id: orderId,
-};
-assert(stripeSessionOrderId(session) === orderId, "metadata orderId");
-assert(
-  sessionBelongsToOrder(session, {
-    id: orderId,
-    stripeCheckoutSessionId: null,
-  }),
-  "session matches order before session id is stored",
-);
-assert(
-  sessionBelongsToOrder(session, {
-    id: orderId,
-    stripeCheckoutSessionId: "cs_test_abc123",
-  }),
-  "session matches stored session id",
-);
-assert(
-  !sessionBelongsToOrder(session, {
-    id: orderId,
-    stripeCheckoutSessionId: "cs_test_other",
-  }),
-  "stored session mismatch is rejected",
-);
-assert(
-  !sessionBelongsToOrder(
-    { ...session, metadata: { orderId: "bg_11111111-1111-1111-1111-111111111111" } },
-    { id: orderId, stripeCheckoutSessionId: "cs_test_abc123" },
-  ),
-  "metadata order mismatch is rejected",
-);
-
-const returnSecret = "test_checkout_return_secret";
-const otherOrderId = "bg_11111111-1111-1111-1111-111111111111";
-const otherSessionId = "cs_test_othercustomer";
-const returnToken = signCheckoutReturnAuth(
-  { sessionId: session.id, orderId },
-  returnSecret,
-);
-assert(returnToken, "return token created");
-const verified = verifyCheckoutReturnAuth(returnToken, returnSecret);
-assert(verified?.sessionId === session.id, "return token session");
-assert(verified?.orderId === orderId, "return token order");
-assert(
-  checkoutReturnAllows(verified, session.id, orderId),
-  "A: legitimate return is authorized",
-);
-assert(
-  checkoutReturnPresentation({
-    authorized: true,
-    sessionPaid: true,
-    orderFailed: false,
-    sessionExpired: false,
-  }) === "confirmed",
-  "A: legitimate paid return is confirmed",
-);
-assert(
-  checkoutReturnPresentation({
-    authorized: true,
-    sessionPaid: true,
-    orderFailed: false,
-    sessionExpired: false,
-  }) === "confirmed",
-  "B/C: refresh and revisit stay confirmed without creating another order",
-);
-assert(
-  !checkoutReturnAllows(verified, otherSessionId, otherOrderId),
-  "D: different session/order is not authorized",
-);
-assert(
-  checkoutReturnPresentation({
-    authorized: false,
-    sessionPaid: true,
-    orderFailed: false,
-    sessionExpired: false,
-  }) === "missing",
-  "D: paid session without matching auth hides order details",
-);
-assert(
-  checkoutReturnPresentation({
-    authorized: false,
-    sessionPaid: true,
-    orderFailed: false,
-    sessionExpired: false,
-  }) === "missing",
-  "E: missing confirmation authorization hides order details",
-);
-assert(
-  verifyCheckoutReturnAuth(returnToken, "wrong_secret") === null,
-  "E: invalid signature is rejected",
-);
-assert(
-  verifyCheckoutReturnAuth(returnToken, returnSecret, 4_000_000_000) === null,
-  "E: expired confirmation authorization is rejected",
-);
-assert(
-  checkoutReturnAllows(null, session.id, orderId) === false,
-  "E: absent confirmation authorization is rejected",
 );
 
 console.log("checkout validation checks passed");

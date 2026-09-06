@@ -61,7 +61,7 @@ export default async function CryptoCheckoutPage({
               ? unpaid
                 ? cartCopy.cryptoUnpaid
                 : cartCopy.cryptoVerified
-              : cartCopy.successMissing}
+              : cartCopy.cryptoMissing}
           </p>
         </header>
 

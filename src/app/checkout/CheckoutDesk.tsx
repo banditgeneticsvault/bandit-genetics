@@ -1,13 +1,13 @@
 "use client";
 
-import { useActionState, useEffect, useId, useState, type FormEvent, type HTMLAttributes } from "react";
+import { useActionState, useEffect, useId, useRef, useState, type FormEvent, type HTMLAttributes } from "react";
 import { useSearchParams } from "next/navigation";
 import { startCheckout } from "@/app/checkout/actions";
 import { CopyAddress } from "@/app/checkout/crypto/CopyAddress";
 import { CartLineVisual } from "@/components/cart/CartLineVisual";
 import { PromotionalGiftLine } from "@/components/cart/PromotionalGiftLine";
 import { PromotionalGiftSelector } from "@/components/cart/PromotionalGiftSelector";
-import { PaymentUnavailableNotice } from "@/components/cart/PaymentUnavailableNotice";
+import { EmailOrderCta } from "@/components/layout/EmailOrderCta";
 import { QuantityStepper } from "@/components/cart/QuantityStepper";
 import { SeedQuantityPicker } from "@/components/cart/PackPicker";
 import { useCart } from "@/components/cart/CartProvider";
@@ -31,6 +31,7 @@ import {
   type CheckoutFieldErrors,
 } from "@/lib/checkout";
 import { CRYPTO_WALLETS, type CryptoAsset } from "@/lib/crypto/wallets";
+import { orderMailto } from "@/lib/order-email";
 import { cn } from "@/lib/cn";
 
 const fieldClassName =
@@ -47,7 +48,7 @@ type ServerQuote = {
   gift: PromotionalGiftView | null;
 };
 
-export function CheckoutDesk({ paymentEnabled }: { paymentEnabled: boolean }) {
+export function CheckoutDesk() {
   const { lines, setSeedTier, setLineQuantity, remove, ready } = useCart();
   const resolved = resolveCart(lines);
   const subtotal = cartSubtotalCents(resolved) ?? 0;
@@ -62,16 +63,13 @@ export function CheckoutDesk({ paymentEnabled }: { paymentEnabled: boolean }) {
   );
   const [clientErrors, setClientErrors] = useState<CheckoutFieldErrors>({});
   const [asset, setAsset] = useState<CryptoAsset | "">("");
-  const [payMethod, setPayMethod] = useState<"card" | "crypto" | "">("");
   const formId = useId();
-  const methodGroupId = `${formId}-method`;
+  const formRef = useRef<HTMLFormElement>(null);
   const fieldErrors = pending
     ? {}
     : Object.keys(clientErrors).length > 0
       ? clientErrors
       : (state?.fieldErrors ?? {});
-  const cardUnavailable =
-    !paymentEnabled || (!pending && state?.status === "payment_unavailable");
   const showError =
     !pending && state?.status === "error" && Object.keys(fieldErrors).length === 0;
   const selectedWallet = asset ? CRYPTO_WALLETS[asset] : null;
@@ -100,6 +98,38 @@ export function CheckoutDesk({ paymentEnabled }: { paymentEnabled: boolean }) {
       .catch(() => undefined);
     return () => controller.abort();
   }, [chosenGiftId, lines, ready]);
+
+  useEffect(() => {
+    const form = formRef.current;
+    if (!form) return;
+
+    const desktop = window.matchMedia("(min-width: 1024px)");
+
+    const fitPanelToViewport = () => {
+      if (!desktop.matches) {
+        form.style.maxHeight = "";
+        return;
+      }
+      const stickyTop = Number.parseFloat(getComputedStyle(form).top) || 112;
+      const gap = 24;
+      const top = Math.max(form.getBoundingClientRect().top, stickyTop);
+      form.style.maxHeight = `${Math.max(320, window.innerHeight - top - gap)}px`;
+    };
+
+    fitPanelToViewport();
+    const observer = new ResizeObserver(fitPanelToViewport);
+    observer.observe(form.parentElement ?? form);
+    window.addEventListener("scroll", fitPanelToViewport, { passive: true });
+    window.addEventListener("resize", fitPanelToViewport);
+    desktop.addEventListener("change", fitPanelToViewport);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", fitPanelToViewport);
+      window.removeEventListener("resize", fitPanelToViewport);
+      desktop.removeEventListener("change", fitPanelToViewport);
+      form.style.maxHeight = "";
+    };
+  }, [ready, resolved.length]);
 
   const giftProductId = chosenGiftId ?? serverQuote?.gift?.productId ?? null;
   const quote =
@@ -130,15 +160,11 @@ export function CheckoutDesk({ paymentEnabled }: { paymentEnabled: boolean }) {
     const intent =
       submitter instanceof HTMLButtonElement ? submitter.value : "";
 
-    if (intent === "card" && (payMethod !== "card" || cardUnavailable)) {
+    if (intent !== "crypto") {
       event.preventDefault();
       return;
     }
-    if (intent === "crypto" && payMethod !== "crypto") {
-      event.preventDefault();
-      return;
-    }
-    if (intent === "crypto" && !asset) {
+    if (!asset) {
       event.preventDefault();
       setClientErrors({ cryptocurrency: cartCopy.invalidCrypto });
       return;
@@ -192,7 +218,7 @@ export function CheckoutDesk({ paymentEnabled }: { paymentEnabled: boolean }) {
   }
 
   return (
-    <div className={cn("grid gap-10 lg:grid-cols-12", payMethod && "pb-28 lg:pb-0")}>
+    <div className="grid gap-10 pb-28 lg:grid-cols-12 lg:pb-0">
       <section className="lg:col-span-7" aria-labelledby={`${formId}-summary`}>
         <p className="section-kicker">{cartCopy.summary}</p>
         <h2
@@ -304,12 +330,13 @@ export function CheckoutDesk({ paymentEnabled }: { paymentEnabled: boolean }) {
 
       <form
         id="checkout-form"
+        ref={formRef}
         action={formAction}
         onSubmit={handleSubmit}
         noValidate
-        className="border border-white/10 bg-charcoal/95 lg:col-span-5 lg:sticky lg:top-28 lg:self-start"
+        className="flex min-w-0 flex-col border border-white/10 bg-charcoal/95 lg:col-span-5 lg:sticky lg:top-28 lg:z-10 lg:max-h-[calc(100dvh-8.5rem)] lg:self-start lg:overflow-hidden"
       >
-        <div className="grid gap-6 px-5 py-6 md:px-7 md:py-8">
+        <div className="grid min-h-0 min-w-0 gap-6 overflow-x-hidden px-5 py-6 md:px-7 md:py-8 lg:flex-1 lg:overflow-y-auto">
           <input type="hidden" name="items" value={JSON.stringify(lines)} />
           <input
             type="hidden"
@@ -351,156 +378,85 @@ export function CheckoutDesk({ paymentEnabled }: { paymentEnabled: boolean }) {
           ) : null}
 
           <div className="min-w-0 border-t border-white/10 pt-6">
-            <p id={methodGroupId} className="section-kicker">
-              {cartCopy.paymentMethod}
-            </p>
+            <p className="section-kicker">{cartCopy.paymentMethod}</p>
             <p className="mt-3 text-copy text-ice/70">{cartCopy.choosePayment}</p>
-            <div
-              role="radiogroup"
-              aria-labelledby={methodGroupId}
-              className="mt-4 grid gap-3"
-            >
-              <label
-                className={cn(
-                  "flex min-h-14 cursor-pointer items-center justify-center border px-4 py-4 text-center font-label text-ui font-semibold tracking-[0.18em] uppercase focus-within:outline focus-within:outline-2 focus-within:outline-offset-3 focus-within:outline-gold",
-                  payMethod === "card"
-                    ? "border-frost bg-frost text-black"
-                    : "border-gunmetal text-ice hover:border-gold hover:text-gold",
-                )}
-              >
-                <input
-                  type="radio"
-                  name="payMethod"
-                  value="card"
-                  checked={payMethod === "card"}
-                  onChange={() => {
-                    setPayMethod("card");
-                    setClientErrors((current) => {
-                      const next = { ...current };
-                      delete next.cryptocurrency;
-                      return next;
-                    });
-                  }}
-                  className="sr-only"
-                />
-                {cartCopy.payWithCard}
-              </label>
-              <label
-                className={cn(
-                  "flex min-h-14 cursor-pointer items-center justify-center border px-4 py-4 text-center font-label text-ui font-semibold tracking-[0.18em] uppercase focus-within:outline focus-within:outline-2 focus-within:outline-offset-3 focus-within:outline-gold",
-                  payMethod === "crypto"
-                    ? "border-frost bg-frost text-black"
-                    : "border-gunmetal text-ice hover:border-gold hover:text-gold",
-                )}
-              >
-                <input
-                  type="radio"
-                  name="payMethod"
-                  value="crypto"
-                  checked={payMethod === "crypto"}
-                  onChange={() => setPayMethod("crypto")}
-                  className="sr-only"
-                />
-                {cartCopy.payWithCrypto}
-              </label>
+            <div className="mt-4">
+              <EmailOrderCta />
             </div>
 
-            {payMethod === "card" ? (
-              <div className="mt-6 grid min-w-0 gap-4">
-                {cardUnavailable ? (
-                  <div id="checkout-payment-unavailable">
-                    <PaymentUnavailableNotice />
-                  </div>
-                ) : (
-                  <>
-                    <p className="text-copy text-ice/80">{cartCopy.cardCheckoutNote}</p>
-                    <p className="text-copy text-ice/70">{cartCopy.stripeAddressNote}</p>
-                    <Button
-                      type="submit"
-                      name="intent"
-                      value="card"
-                      disabled={pending}
-                      className="w-full sm:w-full"
+            <div className="mt-8 grid min-w-0 gap-3">
+              <p className="font-label text-ui tracking-[0.22em] text-gold uppercase">
+                {cartCopy.payWithCrypto}
+              </p>
+              <p className="text-copy text-ice/80">{cartCopy.cryptoNote}</p>
+              <p className="text-copy text-ice/80">{cartCopy.cryptoAmountNote}</p>
+              <fieldset>
+                <legend className="font-label text-ui tracking-[0.22em] text-gold uppercase">
+                  Cryptocurrency
+                </legend>
+                <div className="mt-3 grid gap-2">
+                  {(
+                    Object.values(CRYPTO_WALLETS) as Array<
+                      (typeof CRYPTO_WALLETS)[CryptoAsset]
                     >
-                      {pending ? "CHECKING" : cartCopy.checkoutWithCard}
-                    </Button>
-                  </>
-                )}
-              </div>
-            ) : null}
-
-            {payMethod === "crypto" ? (
-              <div className="mt-6 grid min-w-0 gap-3">
-                <p className="text-copy text-ice/80">{cartCopy.cryptoNote}</p>
-                <p className="text-copy text-ice/80">{cartCopy.cryptoAmountNote}</p>
-                <fieldset>
-                  <legend className="font-label text-ui tracking-[0.22em] text-gold uppercase">
-                    Cryptocurrency
-                  </legend>
-                  <div className="mt-3 grid gap-2">
-                    {(
-                      Object.values(CRYPTO_WALLETS) as Array<
-                        (typeof CRYPTO_WALLETS)[CryptoAsset]
+                  ).map((wallet) => {
+                    const active = asset === wallet.id;
+                    return (
+                      <label
+                        key={wallet.id}
+                        className={cn(
+                          "flex min-h-11 cursor-pointer items-center border px-3 py-3 font-label text-ui tracking-[0.14em] uppercase",
+                          active
+                            ? "border-frost bg-frost text-black"
+                            : "border-gunmetal text-ice hover:border-gold hover:text-gold",
+                        )}
                       >
-                    ).map((wallet) => {
-                      const active = asset === wallet.id;
-                      return (
-                        <label
-                          key={wallet.id}
-                          className={cn(
-                            "flex min-h-11 cursor-pointer items-center border px-3 py-3 font-label text-ui tracking-[0.14em] uppercase",
-                            active
-                              ? "border-frost bg-frost text-black"
-                              : "border-gunmetal text-ice hover:border-gold hover:text-gold",
-                          )}
-                        >
-                          <input
-                            type="radio"
-                            name="cryptocurrency"
-                            value={wallet.id}
-                            checked={active}
-                            onChange={() => setAsset(wallet.id)}
-                            className="sr-only"
-                          />
-                          {wallet.label}
-                        </label>
-                      );
-                    })}
-                  </div>
-                </fieldset>
-                {fieldErrors.cryptocurrency ? (
-                  <p role="alert" className="text-copy text-gold">
-                    {fieldErrors.cryptocurrency}
+                        <input
+                          type="radio"
+                          name="cryptocurrency"
+                          value={wallet.id}
+                          checked={active}
+                          onChange={() => setAsset(wallet.id)}
+                          className="sr-only"
+                        />
+                        {wallet.label}
+                      </label>
+                    );
+                  })}
+                </div>
+              </fieldset>
+              {fieldErrors.cryptocurrency ? (
+                <p role="alert" className="text-copy text-gold">
+                  {fieldErrors.cryptocurrency}
+                </p>
+              ) : null}
+              {selectedWallet ? (
+                <div className="grid min-w-0 gap-3 border border-white/10 px-4 py-4">
+                  <p className="font-label text-ui tracking-[0.18em] text-gold uppercase">
+                    {selectedWallet.label}
                   </p>
-                ) : null}
-                {selectedWallet ? (
-                  <div className="grid min-w-0 gap-3 border border-white/10 px-4 py-4">
-                    <p className="font-label text-ui tracking-[0.18em] text-gold uppercase">
-                      {selectedWallet.label}
-                    </p>
-                    <CopyAddress value={selectedWallet.address} />
-                  </div>
-                ) : null}
-                <p className="text-copy text-ice/70">{cartCopy.cryptoVerifyNote}</p>
-                <Field
-                  id={`${formId}-hash`}
-                  name="transactionHash"
-                  label={cartCopy.cryptoHashLabel}
-                  maxLength={128}
-                  disabled={pending}
-                />
-                <Button
-                  type="submit"
-                  name="intent"
-                  value="crypto"
-                  variant="secondary"
-                  disabled={pending}
-                  className="w-full sm:w-full"
-                >
-                  {pending ? "CHECKING" : cartCopy.payLaterCrypto}
-                </Button>
-              </div>
-            ) : null}
+                  <CopyAddress value={selectedWallet.address} />
+                </div>
+              ) : null}
+              <p className="text-copy text-ice/70">{cartCopy.cryptoVerifyNote}</p>
+              <Field
+                id={`${formId}-hash`}
+                name="transactionHash"
+                label={cartCopy.cryptoHashLabel}
+                maxLength={128}
+                disabled={pending}
+              />
+              <Button
+                type="submit"
+                name="intent"
+                value="crypto"
+                variant="secondary"
+                disabled={pending}
+                className="w-full sm:w-full lg:hidden"
+              >
+                {pending ? "CHECKING" : cartCopy.payLaterCrypto}
+              </Button>
+            </div>
           </div>
 
           {showError ? (
@@ -509,23 +465,26 @@ export function CheckoutDesk({ paymentEnabled }: { paymentEnabled: boolean }) {
             </p>
           ) : null}
         </div>
-      </form>
-      {payMethod === "card" && !cardUnavailable ? (
-        <div className="fixed inset-x-0 bottom-0 z-30 border-t border-white/10 bg-black/95 p-4 lg:hidden">
+        <div className="hidden shrink-0 border-t border-white/10 bg-charcoal px-5 py-4 lg:block md:px-7">
           <Button
             type="submit"
-            form="checkout-form"
             name="intent"
-            value="card"
+            value="crypto"
+            variant="secondary"
             disabled={pending}
             className="w-full sm:w-full"
           >
-            {pending ? "CHECKING" : cartCopy.checkoutWithCard}
+            {pending ? "CHECKING" : cartCopy.payLaterCrypto}
           </Button>
         </div>
-      ) : null}
-      {payMethod === "crypto" ? (
-        <div className="fixed inset-x-0 bottom-0 z-30 border-t border-white/10 bg-black/95 p-4 lg:hidden">
+      </form>
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-white/10 bg-black/95 p-4 lg:hidden">
+          <a
+            href={orderMailto()}
+            className="mb-3 block text-center font-label text-ui tracking-[0.18em] text-gold uppercase underline decoration-gold/50 underline-offset-4"
+          >
+            {cartCopy.emailOrderCta}
+          </a>
           <Button
             type="submit"
             form="checkout-form"
@@ -538,7 +497,6 @@ export function CheckoutDesk({ paymentEnabled }: { paymentEnabled: boolean }) {
             {pending ? "CHECKING" : cartCopy.payLaterCrypto}
           </Button>
         </div>
-      ) : null}
     </div>
   );
 }
