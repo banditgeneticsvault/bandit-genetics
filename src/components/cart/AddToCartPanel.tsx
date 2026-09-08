@@ -95,7 +95,7 @@ export function AddToCartPanel({ listing }: AddToCartPanelProps) {
       )}
 
       <div className="mt-8 border-t border-white/10 pt-6">
-        <p className="section-kicker">EMAIL ORDER</p>
+        <p className="section-kicker">CONTACT</p>
         <div className="mt-5">
           <EmailOrderCta strainName={listing.name} />
         </div>

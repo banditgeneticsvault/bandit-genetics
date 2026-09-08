@@ -7,12 +7,12 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/checkout", "/checkout/", "/api/"],
+        disallow: ["/checkout", "/checkout/", "/age-gate", "/age-gate/", "/api/"],
       },
       {
         userAgent: "OAI-SearchBot",
         allow: "/",
-        disallow: ["/checkout", "/checkout/", "/api/"],
+        disallow: ["/checkout", "/checkout/", "/age-gate", "/age-gate/", "/api/"],
       },
     ],
     sitemap: `${siteUrl}/sitemap.xml`,

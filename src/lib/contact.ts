@@ -26,11 +26,26 @@ export const initialContactState: ContactFormState = {
   fieldErrors: {},
 };
 
+export const CONTACT_FIELD_ORDER = [
+  "name",
+  "email",
+  "subject",
+  "message",
+] as const;
+
+export type ContactParseMessages = {
+  nameRequired: string;
+  emailRequired: string;
+  invalidEmail: string;
+  subjectRequired: string;
+  messageRequired: string;
+};
+
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function parseContactForm(
   input: Record<string, unknown>,
-  messages: { required: string; invalidEmail: string },
+  messages: ContactParseMessages,
 ): { ok: true; data: ContactFields } | { ok: false; fieldErrors: ContactFieldErrors } {
   const name = normalizeLine(input.name, CONTACT_LIMITS.name);
   const email = normalizeLine(input.email, CONTACT_LIMITS.email).toLowerCase();
@@ -39,11 +54,11 @@ export function parseContactForm(
 
   const fieldErrors: ContactFieldErrors = {};
 
-  if (!name) fieldErrors.name = messages.required;
-  if (!email) fieldErrors.email = messages.required;
+  if (!name) fieldErrors.name = messages.nameRequired;
+  if (!email) fieldErrors.email = messages.emailRequired;
   else if (!EMAIL_PATTERN.test(email)) fieldErrors.email = messages.invalidEmail;
-  if (!subject) fieldErrors.subject = messages.required;
-  if (!message) fieldErrors.message = messages.required;
+  if (!subject) fieldErrors.subject = messages.subjectRequired;
+  if (!message) fieldErrors.message = messages.messageRequired;
 
   if (Object.keys(fieldErrors).length > 0) {
     return { ok: false, fieldErrors };

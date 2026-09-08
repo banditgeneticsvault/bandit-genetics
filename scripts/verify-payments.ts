@@ -4,6 +4,7 @@ import {
   validateCheckoutCart,
 } from "../src/lib/checkout-cart.ts";
 import { parseCheckout, parseCheckoutIntent } from "../src/lib/checkout.ts";
+import { parseContactForm } from "../src/lib/contact.ts";
 import {
   eligiblePromotionalProductIds,
   isEligiblePromotionalProductId,
@@ -141,6 +142,42 @@ assert(
 
 assert(parseCheckoutIntent("order") === "order", "order intent");
 assert(parseCheckoutIntent("crypto") === null, "crypto intent removed");
+
+const contactMessages = {
+  nameRequired: "Name is required.",
+  emailRequired: "Email is required.",
+  invalidEmail: "Please enter a valid email address.",
+  subjectRequired: "Subject is required.",
+  messageRequired: "Message is required.",
+};
+
+const missingContactName = parseContactForm(
+  {
+    name: "",
+    email: "buyer@example.com",
+    subject: "Hello",
+    message: "I have a question.",
+  },
+  contactMessages,
+);
+assert(
+  !missingContactName.ok && missingContactName.fieldErrors.name === contactMessages.nameRequired,
+  "contact name required",
+);
+
+const badContactEmail = parseContactForm(
+  {
+    name: "Ada Lovelace",
+    email: "not-an-email",
+    subject: "Hello",
+    message: "I have a question.",
+  },
+  contactMessages,
+);
+assert(
+  !badContactEmail.ok && badContactEmail.fieldErrors.email === contactMessages.invalidEmail,
+  "contact invalid email",
+);
 assert(parseCheckoutIntent("card") === null, "card intent removed");
 assert(parseCheckoutIntent("wire") === null, "invalid intent");
 

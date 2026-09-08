@@ -40,7 +40,7 @@ export type CheckoutSnapshot = {
 };
 
 export type CheckoutFormState = {
-  status: "idle" | "error";
+  status: "idle" | "error" | "unconfigured";
   fieldErrors: CheckoutFieldErrors;
 };
 

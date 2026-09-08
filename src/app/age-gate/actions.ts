@@ -15,6 +15,7 @@ export async function confirmAdultAge(formData: FormData) {
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/",
+    // Session cookie: omitted maxAge so confirmation lasts for this browsing session only.
   });
   redirect(safeAgeGateReturnPath(formData.get("from")));
 }

@@ -15,10 +15,7 @@ function hydrateOrder(order: Order): Order {
     id: order.id,
     customerEmail: order.customerEmail,
     customerName: order.customerName,
-    paymentMethod: "crypto",
-    cryptocurrency: order.cryptocurrency ?? null,
-    receivingAddress: order.receivingAddress ?? null,
-    transactionHash: order.transactionHash ?? null,
+    paymentMethod: "request",
     status: order.status,
     paymentStatus: order.paymentStatus,
     currency: "usd",
@@ -88,10 +85,7 @@ export async function createPendingOrder(input: NewOrderInput): Promise<Order> {
     id: createOrderId(),
     customerEmail: input.customerEmail,
     customerName: input.customerName,
-    paymentMethod: "crypto",
-    cryptocurrency: input.cryptocurrency ?? null,
-    receivingAddress: input.receivingAddress ?? null,
-    transactionHash: input.transactionHash ?? null,
+    paymentMethod: "request",
     status: input.status ?? "pending",
     paymentStatus: input.paymentStatus ?? "unpaid",
     currency: "usd",
@@ -126,7 +120,9 @@ export async function getReusablePendingOrder(
   const order = await getOrderById(id);
   if (!order) return null;
   if (order.status === "paid" || order.paymentStatus === "paid") return null;
-  if (order.status === "payment_submitted") return null;
+  if (order.status === "requested" || order.status === "payment_submitted") {
+    return null;
+  }
   return order;
 }
 

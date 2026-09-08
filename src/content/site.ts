@@ -110,7 +110,7 @@ export const pageCopy = {
     kicker: "Direct line",
     body: "Questions about our genetics, releases, or the Bandit Vault?",
     orderHelp:
-      "Need help with an order or looking for an alternative payment option? No problem. Send us a message and we'll help you get everything taken care of.",
+      "Need help with an order? Send a message and we'll help you get everything taken care of.",
     emailPrompt: "Email us at",
     emailDirect:
       "We're a small, independent genetics company, and we're always happy to work directly with our customers.",
@@ -124,8 +124,11 @@ export const pageCopy = {
     emailLabel: "Email",
     subjectLabel: "Subject",
     messageLabel: "Message",
-    required: "This field is required.",
-    invalidEmail: "Enter a valid email address.",
+    nameRequired: "Name is required.",
+    emailRequired: "Email is required.",
+    invalidEmail: "Please enter a valid email address.",
+    subjectRequired: "Subject is required.",
+    messageRequired: "Message is required.",
     honeypotLabel: "Leave this field blank",
   },
 } as const;

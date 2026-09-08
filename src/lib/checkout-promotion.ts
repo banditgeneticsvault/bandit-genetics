@@ -144,11 +144,11 @@ export async function syncCheckoutPromotion(input: {
     ? await saveOrder({
         ...existing,
         ...fields,
-        paymentMethod: "crypto",
+        paymentMethod: "request",
       })
     : await createPendingOrder({
         ...fields,
-        paymentMethod: "crypto",
+        paymentMethod: "request",
         status: "pending",
         paymentStatus: "unpaid",
       });

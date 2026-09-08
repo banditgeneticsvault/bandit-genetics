@@ -25,8 +25,11 @@ export async function submitContact(
       message: formData.get("message"),
     },
     {
-      required: pageCopy.contact.required,
+      nameRequired: pageCopy.contact.nameRequired,
+      emailRequired: pageCopy.contact.emailRequired,
       invalidEmail: pageCopy.contact.invalidEmail,
+      subjectRequired: pageCopy.contact.subjectRequired,
+      messageRequired: pageCopy.contact.messageRequired,
     },
   );
 

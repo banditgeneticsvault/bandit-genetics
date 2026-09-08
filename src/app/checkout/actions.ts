@@ -8,6 +8,9 @@ import {
   parseCheckoutIntent,
   type CheckoutFormState,
 } from "@/lib/checkout";
+import { deliverOrderRequest } from "@/lib/order-notify";
+import { clearPendingOrderCookie } from "@/lib/orders/pending-cookie";
+import { saveOrder } from "@/lib/orders/repository";
 
 export async function startCheckout(
   _prev: CheckoutFormState,
@@ -38,13 +41,20 @@ export async function startCheckout(
     return { status: "error", fieldErrors: parsed.fieldErrors };
   }
 
-  const synced = await syncCheckoutPromotion({
-    items: parsed.data.cartLines,
-    name: parsed.data.customer.name,
-    email: parsed.data.customer.email,
-    promotionalProductId: formData.get("promotionalProductId"),
-    requireGiftIfQualified: true,
-  });
+  let synced: Awaited<ReturnType<typeof syncCheckoutPromotion>>;
+  try {
+    synced = await syncCheckoutPromotion({
+      items: parsed.data.cartLines,
+      name: parsed.data.customer.name,
+      email: parsed.data.customer.email,
+      promotionalProductId: formData.get("promotionalProductId"),
+      requireGiftIfQualified: true,
+    });
+  } catch {
+    console.error("order.submit.failed");
+    return { status: "error", fieldErrors: {} };
+  }
+
   if (!synced.ok) {
     if (synced.reason === "empty") {
       return { status: "error", fieldErrors: { items: cartCopy.emptyCart } };
@@ -59,6 +69,32 @@ export async function startCheckout(
       status: "error",
       fieldErrors: { items: cartCopy.invalidItems },
     };
+  }
+
+  let delivered: Awaited<ReturnType<typeof deliverOrderRequest>>;
+  try {
+    delivered = await deliverOrderRequest(synced.order);
+  } catch {
+    console.error("order.delivery.failed");
+    return { status: "error", fieldErrors: {} };
+  }
+
+  if (!delivered.ok) {
+    if (delivered.reason === "unconfigured") {
+      console.info("order.delivery.unconfigured");
+      return { status: "unconfigured", fieldErrors: {} };
+    }
+    return { status: "error", fieldErrors: {} };
+  }
+
+  try {
+    await saveOrder({
+      ...synced.order,
+      status: "requested",
+    });
+    await clearPendingOrderCookie();
+  } catch {
+    console.error("order.request.finalize_failed");
   }
 
   redirect(`/checkout/success?order=${encodeURIComponent(synced.order.id)}`);

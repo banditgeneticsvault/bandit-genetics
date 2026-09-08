@@ -43,30 +43,32 @@ export const cartCopy = {
     "Standard storefront options are 1, 2, 3, or 5 seeds. Tell Bandit Genetics what you need for a custom bulk run. Custom bulk stays on the Contact line, not in the seed option selector.",
   bulkCta: "REQUEST A CUSTOM BULK ORDER",
   toastView: "VIEW CART",
-  emailOrderCta: "EMAIL US TO PLACE AN ORDER",
-  emailOrderBody: "You can contact us at",
-  emailOrderCompact: "Email us to place an order:",
+  emailOrderCta: "EMAIL BANDIT GENETICS",
+  emailOrderBody: "You can also reach us at",
+  emailOrderCompact: "Or email us at",
   checkoutTitle: "CHECKOUT",
   checkoutKicker: "THE DESK",
   checkoutIntro:
-    "Review the strains on this ticket. Email support@banditgenetics.com to place an order.",
+    "Review the strains on this ticket, add your name and email, and submit the request. One of us will follow up.",
   paymentMethod: "HOW TO ORDER",
   choosePayment:
-    "We're a small, independent genetics company, and we're currently expanding our payment options to make ordering easier for our customers.",
-  cardComingSoon: "Credit and debit card checkout is coming soon.",
-  howToOrderContact:
-    "Don't see your preferred payment option? No problem. Contact us at",
-  howToOrderContactAfter: "and we'll help you get your order placed.",
+    "Submit what you want from this page. One of us will reach out to the email you enter.",
+  howToOrderContact: "Prefer to write us directly? Email",
+  howToOrderContactAfter: "and we will help you get the order placed.",
   cancelledCheckout:
     "Checkout was not completed. Your cart is still here.",
   invalidItems:
     "One or more items in the cart could not be checked out. Remove unavailable strains and try again.",
   orderLabel: "Order",
-  ticketSubmitted: "TICKET SUBMITTED",
+  ticketSubmitted: "REQUEST RECEIVED",
   ticketSubmittedBody:
-    "Your details are on file. Email support@banditgenetics.com to place this order.",
-  ticketMissing: "This checkout ticket could not be found.",
-  placeOrder: "PLACE ORDER",
+    "We have your request. Someone from Bandit Genetics will follow up at the email you provided. This is not a payment, an approval, or a shipment — just the start of the order.",
+  ticketMissing: "This checkout request could not be found.",
+  placeOrder: "SUBMIT REQUEST",
+  submittingOrder: "SENDING",
+  unconfigured:
+    "This form cannot send the request from the website. Email us at",
+  sendFailed: "We could not send this request. Email us at",
   name: "Name",
   email: "Email",
   line1: "Street address",
@@ -81,7 +83,6 @@ export const cartCopy = {
   emptyCart: "Add a strain before checkout.",
   summary: "ORDER SUMMARY",
   shipping: "SHIPPING",
-  payment: "PAYMENT METHOD",
   taxNote: "Tax is not calculated on this site.",
   network: "The checkout could not continue. Check the connection and try again.",
   chooseSeeds:

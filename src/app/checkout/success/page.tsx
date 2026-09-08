@@ -1,5 +1,4 @@
 import { PageContainer } from "@/components/layout/PageContainer";
-import { EmailOrderCta } from "@/components/layout/EmailOrderCta";
 import { Button } from "@/components/ui/Button";
 import { cartCopy } from "@/content/cart";
 import { siteUrl } from "@/content/site";
@@ -72,7 +71,6 @@ export default async function CheckoutSuccessPage({
             <p className="text-copy text-ice">
               {cartCopy.orderTotal}: {formatUsd(order.totalCents)}
             </p>
-            <EmailOrderCta />
           </div>
         ) : null}
 

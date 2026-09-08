@@ -6,7 +6,6 @@ import { startCheckout } from "@/app/checkout/actions";
 import { CartLineVisual } from "@/components/cart/CartLineVisual";
 import { PromotionalGiftLine } from "@/components/cart/PromotionalGiftLine";
 import { PromotionalGiftSelector } from "@/components/cart/PromotionalGiftSelector";
-import { EmailOrderCta } from "@/components/layout/EmailOrderCta";
 import { OrderEmailLink } from "@/components/layout/OrderEmailLink";
 import { QuantityStepper } from "@/components/cart/QuantityStepper";
 import { SeedQuantityPicker } from "@/components/cart/PackPicker";
@@ -33,7 +32,7 @@ import {
   parseCheckout,
   type CheckoutFieldErrors,
 } from "@/lib/checkout";
-import { orderMailto } from "@/lib/order-email";
+import { revealInvalidControl } from "@/lib/form-focus";
 import { cn } from "@/lib/cn";
 
 const fieldClassName =
@@ -78,8 +77,11 @@ export function CheckoutDesk() {
   const formRef = useRef<HTMLFormElement>(null);
   const wasPending = useRef(false);
   const fieldErrors = pending ? {} : clientErrors;
+  const showFieldErrors = Object.keys(fieldErrors).length > 0;
+  const showUnconfigured =
+    !pending && state?.status === "unconfigured" && !showFieldErrors;
   const showError =
-    !pending && state?.status === "error" && Object.keys(fieldErrors).length === 0;
+    !pending && state?.status === "error" && !showFieldErrors;
 
   useEffect(() => {
     if (!ready || lines.length === 0) {
@@ -402,14 +404,10 @@ export function CheckoutDesk() {
           <div className="min-w-0 border-t border-white/10 pt-6">
             <p className="section-kicker">{cartCopy.paymentMethod}</p>
             <p className="mt-3 text-copy text-ice/70">{cartCopy.choosePayment}</p>
-            <p className="mt-3 text-copy text-ice/70">{cartCopy.cardComingSoon}</p>
             <p className="mt-3 text-copy text-ice/70">
               {cartCopy.howToOrderContact} <OrderEmailLink />{" "}
               {cartCopy.howToOrderContactAfter}
             </p>
-            <div className="mt-4">
-              <EmailOrderCta hideIntro />
-            </div>
             <Button
               type="submit"
               name="intent"
@@ -418,13 +416,18 @@ export function CheckoutDesk() {
               disabled={pending}
               className="mt-4 w-full sm:w-full lg:hidden"
             >
-              {pending ? "CHECKING" : cartCopy.placeOrder}
+              {pending ? cartCopy.submittingOrder : cartCopy.placeOrder}
             </Button>
           </div>
 
+          {showUnconfigured ? (
+            <p role="alert" className="border border-white/10 px-4 py-3 text-copy text-ice">
+              {cartCopy.unconfigured} <OrderEmailLink />.
+            </p>
+          ) : null}
           {showError ? (
-            <p role="alert" className="border border-white/10 px-4 py-3 text-copy text-gold">
-              {cartCopy.network}
+            <p role="alert" className="border border-white/10 px-4 py-3 text-copy text-ice">
+              {cartCopy.sendFailed} <OrderEmailLink />.
             </p>
           ) : null}
         </div>
@@ -437,17 +440,11 @@ export function CheckoutDesk() {
             disabled={pending}
             className="w-full sm:w-full"
           >
-            {pending ? "CHECKING" : cartCopy.placeOrder}
+            {pending ? cartCopy.submittingOrder : cartCopy.placeOrder}
           </Button>
         </div>
       </form>
       <div className="fixed inset-x-0 bottom-0 z-30 border-t border-white/10 bg-black/95 p-4 lg:hidden">
-          <a
-            href={orderMailto()}
-            className="mb-3 block text-center font-label text-ui tracking-[0.18em] text-gold uppercase underline decoration-gold/50 underline-offset-4"
-          >
-            {cartCopy.emailOrderCta}
-          </a>
           <Button
             type="submit"
             form="checkout-form"
@@ -457,7 +454,7 @@ export function CheckoutDesk() {
             disabled={pending}
             className="w-full sm:w-full"
           >
-            {pending ? "CHECKING" : cartCopy.placeOrder}
+            {pending ? cartCopy.submittingOrder : cartCopy.placeOrder}
           </Button>
         </div>
     </div>
@@ -490,12 +487,7 @@ function revealFirstInvalidField(
       : form?.querySelector<HTMLElement>(`[name="${first}"]`);
   if (!target) return;
 
-  target.scrollIntoView({ behavior: "smooth", block: "center" });
-  if (typeof target.focus === "function") {
-    window.requestAnimationFrame(() => {
-      target.focus({ preventScroll: true });
-    });
-  }
+  revealInvalidControl(target);
 }
 
 function Field({

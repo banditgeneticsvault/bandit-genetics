@@ -12,19 +12,19 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Ordering
 
-Customers can place an order by emailing [support@banditgenetics.com](mailto:support@banditgenetics.com).
+Customers submit an order request from checkout. Bandit Genetics then follows up at the email they provided. Direct mail still goes to [support@banditgenetics.com](mailto:support@banditgenetics.com).
 
 Copy `.env.local` from `.env.example` and set:
 
 - `NEXT_PUBLIC_SITE_URL` — public origin, for example `http://localhost:3000` locally or `https://www.banditgenetics.com` in production.
 - `DATABASE_URL` — Postgres connection string (Neon or Vercel Postgres). Server-only. Orders are stored here, not in `.data/orders.json`.
-- `CONTACT_SMTP_HOST` — Proton SMTP host. Server-only.
-- `CONTACT_SMTP_PORT` — Proton SMTP port (`587` for STARTTLS). Server-only.
+- `CONTACT_SMTP_HOST` — SMTP host used to send Contact and order notification mail. Server-only.
+- `CONTACT_SMTP_PORT` — SMTP port (`587` for STARTTLS). Server-only.
 - `CONTACT_SMTP_USER` — SMTP username (`support@banditgenetics.com`). Server-only.
-- `CONTACT_SMTP_PASSWORD` — Proton-generated SMTP token, not the account password. Server-only. Never use `NEXT_PUBLIC_*` for this value.
-- `CONTACT_DESTINATION_EMAIL` — mailbox that receives Contact form messages. Server-only.
+- `CONTACT_SMTP_PASSWORD` — SMTP token, not an account password. Server-only. Never use `NEXT_PUBLIC_*` for this value.
+- `CONTACT_DESTINATION_EMAIL` — mailbox that receives Contact messages and order request notifications, typically `support@banditgenetics.com`. Server-only.
 
-The checkout form validates the cart and customer details, then stores an unpaid internal order ticket. The Contact form sends mail through Proton SMTP when the `CONTACT_SMTP_*` variables are set.
+Checkout stores the request in Postgres and sends a detailed notification through the same SMTP settings as the Contact form. If SMTP is not configured, the site will not show a false success message.
 
 ### Vercel (after code review)
 

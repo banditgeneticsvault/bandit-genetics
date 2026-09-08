@@ -1,5 +1,6 @@
 export const ORDER_STATUSES = [
   "pending",
+  "requested",
   "pending_payment",
   "payment_submitted",
   "paid",
@@ -18,11 +19,9 @@ export const PAYMENT_STATUSES = [
 
 export type OrderPaymentStatus = (typeof PAYMENT_STATUSES)[number];
 
-export const PAYMENT_METHODS = ["crypto"] as const;
+export const PAYMENT_METHODS = ["request"] as const;
 
 export type PaymentMethod = (typeof PAYMENT_METHODS)[number];
-
-export type CryptoAssetId = "btc" | "eth" | "sol";
 
 export type OrderLineKind = "paid" | "promotional";
 
@@ -46,9 +45,6 @@ export type Order = {
   customerEmail: string;
   customerName: string;
   paymentMethod: PaymentMethod;
-  cryptocurrency: CryptoAssetId | null;
-  receivingAddress: string | null;
-  transactionHash: string | null;
   status: OrderStatus;
   paymentStatus: OrderPaymentStatus;
   currency: "usd";
@@ -87,9 +83,6 @@ export type NewOrderInput = {
   promotionalItemPriceCents?: number;
   lines: OrderLine[];
   paymentMethod?: PaymentMethod;
-  cryptocurrency?: CryptoAssetId | null;
-  receivingAddress?: string | null;
-  transactionHash?: string | null;
   status?: OrderStatus;
   paymentStatus?: OrderPaymentStatus;
 };

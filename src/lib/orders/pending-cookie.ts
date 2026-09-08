@@ -11,6 +11,11 @@ export async function readPendingOrderCookie(): Promise<string | null> {
   return isInternalOrderId(value) ? value : null;
 }
 
+export async function clearPendingOrderCookie() {
+  const store = await cookies();
+  store.delete(PENDING_ORDER_COOKIE);
+}
+
 export async function writePendingOrderCookie(orderId: string) {
   if (!isInternalOrderId(orderId)) return;
   const store = await cookies();

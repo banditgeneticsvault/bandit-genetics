@@ -104,7 +104,7 @@ async function main() {
         lineTotalCents: 2000,
       },
     ],
-    paymentMethod: "crypto",
+    paymentMethod: "request",
     status: "pending",
     paymentStatus: "unpaid",
   });
