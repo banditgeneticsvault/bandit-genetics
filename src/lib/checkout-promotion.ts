@@ -8,6 +8,7 @@ import {
   writePendingOrderCookie,
 } from "@/lib/orders/pending-cookie";
 import {
+  createOrderId,
   createPendingOrder,
   getReusablePendingOrder,
   saveOrder,
@@ -34,6 +35,18 @@ export type CheckoutPromotionQuote = {
   gift: ReturnType<typeof promotionalGiftView>;
 };
 
+export type PreparedCheckout =
+  | { ok: true; quote: CheckoutPromotionQuote; order: Order; lines: ResolvedCartLine[] }
+  | {
+      ok: false;
+      reason:
+        | "empty"
+        | "invalid_cart"
+        | "promotional_catalog_empty"
+        | "invalid_promotional_product"
+        | "gift_required";
+    };
+
 function paidLinesFromResolved(lines: ResolvedCartLine[]): OrderLine[] {
   return lines.map((line) => ({
     kind: "paid" as const,
@@ -48,25 +61,34 @@ function paidLinesFromResolved(lines: ResolvedCartLine[]): OrderLine[] {
   }));
 }
 
-export async function syncCheckoutPromotion(input: {
+function quoteFromOrder(
+  order: Order,
+  remainingCents: number,
+  gift: ReturnType<typeof promotionalGiftView>,
+): CheckoutPromotionQuote {
+  return {
+    orderId: order.id,
+    merchandiseSubtotalCents: order.subtotalCents,
+    shippingCents: order.shippingCents,
+    taxCents: order.taxCents,
+    totalCents: order.totalCents,
+    promotionStatus: order.promotionStatus,
+    remainingCents,
+    freeShipping: order.freeShipping,
+    promotionalGiftApplied: order.promotionalGiftApplied,
+    gift,
+  };
+}
+
+export function prepareCheckoutOrder(input: {
   items: CartLine[];
   name?: string;
   email?: string;
   notes?: string;
   promotionalProductId?: unknown;
   requireGiftIfQualified?: boolean;
-}): Promise<
-  | { ok: true; quote: CheckoutPromotionQuote; order: Order; lines: ResolvedCartLine[] }
-  | {
-      ok: false;
-      reason:
-        | "empty"
-        | "invalid_cart"
-        | "promotional_catalog_empty"
-        | "invalid_promotional_product"
-        | "gift_required";
-    }
-> {
+  existing?: Order | null;
+}): PreparedCheckout {
   if (input.items.length === 0) {
     return { ok: false, reason: "empty" };
   }
@@ -84,8 +106,8 @@ export async function syncCheckoutPromotion(input: {
     return { ok: false, reason: "invalid_promotional_product" };
   }
 
+  const existing = input.existing ?? null;
   const quote = quoteShippingPromotion(cart.subtotalCents, 0);
-  const existing = await getReusablePendingOrder(await readPendingOrderCookie());
   const qualified = quote.promotionStatus === "qualified";
   let assignment;
   try {
@@ -115,14 +137,18 @@ export async function syncCheckoutPromotion(input: {
   const giftView = assignment.applied ? assignedView : null;
   const paidLines = paidLinesFromResolved(cart.lines);
   const lines = giftLine ? [...paidLines, giftLine] : paidLines;
-  const customerName = input.name?.trim() || existing?.customerName || "";
-  const customerEmail = input.email?.trim() || existing?.customerEmail || "";
-  const customerNotes = input.notes?.trim() || existing?.customerNotes || "";
+  const createdAt = existing?.createdAt ?? new Date().toISOString();
+  const updatedAt = new Date().toISOString();
 
-  const fields = {
-    customerEmail,
-    customerName,
-    customerNotes,
+  const order: Order = {
+    id: existing?.id ?? createOrderId(),
+    customerEmail: input.email?.trim() || existing?.customerEmail || "",
+    customerName: input.name?.trim() || existing?.customerName || "",
+    customerNotes: input.notes?.trim() || existing?.customerNotes || "",
+    paymentMethod: "request",
+    status: existing?.status ?? "pending",
+    paymentStatus: existing?.paymentStatus ?? "unpaid",
+    currency: "usd",
     subtotalCents: quote.merchandiseSubtotalCents,
     shippingCents: quote.shippingCents,
     taxCents: quote.taxCents,
@@ -141,38 +167,83 @@ export async function syncCheckoutPromotion(input: {
       : (existing?.promotionalQuantity ?? null),
     promotionalItemPriceCents: giftLine ? giftLine.unitPriceCents : 0,
     lines,
+    createdAt,
+    updatedAt,
+    paidAt: existing?.paidAt ?? null,
   };
-
-  const order = existing
-    ? await saveOrder({
-        ...existing,
-        ...fields,
-        paymentMethod: "request",
-      })
-    : await createPendingOrder({
-        ...fields,
-        paymentMethod: "request",
-        status: "pending",
-        paymentStatus: "unpaid",
-      });
-
-  await writePendingOrderCookie(order.id);
 
   return {
     ok: true,
     lines: cart.lines,
     order,
+    quote: quoteFromOrder(order, quote.remainingCents, giftView),
+  };
+}
+
+async function lookupExistingOrder(): Promise<Order | null> {
+  try {
+    return await getReusablePendingOrder(await readPendingOrderCookie());
+  } catch {
+    console.error("order.store.lookup_failed");
+    return null;
+  }
+}
+
+export async function persistPreparedOrder(order: Order): Promise<Order | null> {
+  try {
+    const saved = await saveOrder(order);
+    await writePendingOrderCookie(saved.id);
+    return saved;
+  } catch {
+    console.error("order.store.persist_failed");
+    return null;
+  }
+}
+
+export async function syncCheckoutPromotion(input: {
+  items: CartLine[];
+  name?: string;
+  email?: string;
+  notes?: string;
+  promotionalProductId?: unknown;
+  requireGiftIfQualified?: boolean;
+}): Promise<PreparedCheckout> {
+  const existing = await lookupExistingOrder();
+  const prepared = prepareCheckoutOrder({ ...input, existing });
+  if (!prepared.ok) return prepared;
+
+  const saved = existing
+    ? await persistPreparedOrder({
+        ...existing,
+        ...prepared.order,
+        id: existing.id,
+        createdAt: existing.createdAt,
+        paymentMethod: "request",
+      })
+    : await (async () => {
+        try {
+          const created = await createPendingOrder({
+            ...prepared.order,
+            paymentMethod: "request",
+            status: "pending",
+            paymentStatus: "unpaid",
+          });
+          await writePendingOrderCookie(created.id);
+          return created;
+        } catch {
+          console.error("order.store.persist_failed");
+          return null;
+        }
+      })();
+
+  if (!saved) return prepared;
+
+  return {
+    ...prepared,
+    order: saved,
     quote: {
-      orderId: order.id,
-      merchandiseSubtotalCents: quote.merchandiseSubtotalCents,
-      shippingCents: quote.shippingCents,
-      taxCents: quote.taxCents,
-      totalCents: quote.totalCents,
-      promotionStatus: quote.promotionStatus,
-      remainingCents: quote.remainingCents,
-      freeShipping: quote.freeShipping,
-      promotionalGiftApplied: Boolean(giftLine),
-      gift: giftView,
+      ...prepared.quote,
+      orderId: saved.id,
     },
   };
 }

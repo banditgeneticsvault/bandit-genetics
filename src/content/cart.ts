@@ -6,7 +6,7 @@ export const cartCopy = {
   cart: "CART",
   empty: "THE CART IS EMPTY.",
   emptyHint: "Open The Vault and add a strain.",
-  continue: "CONTINUE IN THE VAULT",
+  openTheVault: "OPEN THE VAULT",
   backToTheVault: "BACK TO THE VAULT",
   checkout: "CHECKOUT",
   remove: "REMOVE",
@@ -43,9 +43,8 @@ export const cartCopy = {
     "Standard storefront options are 1, 2, 3, or 5 seeds. Tell Bandit Genetics what you need for a custom bulk run. Custom bulk stays on the Contact line, not in the seed option selector.",
   bulkCta: "REQUEST A CUSTOM BULK ORDER",
   toastView: "VIEW CART",
-  emailOrderCta: "EMAIL BANDIT GENETICS",
-  emailOrderBody: "You can also reach us at",
-  emailOrderCompact: "Or email us at",
+  addThenCheckout:
+    "Add this file to the cart, then submit your request at checkout. One of us will follow up.",
   checkoutTitle: "CHECKOUT",
   checkoutKicker: "THE DESK",
   checkoutIntro:
@@ -53,8 +52,6 @@ export const cartCopy = {
   paymentMethod: "HOW TO ORDER",
   choosePayment:
     "Submit what you want from this page. One of us will reach out to the email you enter.",
-  howToOrderContact: "Prefer to write us directly? Email",
-  howToOrderContactAfter: "and we will help you get the order placed.",
   cancelledCheckout:
     "Checkout was not completed. Your cart is still here.",
   invalidItems:
@@ -67,8 +64,8 @@ export const cartCopy = {
   placeOrder: "SUBMIT REQUEST",
   submittingOrder: "SENDING",
   unconfigured:
-    "This form cannot send the request from the website. Email us at",
-  sendFailed: "We could not send this request. Email us at",
+    "This request could not be sent from the website. Wait a moment and try again.",
+  sendFailed: "We could not send this request. Wait a moment and try again.",
   name: "Name",
   email: "Email",
   notes: "Notes",

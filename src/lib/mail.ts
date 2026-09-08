@@ -37,12 +37,11 @@ function readPort() {
   return port;
 }
 
-function resolveDestination(raw: string | undefined) {
+function resolveAuthorizedAddress(raw: string | undefined) {
   const value = headerSafe(raw ?? "");
-  if (!value || value.toLowerCase() === LEGACY_PROTON_ADDRESS) {
-    if (value.toLowerCase() === LEGACY_PROTON_ADDRESS) {
-      console.info("mail.destination.legacy_proton_me");
-    }
+  if (!value) return "";
+  if (value.toLowerCase() === LEGACY_PROTON_ADDRESS) {
+    console.info("mail.address.legacy_proton_me");
     return SUPPORT_ADDRESS;
   }
   return value;
@@ -70,6 +69,10 @@ function readSmtpConfig():
     return { ok: false, missing };
   }
 
+  const authorizedUser = resolveAuthorizedAddress(user!.value) || SUPPORT_ADDRESS;
+  const from =
+    resolveAuthorizedAddress(fromRaw) || authorizedUser || SUPPORT_ADDRESS;
+
   return {
     ok: true,
     config: {
@@ -77,8 +80,8 @@ function readSmtpConfig():
       port: port as number,
       user: user!.value,
       pass: pass!.value,
-      from: headerSafe(fromRaw ?? SUPPORT_ADDRESS) || SUPPORT_ADDRESS,
-      destination: resolveDestination(destinationRaw),
+      from,
+      destination: resolveAuthorizedAddress(destinationRaw) || SUPPORT_ADDRESS,
     },
   };
 }
@@ -165,7 +168,12 @@ export async function sendBanditMail(input: {
   const subject = headerSafe(input.subject);
 
   if (!from || !to || !subject || !isValidReplyTo(replyTo)) {
-    console.error("mail.smtp.invalid_headers");
+    console.error("mail.smtp.invalid_headers", {
+      fromSet: Boolean(from),
+      toSet: Boolean(to),
+      subjectSet: Boolean(subject),
+      replyToValid: isValidReplyTo(replyTo),
+    });
     return { ok: false, reason: "send_failed" };
   }
 
@@ -193,7 +201,7 @@ export async function sendBanditMail(input: {
       to,
       replyTo,
       envelope: {
-        from,
+        from: headerSafe(config.user) || from,
         to,
       },
       subject,

@@ -1,6 +1,5 @@
 "use client";
 
-import { EmailOrderCta } from "@/components/layout/EmailOrderCta";
 import { QuantityStepper } from "@/components/cart/QuantityStepper";
 import { SeedQuantityPicker } from "@/components/cart/PackPicker";
 import { CartLineVisual } from "@/components/cart/CartLineVisual";
@@ -162,15 +161,15 @@ export function CartDrawer() {
           ) : null}
 
           <div className="mt-8 flex flex-col gap-3">
-            <Button href="/vault" variant="secondary" onClick={closeCart}>
-              {cartCopy.continue}
-            </Button>
-            {resolved.length > 0 ? (
+            {!ready || resolved.length === 0 ? (
+              <Button href="/vault" variant="secondary" onClick={closeCart}>
+                {cartCopy.openTheVault}
+              </Button>
+            ) : (
               <>
                 <Button href="/checkout" onClick={closeCart}>
                   {cartCopy.checkout}
                 </Button>
-                <EmailOrderCta compact className="w-full" />
                 <button
                   type="button"
                   onClick={clear}
@@ -179,7 +178,7 @@ export function CartDrawer() {
                   {cartCopy.clear}
                 </button>
               </>
-            ) : null}
+            )}
           </div>
         </div>
       </aside>

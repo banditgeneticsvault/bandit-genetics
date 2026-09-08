@@ -42,8 +42,9 @@ export type CheckoutSnapshot = {
 };
 
 export type CheckoutFormState = {
-  status: "idle" | "error" | "unconfigured";
+  status: "idle" | "error" | "unconfigured" | "success";
   fieldErrors: CheckoutFieldErrors;
+  orderId?: string;
 };
 
 export const initialCheckoutState: CheckoutFormState = {

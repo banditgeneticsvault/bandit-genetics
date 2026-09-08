@@ -96,8 +96,8 @@ export function SocialLinks() {
         <li>
           <a
             href={`mailto:${brand.email}`}
-            aria-label="Email Bandit Genetics"
-            title="Email Bandit Genetics"
+            aria-label="Email support"
+            title="Email support"
             className={cn(controlClassName, controlToneClassName)}
           >
             <EmailIcon />

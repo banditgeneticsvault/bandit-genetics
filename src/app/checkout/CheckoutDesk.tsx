@@ -6,7 +6,6 @@ import { startCheckout } from "@/app/checkout/actions";
 import { CartLineVisual } from "@/components/cart/CartLineVisual";
 import { PromotionalGiftLine } from "@/components/cart/PromotionalGiftLine";
 import { PromotionalGiftSelector } from "@/components/cart/PromotionalGiftSelector";
-import { OrderEmailLink } from "@/components/layout/OrderEmailLink";
 import { QuantityStepper } from "@/components/cart/QuantityStepper";
 import { SeedQuantityPicker } from "@/components/cart/PackPicker";
 import { useCart } from "@/components/cart/CartProvider";
@@ -59,7 +58,7 @@ type ServerQuote = {
 };
 
 export function CheckoutDesk() {
-  const { lines, setSeedTier, setLineQuantity, remove, ready } = useCart();
+  const { lines, setSeedTier, setLineQuantity, remove, ready, clear } = useCart();
   const resolved = resolveCart(lines);
   const subtotal = cartSubtotalCents(resolved) ?? 0;
   const localQuote = quoteShippingPromotion(subtotal);
@@ -78,10 +77,12 @@ export function CheckoutDesk() {
   const wasPending = useRef(false);
   const fieldErrors = pending ? {} : clientErrors;
   const showFieldErrors = Object.keys(fieldErrors).length > 0;
+  const sent = !pending && state?.status === "success";
+  const locked = pending || sent;
   const showUnconfigured =
-    !pending && state?.status === "unconfigured" && !showFieldErrors;
+    !pending && state?.status === "unconfigured" && !showFieldErrors && !sent;
   const showError =
-    !pending && state?.status === "error" && !showFieldErrors;
+    !pending && state?.status === "error" && !showFieldErrors && !sent;
 
   useEffect(() => {
     if (!ready || lines.length === 0) {
@@ -150,6 +151,12 @@ export function CheckoutDesk() {
     wasPending.current = pending;
   }, [pending, state]);
 
+  useEffect(() => {
+    if (state?.status === "success") {
+      clear();
+    }
+  }, [clear, state?.status]);
+
   const giftProductId = chosenGiftId ?? serverQuote?.gift?.productId ?? null;
   const quote =
     serverQuote && serverQuote.merchandiseSubtotalCents === subtotal
@@ -179,7 +186,7 @@ export function CheckoutDesk() {
     const intent =
       submitter instanceof HTMLButtonElement ? submitter.value : "";
 
-    if (intent !== "order" || pending) {
+    if (intent !== "order" || locked) {
       event.preventDefault();
       return;
     }
@@ -215,6 +222,28 @@ export function CheckoutDesk() {
     return <p className="text-copy text-ice/60">Loading checkout.</p>;
   }
 
+  if (sent) {
+    return (
+      <div className="border border-white/10 bg-charcoal px-5 py-6">
+        <p className="section-kicker">{cartCopy.checkoutKicker}</p>
+        <h2 className="mt-3 font-display text-[clamp(1.7rem,4vw,2.4rem)] leading-none text-frost">
+          {cartCopy.ticketSubmitted}
+        </h2>
+        <p className="mt-4 max-w-2xl text-copy leading-relaxed text-ice/75">
+          {cartCopy.ticketSubmittedBody}
+        </p>
+        {state.orderId ? (
+          <p className="mt-4 text-copy text-ice">
+            {cartCopy.orderLabel} {state.orderId}
+          </p>
+        ) : null}
+        <div className="mt-6">
+          <Button href="/vault">{cartCopy.openTheVault}</Button>
+        </div>
+      </div>
+    );
+  }
+
   if (resolved.length === 0) {
     return (
       <div className="border border-white/10 bg-charcoal px-5 py-6">
@@ -224,7 +253,7 @@ export function CheckoutDesk() {
         <p className="mt-3 text-copy text-ice/70">{cartCopy.emptyHint}</p>
         <div className="mt-6">
           <Button href="/vault" variant="secondary">
-            {cartCopy.continue}
+            {cartCopy.openTheVault}
           </Button>
         </div>
       </div>
@@ -291,7 +320,7 @@ export function CheckoutDesk() {
               });
               setChosenGiftId(productId);
             }}
-            disabled={pending}
+            disabled={locked}
           />
         ) : null}
         {showGift && serverQuote?.gift ? (
@@ -367,7 +396,7 @@ export function CheckoutDesk() {
             autoComplete="name"
             maxLength={CHECKOUT_LIMITS.name}
             error={fieldErrors.name}
-            disabled={pending}
+            disabled={locked}
             value={values.name}
             onChange={(value) => {
               setValues((current) => ({ ...current, name: value }));
@@ -386,7 +415,7 @@ export function CheckoutDesk() {
             inputMode="email"
             maxLength={CHECKOUT_LIMITS.email}
             error={fieldErrors.email}
-            disabled={pending}
+            disabled={locked}
             value={values.email}
             onChange={(value) => {
               setValues((current) => ({ ...current, email: value }));
@@ -408,7 +437,7 @@ export function CheckoutDesk() {
               name="notes"
               rows={4}
               maxLength={CHECKOUT_LIMITS.notes}
-              disabled={pending}
+              disabled={locked}
               value={values.notes}
               onChange={(event) =>
                 setValues((current) => ({ ...current, notes: event.target.value }))
@@ -426,16 +455,12 @@ export function CheckoutDesk() {
           <div className="min-w-0 border-t border-white/10 pt-6">
             <p className="section-kicker">{cartCopy.paymentMethod}</p>
             <p className="mt-3 text-copy text-ice/70">{cartCopy.choosePayment}</p>
-            <p className="mt-3 text-copy text-ice/70">
-              {cartCopy.howToOrderContact} <OrderEmailLink />{" "}
-              {cartCopy.howToOrderContactAfter}
-            </p>
             <Button
               type="submit"
               name="intent"
               value="order"
               variant="secondary"
-              disabled={pending}
+              disabled={locked}
               className="mt-4 w-full sm:w-full lg:hidden"
             >
               {pending ? cartCopy.submittingOrder : cartCopy.placeOrder}
@@ -444,12 +469,12 @@ export function CheckoutDesk() {
 
           {showUnconfigured ? (
             <p role="alert" className="border border-white/10 px-4 py-3 text-copy text-ice">
-              {cartCopy.unconfigured} <OrderEmailLink />.
+              {cartCopy.unconfigured}
             </p>
           ) : null}
           {showError ? (
             <p role="alert" className="border border-white/10 px-4 py-3 text-copy text-ice">
-              {cartCopy.sendFailed} <OrderEmailLink />.
+              {cartCopy.sendFailed}
             </p>
           ) : null}
         </div>
@@ -459,7 +484,7 @@ export function CheckoutDesk() {
             name="intent"
             value="order"
             variant="secondary"
-            disabled={pending}
+            disabled={locked}
             className="w-full sm:w-full"
           >
             {pending ? cartCopy.submittingOrder : cartCopy.placeOrder}
@@ -473,7 +498,7 @@ export function CheckoutDesk() {
             name="intent"
             value="order"
             variant="secondary"
-            disabled={pending}
+            disabled={locked}
             className="w-full sm:w-full"
           >
             {pending ? cartCopy.submittingOrder : cartCopy.placeOrder}

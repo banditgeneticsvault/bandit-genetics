@@ -25,7 +25,7 @@ Copy `.env.local` from `.env.example` and set:
 - `EMAIL_FROM` — From address. Must be the same Proton custom-domain address authorized by the SMTP token. Server-only.
 - `CONTACT_DESTINATION_EMAIL` — mailbox that receives Contact and order notifications. Use `support@banditgenetics.com`. Server-only.
 
-Checkout stores the request in Postgres and sends a detailed notification through the same SMTP settings as the Contact form. If SMTP is not configured, the site will not show a false success message.
+Checkout sends a detailed notification through the same SMTP settings as the Contact form. Postgres is used to store the ticket after the email is accepted; a database failure will not fake success, and it will not block a request that SMTP already accepted. If SMTP is not configured, the site will not show a success message.
 
 ### Vercel (Production)
 

@@ -3,8 +3,8 @@ import "server-only";
 import { NextResponse } from "next/server";
 import { parseCheckoutCartPayload } from "@/lib/checkout-cart";
 import {
+  prepareCheckoutOrder,
   publicQuotePayload,
-  syncCheckoutPromotion,
 } from "@/lib/checkout-promotion";
 import { PROMOTION_THRESHOLD_CENTS } from "@/lib/shipping-promotion";
 
@@ -42,7 +42,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: parsed.reason }, { status: 400 });
   }
 
-  const synced = await syncCheckoutPromotion({
+  const synced = prepareCheckoutOrder({
     items: parsed.lines,
     promotionalProductId: record.promotionalProductId,
   });

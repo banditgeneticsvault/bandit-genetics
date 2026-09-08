@@ -110,7 +110,7 @@ export const pageCopy = {
     kicker: "Direct line",
     body: "Questions about our genetics, releases, or the Bandit Vault?",
     orderHelp:
-      "Need help with an order? Send a message and we'll help you get everything taken care of.",
+      "Need help with an order you already requested? Send a message and we'll help you get everything taken care of.",
     emailPrompt: "Email us at",
     emailDirect:
       "We're a small, independent genetics company, and we're always happy to work directly with our customers.",
@@ -144,5 +144,5 @@ export const seoCopy = {
   aboutDescription:
     "Bandit Genetics is a cannabis genetics and seed brand. An underground luxury operation built around finding exceptional genetics, studying them, and breeding with restraint. Taken from the best. Bred for the rest.",
   contactDescription:
-    "Contact Bandit Genetics to place an order, ask about genetics, or request a custom bulk run. Email support@banditgenetics.com.",
+    "Ask Bandit Genetics about genetics or a custom bulk run. Place order requests through checkout on the site. Email support@banditgenetics.com for support.",
 } as const;

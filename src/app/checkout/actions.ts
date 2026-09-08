@@ -1,8 +1,7 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { cartCopy } from "@/content/cart";
-import { syncCheckoutPromotion } from "@/lib/checkout-promotion";
+import { prepareCheckoutOrder } from "@/lib/checkout-promotion";
 import {
   parseCheckout,
   parseCheckoutIntent,
@@ -18,6 +17,7 @@ export async function startCheckout(
 ): Promise<CheckoutFormState> {
   const intent = parseCheckoutIntent(formData.get("intent"));
   if (!intent) {
+    console.error("order.submit.invalid_intent");
     return { status: "error", fieldErrors: {} };
   }
 
@@ -42,9 +42,9 @@ export async function startCheckout(
     return { status: "error", fieldErrors: parsed.fieldErrors };
   }
 
-  let synced: Awaited<ReturnType<typeof syncCheckoutPromotion>>;
+  let prepared: ReturnType<typeof prepareCheckoutOrder>;
   try {
-    synced = await syncCheckoutPromotion({
+    prepared = prepareCheckoutOrder({
       items: parsed.data.cartLines,
       name: parsed.data.customer.name,
       email: parsed.data.customer.email,
@@ -53,18 +53,18 @@ export async function startCheckout(
       requireGiftIfQualified: true,
     });
   } catch {
-    console.error("order.submit.failed");
+    console.error("order.submit.prepare_failed");
     return { status: "error", fieldErrors: {} };
   }
 
-  if (!synced.ok) {
-    if (synced.reason === "empty") {
+  if (!prepared.ok) {
+    if (prepared.reason === "empty") {
       return { status: "error", fieldErrors: { items: cartCopy.emptyCart } };
     }
-    if (synced.reason === "gift_required") {
+    if (prepared.reason === "gift_required") {
       return { status: "error", fieldErrors: { gift: cartCopy.giftRequired } };
     }
-    if (synced.reason === "invalid_promotional_product") {
+    if (prepared.reason === "invalid_promotional_product") {
       return { status: "error", fieldErrors: { gift: cartCopy.invalidGift } };
     }
     return {
@@ -75,7 +75,7 @@ export async function startCheckout(
 
   let delivered: Awaited<ReturnType<typeof deliverOrderRequest>>;
   try {
-    delivered = await deliverOrderRequest(synced.order);
+    delivered = await deliverOrderRequest(prepared.order);
   } catch {
     console.error("order.delivery.failed");
     return { status: "error", fieldErrors: {} };
@@ -83,15 +83,16 @@ export async function startCheckout(
 
   if (!delivered.ok) {
     if (delivered.reason === "unconfigured") {
-      console.info("order.delivery.unconfigured");
+      console.error("order.delivery.unconfigured");
       return { status: "unconfigured", fieldErrors: {} };
     }
+    console.error("order.delivery.rejected");
     return { status: "error", fieldErrors: {} };
   }
 
   try {
     await saveOrder({
-      ...synced.order,
+      ...prepared.order,
       status: "requested",
     });
     await clearPendingOrderCookie();
@@ -99,5 +100,9 @@ export async function startCheckout(
     console.error("order.request.finalize_failed");
   }
 
-  redirect(`/checkout/success?order=${encodeURIComponent(synced.order.id)}`);
+  return {
+    status: "success",
+    fieldErrors: {},
+    orderId: prepared.order.id,
+  };
 }

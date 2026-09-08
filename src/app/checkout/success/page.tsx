@@ -78,7 +78,7 @@ export default async function CheckoutSuccessPage({
           <Button href="/checkout" variant="secondary">
             Return to checkout
           </Button>
-          <Button href="/vault">{cartCopy.continue}</Button>
+          <Button href="/vault">{cartCopy.openTheVault}</Button>
         </div>
       </PageContainer>
     </main>
