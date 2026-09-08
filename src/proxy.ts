@@ -1,37 +1,22 @@
 import { NextResponse, type NextRequest } from "next/server";
-import {
-  AGE_COOKIE_NAME,
-  AGE_GATE_PATH,
-  isAgeGatePublicPath,
-  isAgeVerifiedCookie,
-  safeAgeGateReturnPath,
-} from "@/lib/age-gate";
+import { AGE_GATE_PATH, safeAgeGateReturnPath } from "@/lib/age-gate";
 
 export function proxy(request: NextRequest) {
-  const { pathname, search } = request.nextUrl;
-  const verified = isAgeVerifiedCookie(request.cookies.get(AGE_COOKIE_NAME)?.value);
+  const { pathname } = request.nextUrl;
 
-  if (verified) {
-    if (pathname === AGE_GATE_PATH || pathname.startsWith(`${AGE_GATE_PATH}/`)) {
-      const next = request.nextUrl.clone();
-      const destination = safeAgeGateReturnPath(request.nextUrl.searchParams.get("from"));
-      const [path, query] = destination.split("?");
-      next.pathname = path || "/";
-      next.search = query ? `?${query}` : "";
-      return NextResponse.redirect(next);
-    }
-    return NextResponse.next();
+  if (
+    (pathname === AGE_GATE_PATH || pathname.startsWith(`${AGE_GATE_PATH}/`)) &&
+    request.method !== "POST"
+  ) {
+    const next = request.nextUrl.clone();
+    const destination = safeAgeGateReturnPath(request.nextUrl.searchParams.get("from"));
+    const [path, query] = destination.split("?");
+    next.pathname = path || "/";
+    next.search = query ? `?${query}` : "";
+    return NextResponse.redirect(next);
   }
 
-  if (isAgeGatePublicPath(pathname)) {
-    return NextResponse.next();
-  }
-
-  const gate = request.nextUrl.clone();
-  gate.pathname = AGE_GATE_PATH;
-  const from = `${pathname}${search}`;
-  gate.search = from && from !== "/" ? `?from=${encodeURIComponent(from)}` : "";
-  return NextResponse.redirect(gate);
+  return NextResponse.next();
 }
 
 export const config = {

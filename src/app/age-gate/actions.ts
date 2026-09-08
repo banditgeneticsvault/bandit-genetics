@@ -1,14 +1,10 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import {
-  AGE_COOKIE_NAME,
-  AGE_COOKIE_VALUE,
-  safeAgeGateReturnPath,
-} from "@/lib/age-gate";
+import { revalidatePath } from "next/cache";
+import { AGE_COOKIE_NAME, AGE_COOKIE_VALUE } from "@/lib/age-gate";
 
-export async function confirmAdultAge(formData: FormData) {
+export async function confirmAdultAge() {
   const store = await cookies();
   store.set(AGE_COOKIE_NAME, AGE_COOKIE_VALUE, {
     httpOnly: true,
@@ -17,5 +13,5 @@ export async function confirmAdultAge(formData: FormData) {
     path: "/",
     // Session cookie: omitted maxAge so confirmation lasts for this browsing session only.
   });
-  redirect(safeAgeGateReturnPath(formData.get("from")));
+  revalidatePath("/", "layout");
 }

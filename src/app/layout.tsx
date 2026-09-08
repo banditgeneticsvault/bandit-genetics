@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { Barlow_Condensed, Cormorant_Garamond, Figtree } from "next/font/google";
+import { AgeGateModal } from "@/components/age-gate/AgeGateModal";
 import { AppProviders } from "@/components/layout/AppProviders";
 import { SiteChrome } from "@/components/layout/SiteChrome";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { brand, seoCopy, siteUrl } from "@/content/site";
+import { AGE_COOKIE_NAME, isAgeVerifiedCookie } from "@/lib/age-gate";
 import { brandOgImage, organizationGraph } from "@/lib/seo";
 import "./globals.css";
 
@@ -67,7 +70,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const store = await cookies();
+  const ageVerified = isAgeVerifiedCookie(store.get(AGE_COOKIE_NAME)?.value);
+
   return (
     <html
       lang="en"
@@ -75,9 +81,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="flex min-h-dvh flex-col">
         <JsonLd data={organizationGraph()} />
-        <AppProviders>
-          <SiteChrome>{children}</SiteChrome>
-        </AppProviders>
+        <div
+          className="flex min-h-dvh flex-1 flex-col"
+          {...(ageVerified ? {} : { inert: true })}
+        >
+          <AppProviders>
+            <SiteChrome>{children}</SiteChrome>
+          </AppProviders>
+        </div>
+        {ageVerified ? null : <AgeGateModal />}
       </body>
     </html>
   );

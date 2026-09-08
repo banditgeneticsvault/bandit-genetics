@@ -45,6 +45,11 @@
     color: var(--color-frost);
   }
 
+  html.age-gate-lock,
+  html.age-gate-lock body {
+    overflow: hidden !important;
+  }
+
   :focus-visible {
     outline: 2px solid var(--color-gold);
     outline-offset: 3px;
