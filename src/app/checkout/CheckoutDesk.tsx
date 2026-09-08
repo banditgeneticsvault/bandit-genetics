@@ -3,7 +3,6 @@
 import { useActionState, useEffect, useId, useRef, useState, type FormEvent, type HTMLAttributes } from "react";
 import { useSearchParams } from "next/navigation";
 import { startCheckout } from "@/app/checkout/actions";
-import { CopyAddress } from "@/app/checkout/crypto/CopyAddress";
 import { CartLineVisual } from "@/components/cart/CartLineVisual";
 import { PromotionalGiftLine } from "@/components/cart/PromotionalGiftLine";
 import { PromotionalGiftSelector } from "@/components/cart/PromotionalGiftSelector";
@@ -27,16 +26,27 @@ import {
   quoteShippingPromotion,
 } from "@/lib/shipping-promotion";
 import {
+  CHECKOUT_FIELD_ORDER,
+  emailValidationError,
   initialCheckoutState,
+  nameValidationError,
   parseCheckout,
   type CheckoutFieldErrors,
 } from "@/lib/checkout";
-import { CRYPTO_WALLETS, type CryptoAsset } from "@/lib/crypto/wallets";
 import { orderMailto } from "@/lib/order-email";
 import { cn } from "@/lib/cn";
 
 const fieldClassName =
-  "min-h-12 w-full rounded-none border border-white/12 bg-black/55 px-3 py-3 font-sans text-copy text-frost outline-none placeholder:text-ice/35 focus-visible:border-gold";
+  "min-h-12 w-full scroll-mt-28 scroll-mb-28 rounded-none border bg-black/55 px-3 py-3 font-sans text-copy text-frost outline-none placeholder:text-ice/35 focus-visible:border-gold";
+
+const parseMessages = {
+  nameRequired: cartCopy.nameRequired,
+  nameInvalid: cartCopy.nameInvalid,
+  emailRequired: cartCopy.emailRequired,
+  invalidEmail: cartCopy.invalidEmail,
+  emptyCart: cartCopy.emptyCart,
+  invalidItems: cartCopy.invalidItems,
+};
 
 type ServerQuote = {
   merchandiseSubtotalCents: number;
@@ -63,17 +73,13 @@ export function CheckoutDesk() {
     initialCheckoutState,
   );
   const [clientErrors, setClientErrors] = useState<CheckoutFieldErrors>({});
-  const [asset, setAsset] = useState<CryptoAsset | "">("");
+  const [values, setValues] = useState({ name: "", email: "" });
   const formId = useId();
   const formRef = useRef<HTMLFormElement>(null);
-  const fieldErrors = pending
-    ? {}
-    : Object.keys(clientErrors).length > 0
-      ? clientErrors
-      : (state?.fieldErrors ?? {});
+  const wasPending = useRef(false);
+  const fieldErrors = pending ? {} : clientErrors;
   const showError =
     !pending && state?.status === "error" && Object.keys(fieldErrors).length === 0;
-  const selectedWallet = asset ? CRYPTO_WALLETS[asset] : null;
 
   useEffect(() => {
     if (!ready || lines.length === 0) {
@@ -132,6 +138,16 @@ export function CheckoutDesk() {
     };
   }, [ready, resolved.length]);
 
+  useEffect(() => {
+    if (wasPending.current && !pending && state?.fieldErrors) {
+      setClientErrors(state.fieldErrors);
+      if (Object.keys(state.fieldErrors).length > 0) {
+        revealFirstInvalidField(formRef.current, state.fieldErrors);
+      }
+    }
+    wasPending.current = pending;
+  }, [pending, state]);
+
   const giftProductId = chosenGiftId ?? serverQuote?.gift?.productId ?? null;
   const quote =
     serverQuote && serverQuote.merchandiseSubtotalCents === subtotal
@@ -161,38 +177,32 @@ export function CheckoutDesk() {
     const intent =
       submitter instanceof HTMLButtonElement ? submitter.value : "";
 
-    if (intent !== "crypto") {
+    if (intent !== "order") {
       event.preventDefault();
-      return;
-    }
-    if (!asset) {
-      event.preventDefault();
-      setClientErrors({ cryptocurrency: cartCopy.invalidCrypto });
       return;
     }
 
+    const nextErrors: CheckoutFieldErrors = {};
     if (qualified && !showGift) {
-      event.preventDefault();
-      setClientErrors({ gift: cartCopy.giftRequired });
-      return;
+      nextErrors.gift = cartCopy.giftRequired;
     }
 
     const parsed = parseCheckout(
       {
-        name: String(new FormData(form).get("name") ?? ""),
-        email: String(new FormData(form).get("email") ?? ""),
+        name: values.name,
+        email: values.email,
         items: JSON.stringify(lines),
       },
-      {
-        required: cartCopy.required,
-        invalidEmail: cartCopy.invalidEmail,
-        emptyCart: cartCopy.emptyCart,
-        invalidItems: cartCopy.invalidItems,
-      },
+      parseMessages,
     );
     if (!parsed.ok) {
+      Object.assign(nextErrors, parsed.fieldErrors);
+    }
+
+    if (Object.keys(nextErrors).length > 0) {
       event.preventDefault();
-      setClientErrors(parsed.fieldErrors);
+      setClientErrors(nextErrors);
+      revealFirstInvalidField(form, nextErrors);
       return;
     }
     setClientErrors({});
@@ -268,6 +278,8 @@ export function CheckoutDesk() {
           <PromotionalGiftSelector
             options={giftOptions}
             selectedProductId={giftProductId}
+            error={fieldErrors.gift}
+            errorId={`${formId}-gift-error`}
             onSelect={(productId) => {
               setClientErrors((current) => {
                 const next = { ...current };
@@ -278,11 +290,6 @@ export function CheckoutDesk() {
             }}
             disabled={pending}
           />
-        ) : null}
-        {fieldErrors.gift ? (
-          <p role="alert" className="mt-3 text-copy text-gold">
-            {fieldErrors.gift}
-          </p>
         ) : null}
         {showGift && serverQuote?.gift ? (
           <ul className="mt-3 grid gap-3">
@@ -358,6 +365,13 @@ export function CheckoutDesk() {
             maxLength={CHECKOUT_LIMITS.name}
             error={fieldErrors.name}
             disabled={pending}
+            value={values.name}
+            onChange={(value) => {
+              setValues((current) => ({ ...current, name: value }));
+              setClientErrors((current) =>
+                updateFieldError(current, "name", nameValidationError(value, parseMessages)),
+              );
+            }}
             required
           />
           <Field
@@ -370,10 +384,17 @@ export function CheckoutDesk() {
             maxLength={CHECKOUT_LIMITS.email}
             error={fieldErrors.email}
             disabled={pending}
+            value={values.email}
+            onChange={(value) => {
+              setValues((current) => ({ ...current, email: value }));
+              setClientErrors((current) =>
+                updateFieldError(current, "email", emailValidationError(value, parseMessages)),
+              );
+            }}
             required
           />
           {fieldErrors.items ? (
-            <p role="alert" className="text-copy text-gold">
+            <p role="alert" className="text-copy text-alert">
               {fieldErrors.items}
             </p>
           ) : null}
@@ -389,84 +410,16 @@ export function CheckoutDesk() {
             <div className="mt-4">
               <EmailOrderCta hideIntro />
             </div>
-
-            <div className="mt-8 grid min-w-0 gap-3">
-              <p className="font-label text-ui tracking-[0.22em] text-gold uppercase">
-                {cartCopy.payWithCrypto}
-              </p>
-              <p className="text-copy text-ice/80">{cartCopy.cryptoNote}</p>
-              <p className="text-copy text-ice/80">{cartCopy.cryptoUnpaidNote}</p>
-              <p className="text-copy text-ice/80">{cartCopy.howToOrderAmount}</p>
-              <p className="text-copy text-ice/80">{cartCopy.cryptoInstructionsNote}</p>
-              <fieldset>
-                <legend className="sr-only">{cartCopy.payWithCrypto}</legend>
-                <div className="mt-3 grid gap-2">
-                  {(
-                    Object.values(CRYPTO_WALLETS) as Array<
-                      (typeof CRYPTO_WALLETS)[CryptoAsset]
-                    >
-                  ).map((wallet) => {
-                    const active = asset === wallet.id;
-                    return (
-                      <label
-                        key={wallet.id}
-                        className={cn(
-                          "flex min-h-11 cursor-pointer items-center border px-3 py-3 font-label text-ui tracking-[0.14em] uppercase",
-                          active
-                            ? "border-frost bg-frost text-black"
-                            : "border-gunmetal text-ice hover:border-gold hover:text-gold",
-                        )}
-                      >
-                        <input
-                          type="radio"
-                          name="cryptocurrency"
-                          value={wallet.id}
-                          checked={active}
-                          onChange={() => setAsset(wallet.id)}
-                          className="sr-only"
-                        />
-                        {wallet.label}
-                      </label>
-                    );
-                  })}
-                </div>
-              </fieldset>
-              {fieldErrors.cryptocurrency ? (
-                <p role="alert" className="text-copy text-gold">
-                  {fieldErrors.cryptocurrency}
-                </p>
-              ) : null}
-              {selectedWallet ? (
-                <div className="grid min-w-0 gap-3 border border-white/10 px-4 py-4">
-                  <p className="font-label text-ui tracking-[0.18em] text-gold uppercase">
-                    {selectedWallet.label}
-                  </p>
-                  <CopyAddress value={selectedWallet.address} />
-                </div>
-              ) : null}
-              <p className="font-label text-ui tracking-[0.22em] text-gold uppercase">
-                {cartCopy.paymentVerification}
-              </p>
-              <p className="text-copy text-ice/70">{cartCopy.cryptoVerifyManual}</p>
-              <p className="text-copy text-ice/70">{cartCopy.howToOrderHashNote}</p>
-              <Field
-                id={`${formId}-hash`}
-                name="transactionHash"
-                label={cartCopy.cryptoHashLabel}
-                maxLength={128}
-                disabled={pending}
-              />
-              <Button
-                type="submit"
-                name="intent"
-                value="crypto"
-                variant="secondary"
-                disabled={pending}
-                className="w-full sm:w-full lg:hidden"
-              >
-                {pending ? "CHECKING" : cartCopy.payLaterCrypto}
-              </Button>
-            </div>
+            <Button
+              type="submit"
+              name="intent"
+              value="order"
+              variant="secondary"
+              disabled={pending}
+              className="mt-4 w-full sm:w-full lg:hidden"
+            >
+              {pending ? "CHECKING" : cartCopy.placeOrder}
+            </Button>
           </div>
 
           {showError ? (
@@ -479,12 +432,12 @@ export function CheckoutDesk() {
           <Button
             type="submit"
             name="intent"
-            value="crypto"
+            value="order"
             variant="secondary"
             disabled={pending}
             className="w-full sm:w-full"
           >
-            {pending ? "CHECKING" : cartCopy.payLaterCrypto}
+            {pending ? "CHECKING" : cartCopy.placeOrder}
           </Button>
         </div>
       </form>
@@ -499,16 +452,50 @@ export function CheckoutDesk() {
             type="submit"
             form="checkout-form"
             name="intent"
-            value="crypto"
+            value="order"
             variant="secondary"
             disabled={pending}
             className="w-full sm:w-full"
           >
-            {pending ? "CHECKING" : cartCopy.payLaterCrypto}
+            {pending ? "CHECKING" : cartCopy.placeOrder}
           </Button>
         </div>
     </div>
   );
+}
+
+function updateFieldError(
+  current: CheckoutFieldErrors,
+  field: keyof CheckoutFieldErrors,
+  error: string | undefined,
+) {
+  if (!current[field]) return current;
+  const next = { ...current };
+  if (error) next[field] = error;
+  else delete next[field];
+  return next;
+}
+
+function revealFirstInvalidField(
+  form: HTMLFormElement | null,
+  errors: CheckoutFieldErrors,
+) {
+  const first = CHECKOUT_FIELD_ORDER.find((key) => errors[key]);
+  if (!first) return;
+
+  const target =
+    first === "gift"
+      ? document.querySelector<HTMLElement>("#checkout-gift button") ??
+        document.getElementById("checkout-gift")
+      : form?.querySelector<HTMLElement>(`[name="${first}"]`);
+  if (!target) return;
+
+  target.scrollIntoView({ behavior: "smooth", block: "center" });
+  if (typeof target.focus === "function") {
+    window.requestAnimationFrame(() => {
+      target.focus({ preventScroll: true });
+    });
+  }
 }
 
 function Field({
@@ -522,6 +509,8 @@ function Field({
   autoComplete,
   inputMode,
   maxLength,
+  value,
+  onChange,
 }: {
   id: string;
   name: string;
@@ -533,28 +522,45 @@ function Field({
   autoComplete?: string;
   inputMode?: HTMLAttributes<HTMLInputElement>["inputMode"];
   maxLength?: number;
+  value: string;
+  onChange: (value: string) => void;
 }) {
   const errorId = `${id}-error`;
   return (
     <div className="grid gap-2">
       <label htmlFor={id} className="font-label text-ui tracking-[0.22em] text-gold uppercase">
         {label}
+        {required ? (
+          <span className="font-sans tracking-normal text-ice/70 normal-case">
+            {" "}
+            <span aria-hidden="true">*</span>
+            <span className="sr-only"> (required)</span>
+          </span>
+        ) : null}
       </label>
       <input
         id={id}
         name={name}
         type={type}
         required={required}
+        aria-required={required || undefined}
         disabled={disabled}
         autoComplete={autoComplete}
         inputMode={inputMode}
         maxLength={maxLength}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? errorId : undefined}
-        className={cn(fieldClassName)}
+        className={cn(
+          fieldClassName,
+          error
+            ? "border-alert focus-visible:border-alert"
+            : "border-white/12",
+        )}
       />
       {error ? (
-        <p id={errorId} role="alert" className="text-copy text-gold">
+        <p id={errorId} role="alert" className="text-copy text-alert">
           {error}
         </p>
       ) : null}

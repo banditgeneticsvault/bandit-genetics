@@ -12,7 +12,7 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Ordering
 
-Customers can place an order by emailing [support@banditgenetics.com](mailto:support@banditgenetics.com), or by using cryptocurrency checkout on the site. Crypto verification is manual. Submitting crypto does not mark the order paid.
+Customers can place an order by emailing [support@banditgenetics.com](mailto:support@banditgenetics.com).
 
 Copy `.env.local` from `.env.example` and set:
 
@@ -24,7 +24,7 @@ Copy `.env.local` from `.env.example` and set:
 - `CONTACT_SMTP_PASSWORD` — Proton-generated SMTP token, not the account password. Server-only. Never use `NEXT_PUBLIC_*` for this value.
 - `CONTACT_DESTINATION_EMAIL` — mailbox that receives Contact form messages. Server-only.
 
-The checkout button submits the existing cart to the `startCheckout` server action. Cryptocurrency checkout creates an unpaid internal order and shows receiving-address instructions. The Contact form sends mail through Proton SMTP when the `CONTACT_SMTP_*` variables are set.
+The checkout form validates the cart and customer details, then stores an unpaid internal order ticket. The Contact form sends mail through Proton SMTP when the `CONTACT_SMTP_*` variables are set.
 
 ### Vercel (after code review)
 

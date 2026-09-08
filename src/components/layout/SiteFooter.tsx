@@ -15,7 +15,7 @@ export function SiteFooter() {
             {brand.wordmark}
           </p>
           <p className="mt-5 max-w-sm break-words text-copy leading-relaxed text-ice/70">
-            Email us to place an order: <OrderEmailLink />. Cryptocurrency checkout is also available.
+            Email us to place an order: <OrderEmailLink />.
           </p>
         </div>
 

@@ -10,16 +10,30 @@ export function PromotionalGiftSelector({
   selectedProductId,
   onSelect,
   disabled,
+  error,
+  errorId,
 }: {
   options: PromotionalGiftView[];
   selectedProductId: string | null;
   onSelect: (productId: string) => void;
   disabled?: boolean;
+  error?: string;
+  errorId?: string;
 }) {
   const selected = Boolean(selectedProductId);
 
   return (
-    <section className="mt-6 min-w-0 border border-gold/40 bg-charcoal px-4 py-5">
+    <div
+      id="checkout-gift"
+      tabIndex={-1}
+      role="group"
+      aria-label={cartCopy.chooseFreeFive}
+      aria-describedby={error && errorId ? errorId : undefined}
+      className={cn(
+        "mt-6 min-w-0 scroll-mt-28 scroll-mb-28 border bg-charcoal px-4 py-5",
+        error ? "border-alert" : "border-gold/40",
+      )}
+    >
       <p className="font-label text-ui tracking-[0.18em] text-gold uppercase">
         {selected ? cartCopy.changeFreeGift : cartCopy.chooseFreeFive}
       </p>
@@ -70,6 +84,11 @@ export function PromotionalGiftSelector({
           );
         })}
       </div>
-    </section>
+      {error ? (
+        <p id={errorId} role="alert" className="mt-3 text-copy text-alert">
+          {error}
+        </p>
+      ) : null}
+    </div>
   );
 }

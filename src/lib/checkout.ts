@@ -9,6 +9,7 @@ import type { CartLine } from "@/data/order";
 import type { ResolvedCartLine } from "@/lib/cart";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const NAME_TOKEN = /[A-Za-z]/;
 
 export type CheckoutCustomer = {
   name: string;
@@ -19,16 +20,16 @@ export type CheckoutFieldErrors = Partial<{
   name: string;
   email: string;
   items: string;
-  cryptocurrency: string;
   gift: string;
 }>;
 
 export type CheckoutParseMessages = {
-  required: string;
+  nameRequired: string;
+  nameInvalid: string;
+  emailRequired: string;
   invalidEmail: string;
   emptyCart: string;
   invalidItems: string;
-  invalidCrypto?: string;
 };
 
 export type CheckoutSnapshot = {
@@ -48,9 +49,31 @@ export const initialCheckoutState: CheckoutFormState = {
   fieldErrors: {},
 };
 
-export function parseCheckoutIntent(value: unknown): "crypto" | null {
-  if (value === "crypto") return value;
+export const CHECKOUT_FIELD_ORDER = ["name", "email", "gift", "items"] as const;
+
+export function parseCheckoutIntent(value: unknown): "order" | null {
+  if (value === "order") return value;
   return null;
+}
+
+export function nameValidationError(
+  value: unknown,
+  messages: Pick<CheckoutParseMessages, "nameRequired" | "nameInvalid">,
+) {
+  const name = normalize(value, CHECKOUT_LIMITS.name);
+  if (!name) return messages.nameRequired;
+  if (!isFullName(name)) return messages.nameInvalid;
+  return undefined;
+}
+
+export function emailValidationError(
+  value: unknown,
+  messages: Pick<CheckoutParseMessages, "emailRequired" | "invalidEmail">,
+) {
+  const email = normalize(value, CHECKOUT_LIMITS.email).toLowerCase();
+  if (!email) return messages.emailRequired;
+  if (!EMAIL_PATTERN.test(email)) return messages.invalidEmail;
+  return undefined;
 }
 
 export function parseCheckout(
@@ -65,9 +88,10 @@ export function parseCheckout(
   };
 
   const fieldErrors: CheckoutFieldErrors = {};
-  if (!customer.name) fieldErrors.name = messages.required;
-  if (!customer.email) fieldErrors.email = messages.required;
-  else if (!EMAIL_PATTERN.test(customer.email)) fieldErrors.email = messages.invalidEmail;
+  const nameError = nameValidationError(input.name, messages);
+  const emailError = emailValidationError(input.email, messages);
+  if (nameError) fieldErrors.name = nameError;
+  if (emailError) fieldErrors.email = emailError;
 
   const parsedItems = parseCheckoutCartPayload(input.items);
   if (!parsedItems.ok) {
@@ -114,6 +138,11 @@ export function isCheckoutCartError(value: string): value is CheckoutCartError {
     value === "invalid_quantity" ||
     value === "unavailable"
   );
+}
+
+function isFullName(name: string) {
+  const parts = name.split(" ").filter(Boolean);
+  return parts.length >= 2 && parts.every((part) => NAME_TOKEN.test(part));
 }
 
 function normalize(value: unknown, max: number) {

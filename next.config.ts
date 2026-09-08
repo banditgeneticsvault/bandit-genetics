@@ -67,6 +67,20 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: "/checkout/crypto",
+        destination: "/checkout",
+        permanent: true,
+      },
+      {
+        source: "/checkout/crypto/:path*",
+        destination: "/checkout",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

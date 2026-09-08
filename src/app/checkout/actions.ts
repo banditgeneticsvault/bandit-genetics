@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { cartCopy } from "@/content/cart";
-import { createCryptoOrder } from "@/lib/crypto/checkout";
+import { syncCheckoutPromotion } from "@/lib/checkout-promotion";
 import {
   parseCheckout,
   parseCheckoutIntent,
@@ -25,7 +25,9 @@ export async function startCheckout(
       items: formData.get("items"),
     },
     {
-      required: cartCopy.required,
+      nameRequired: cartCopy.nameRequired,
+      nameInvalid: cartCopy.nameInvalid,
+      emailRequired: cartCopy.emailRequired,
       invalidEmail: cartCopy.invalidEmail,
       emptyCart: cartCopy.emptyCart,
       invalidItems: cartCopy.invalidItems,
@@ -36,28 +38,21 @@ export async function startCheckout(
     return { status: "error", fieldErrors: parsed.fieldErrors };
   }
 
-  const payment = await createCryptoOrder({
+  const synced = await syncCheckoutPromotion({
+    items: parsed.data.cartLines,
     name: parsed.data.customer.name,
     email: parsed.data.customer.email,
-    items: parsed.data.cartLines,
-    cryptocurrency: formData.get("cryptocurrency"),
-    transactionHash: formData.get("transactionHash"),
     promotionalProductId: formData.get("promotionalProductId"),
+    requireGiftIfQualified: true,
   });
-  if (!payment.ok) {
-    if (payment.reason === "empty") {
+  if (!synced.ok) {
+    if (synced.reason === "empty") {
       return { status: "error", fieldErrors: { items: cartCopy.emptyCart } };
     }
-    if (payment.reason === "invalid_asset") {
-      return {
-        status: "error",
-        fieldErrors: { cryptocurrency: cartCopy.invalidCrypto },
-      };
-    }
-    if (payment.reason === "gift_required") {
+    if (synced.reason === "gift_required") {
       return { status: "error", fieldErrors: { gift: cartCopy.giftRequired } };
     }
-    if (payment.reason === "invalid_promotional_product") {
+    if (synced.reason === "invalid_promotional_product") {
       return { status: "error", fieldErrors: { gift: cartCopy.invalidGift } };
     }
     return {
@@ -65,5 +60,6 @@ export async function startCheckout(
       fieldErrors: { items: cartCopy.invalidItems },
     };
   }
-  redirect(`/checkout/crypto?order=${encodeURIComponent(payment.order.id)}`);
+
+  redirect(`/checkout/success?order=${encodeURIComponent(synced.order.id)}`);
 }

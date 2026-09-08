@@ -21,7 +21,7 @@ export function EmailOrderCta({
     <div className={cn("grid min-w-0 gap-3", className)}>
       {compact || hideIntro ? null : (
         <p className="text-copy leading-relaxed text-ice/80">
-          {cartCopy.emailOrderBody} <OrderEmailLink />. {cartCopy.emailOrderCryptoNote}
+          {cartCopy.emailOrderBody} <OrderEmailLink />.
         </p>
       )}
       <Button href={orderMailto({ strainName })} variant="secondary">

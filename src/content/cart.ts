@@ -45,54 +45,27 @@ export const cartCopy = {
   toastView: "VIEW CART",
   emailOrderCta: "EMAIL US TO PLACE AN ORDER",
   emailOrderBody: "You can contact us at",
-  emailOrderCryptoNote:
-    "Cryptocurrency checkout remains available if you prefer to pay that way.",
   emailOrderCompact: "Email us to place an order:",
   checkoutTitle: "CHECKOUT",
   checkoutKicker: "THE DESK",
   checkoutIntro:
-    "Review the strains on this ticket. Email support@banditgenetics.com to place an order, or use cryptocurrency checkout. Crypto is not marked paid until Bandit Genetics verifies it.",
-  payLaterCrypto: "PAY LATER / PAY WITH CRYPTO",
+    "Review the strains on this ticket. Email support@banditgenetics.com to place an order.",
   paymentMethod: "HOW TO ORDER",
-  payWithCrypto: "CRYPTOCURRENCY",
   choosePayment:
     "We're a small, independent genetics company, and we're currently expanding our payment options to make ordering easier for our customers.",
   cardComingSoon: "Credit and debit card checkout is coming soon.",
   howToOrderContact:
     "Don't see your preferred payment option? No problem. Contact us at",
   howToOrderContactAfter: "and we'll help you get your order placed.",
-  cryptoNote:
-    "Cryptocurrency checkout is currently available through Bitcoin, Ethereum, and Solana.",
-  cryptoUnpaidNote:
-    "Your order is submitted first and remains unpaid until your cryptocurrency payment is received and manually verified by Bandit Genetics.",
-  howToOrderAmount:
-    "The amount due is the USD total shown for your order. The checkout does not automatically convert the USD total into BTC, ETH, or SOL.",
-  cryptoInstructionsNote:
-    "Before sending payment, follow the payment instructions shown for your selected cryptocurrency network and verify the amount carefully.",
-  paymentVerification: "PAYMENT VERIFICATION",
-  cryptoVerifyManual: "Cryptocurrency payments are verified manually.",
-  howToOrderHashNote:
-    "A transaction hash may be provided as optional information to help us locate your transaction. Submitting a transaction hash does not mark an order as paid.",
-  cryptoVerifyNote:
-    "CRYPTO PAYMENT VERIFICATION IS MANUAL. A transaction hash is optional customer information only. It does not mark the order paid.",
-  cryptoAmountNote:
-    "The amount due is the USD order total from this ticket. This site does not convert USD into BTC, ETH, or SOL. Confirm the crypto amount through Bandit Genetics payment instructions before sending.",
-  invalidCrypto: "Choose Bitcoin, Ethereum, or Solana.",
-  cryptoSubmitted: "ORDER SUBMITTED",
-  cryptoPaymentRequired: "PAYMENT REQUIRED",
-  cryptoUnpaid:
-    "Payment has not been verified. This order is unpaid.",
-  cryptoVerified:
-    "Bandit Genetics marked this order paid after manual verification.",
-  cryptoHashLabel: "Transaction hash (optional)",
-  cryptoCopy: "COPY ADDRESS",
-  cryptoCopied: "COPIED",
   cancelledCheckout:
     "Checkout was not completed. Your cart is still here.",
   invalidItems:
     "One or more items in the cart could not be checked out. Remove unavailable strains and try again.",
   orderLabel: "Order",
-  cryptoMissing: "This crypto checkout ticket could not be found.",
+  ticketSubmitted: "TICKET SUBMITTED",
+  ticketSubmittedBody:
+    "Your details are on file. Email support@banditgenetics.com to place this order.",
+  ticketMissing: "This checkout ticket could not be found.",
   placeOrder: "PLACE ORDER",
   name: "Name",
   email: "Email",
@@ -101,8 +74,10 @@ export const cartCopy = {
   region: "State / region",
   postal: "Postal code",
   country: "Country",
-  required: "This field is required.",
-  invalidEmail: "Enter a valid email address.",
+  nameRequired: "Name is required.",
+  nameInvalid: "Please enter your full name.",
+  emailRequired: "Email is required.",
+  invalidEmail: "Please enter a valid email address.",
   emptyCart: "Add a strain before checkout.",
   summary: "ORDER SUMMARY",
   shipping: "SHIPPING",

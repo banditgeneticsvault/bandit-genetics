@@ -141,5 +141,5 @@ export const seoCopy = {
   aboutDescription:
     "Bandit Genetics is a cannabis genetics and seed brand. An underground luxury operation built around finding exceptional genetics, studying them, and breeding with restraint. Taken from the best. Bred for the rest.",
   contactDescription:
-    "Contact Bandit Genetics to place an order, ask about genetics, or request a custom bulk run. Email support@banditgenetics.com or use cryptocurrency checkout.",
+    "Contact Bandit Genetics to place an order, ask about genetics, or request a custom bulk run. Email support@banditgenetics.com.",
 } as const;

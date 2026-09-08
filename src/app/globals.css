@@ -13,6 +13,7 @@
   --color-frost: #eef2f5;
   --color-gold: #b89555;
   --color-gold-dim: #7d6438;
+  --color-alert: #c45c4a;
 
   --font-display: var(--font-cormorant), "Times New Roman", serif;
   --font-label: var(--font-barlow), "Arial Narrow", sans-serif;

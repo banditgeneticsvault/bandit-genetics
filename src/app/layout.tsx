@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Barlow_Condensed, Cormorant_Garamond, Figtree } from "next/font/google";
 import { AppProviders } from "@/components/layout/AppProviders";
-import { SiteFooter } from "@/components/layout/SiteFooter";
-import { SiteHeader } from "@/components/layout/SiteHeader";
+import { SiteChrome } from "@/components/layout/SiteChrome";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { brand, seoCopy, siteUrl } from "@/content/site";
 import { brandOgImage, organizationGraph } from "@/lib/seo";
@@ -75,19 +74,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${cormorant.variable} ${barlow.variable} ${figtree.variable}`}
     >
       <body className="flex min-h-dvh flex-col">
-        <a
-          href="#content"
-          className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:m-4 focus:bg-frost focus:px-4 focus:py-3 focus:text-black"
-        >
-          Skip to content
-        </a>
         <JsonLd data={organizationGraph()} />
         <AppProviders>
-          <SiteHeader />
-          <div id="content" className="flex-1">
-            {children}
-          </div>
-          <SiteFooter />
+          <SiteChrome>{children}</SiteChrome>
         </AppProviders>
       </body>
     </html>
