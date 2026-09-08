@@ -31,19 +31,12 @@ export function CartLineVisual({
         <p className="mt-2 font-label text-ui tracking-[0.12em] text-ice uppercase">
           {line.seedLabel}
         </p>
-        <p className="mt-1 font-label text-ui tracking-[0.12em] text-ice uppercase">
-          {line.seedCount === 1
-            ? "1 SEED IN THIS OPTION"
-            : `${line.seedCount} SEEDS IN THIS OPTION`}
-        </p>
         <p className="mt-2 text-copy text-ice">
           {cartCopy.optionPrice}: {formatUsd(line.priceCents)}
         </p>
-        {line.quantity > 1 ? (
-          <p className="mt-2 font-label text-ui tracking-[0.12em] text-gold uppercase">
-            {cartOptionsPhrase(line.quantity, line.seedCount)}
-          </p>
-        ) : null}
+        <p className="mt-2 font-label text-ui tracking-[0.12em] text-gold uppercase">
+          {cartOptionsPhrase(line.quantity, line.seedCount)}
+        </p>
         <p className="mt-1 font-label text-ui tracking-[0.12em] text-ice uppercase">
           {totalSeedsPhrase(line.totalSeeds)}
         </p>

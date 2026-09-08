@@ -37,8 +37,12 @@ export function VaultAtmosphere({
           />
         ) : null}
       </div>
-      {/* ~30% extra darkness vs the previous treatment; garden still shows through. */}
-      <div className="absolute inset-0 bg-black/30" />
+      {/* Page tone (~Contact): ~30% darker than black/30 so copy stays readable. */}
+      <div
+        className={
+          pageTone ? "absolute inset-0 bg-black/50" : "absolute inset-0 bg-black/30"
+        }
+      />
       <div
         className={
           pageTone

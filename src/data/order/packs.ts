@@ -69,7 +69,8 @@ export function clampCartQuantity(value: unknown): number {
 
 export function cartOptionsPhrase(quantity: number, seeds: number) {
   const unit = seeds === 1 ? "1 SEED" : `${seeds} SEED`;
-  return `${quantity} × ${unit} OPTIONS`;
+  const optionWord = quantity === 1 ? "OPTION" : "OPTIONS";
+  return `${quantity} × ${unit} ${optionWord}`;
 }
 
 export function totalSeedsPhrase(totalSeeds: number) {

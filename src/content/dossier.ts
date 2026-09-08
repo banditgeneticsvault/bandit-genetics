@@ -8,7 +8,7 @@ export const dossierCopy = {
   combined: "COMBINED DIRECTION",
   publicLineage: "LINEAGE ON FILE",
   banditDidNotBreed: "Bandit Genetics did not create this parent.",
-  banditFile: "THE BANDIT FILE",
+  banditFile: "GENETIC LINEAGE",
   plant: "PLANT CHARACTER",
   flower: "FLOWER CHARACTER",
   resin: "RESIN EXPRESSION",
