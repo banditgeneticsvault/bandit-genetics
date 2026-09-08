@@ -44,6 +44,7 @@ export type Order = {
   id: string;
   customerEmail: string;
   customerName: string;
+  customerNotes: string;
   paymentMethod: PaymentMethod;
   status: OrderStatus;
   paymentStatus: OrderPaymentStatus;
@@ -69,6 +70,7 @@ export type Order = {
 export type NewOrderInput = {
   customerEmail: string;
   customerName: string;
+  customerNotes?: string;
   subtotalCents: number;
   shippingCents?: number;
   taxCents?: number;

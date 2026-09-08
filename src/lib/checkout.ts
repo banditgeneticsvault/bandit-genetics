@@ -14,11 +14,13 @@ const NAME_TOKEN = /[A-Za-z]/;
 export type CheckoutCustomer = {
   name: string;
   email: string;
+  notes: string;
 };
 
 export type CheckoutFieldErrors = Partial<{
   name: string;
   email: string;
+  notes: string;
   items: string;
   gift: string;
 }>;
@@ -85,6 +87,7 @@ export function parseCheckout(
   const customer: CheckoutCustomer = {
     name: normalize(input.name, CHECKOUT_LIMITS.name),
     email: normalize(input.email, CHECKOUT_LIMITS.email).toLowerCase(),
+    notes: normalizeMessage(input.notes, CHECKOUT_LIMITS.notes),
   };
 
   const fieldErrors: CheckoutFieldErrors = {};
@@ -148,4 +151,9 @@ function isFullName(name: string) {
 function normalize(value: unknown, max: number) {
   if (typeof value !== "string") return "";
   return value.replace(/\s+/g, " ").trim().slice(0, max);
+}
+
+function normalizeMessage(value: unknown, max: number) {
+  if (typeof value !== "string") return "";
+  return value.replace(/\r\n/g, "\n").replace(/\r/g, "\n").trim().slice(0, max);
 }

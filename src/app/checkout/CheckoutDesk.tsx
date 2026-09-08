@@ -72,7 +72,7 @@ export function CheckoutDesk() {
     initialCheckoutState,
   );
   const [clientErrors, setClientErrors] = useState<CheckoutFieldErrors>({});
-  const [values, setValues] = useState({ name: "", email: "" });
+  const [values, setValues] = useState({ name: "", email: "", notes: "" });
   const formId = useId();
   const formRef = useRef<HTMLFormElement>(null);
   const wasPending = useRef(false);
@@ -179,7 +179,7 @@ export function CheckoutDesk() {
     const intent =
       submitter instanceof HTMLButtonElement ? submitter.value : "";
 
-    if (intent !== "order") {
+    if (intent !== "order" || pending) {
       event.preventDefault();
       return;
     }
@@ -193,6 +193,7 @@ export function CheckoutDesk() {
       {
         name: values.name,
         email: values.email,
+        notes: values.notes,
         items: JSON.stringify(lines),
       },
       parseMessages,
@@ -395,6 +396,27 @@ export function CheckoutDesk() {
             }}
             required
           />
+          <div className="grid gap-2">
+            <label
+              htmlFor={`${formId}-notes`}
+              className="font-label text-ui tracking-[0.22em] text-gold uppercase"
+            >
+              {cartCopy.notes}
+            </label>
+            <textarea
+              id={`${formId}-notes`}
+              name="notes"
+              rows={4}
+              maxLength={CHECKOUT_LIMITS.notes}
+              disabled={pending}
+              value={values.notes}
+              onChange={(event) =>
+                setValues((current) => ({ ...current, notes: event.target.value }))
+              }
+              className={cn(fieldClassName, "min-h-28 resize-y border-white/12")}
+            />
+            <p className="text-copy text-ice/50">{cartCopy.notesHint}</p>
+          </div>
           {fieldErrors.items ? (
             <p role="alert" className="text-copy text-alert">
               {fieldErrors.items}

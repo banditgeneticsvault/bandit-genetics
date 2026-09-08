@@ -25,6 +25,7 @@ export async function startCheckout(
     {
       name: formData.get("name"),
       email: formData.get("email"),
+      notes: formData.get("notes"),
       items: formData.get("items"),
     },
     {
@@ -47,6 +48,7 @@ export async function startCheckout(
       items: parsed.data.cartLines,
       name: parsed.data.customer.name,
       email: parsed.data.customer.email,
+      notes: parsed.data.customer.notes,
       promotionalProductId: formData.get("promotionalProductId"),
       requireGiftIfQualified: true,
     });

@@ -71,6 +71,8 @@ export const cartCopy = {
   sendFailed: "We could not send this request. Email us at",
   name: "Name",
   email: "Email",
+  notes: "Notes",
+  notesHint: "Anything we should know before we follow up. Optional.",
   line1: "Street address",
   city: "City",
   region: "State / region",

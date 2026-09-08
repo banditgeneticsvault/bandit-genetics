@@ -52,6 +52,7 @@ export async function syncCheckoutPromotion(input: {
   items: CartLine[];
   name?: string;
   email?: string;
+  notes?: string;
   promotionalProductId?: unknown;
   requireGiftIfQualified?: boolean;
 }): Promise<
@@ -116,10 +117,12 @@ export async function syncCheckoutPromotion(input: {
   const lines = giftLine ? [...paidLines, giftLine] : paidLines;
   const customerName = input.name?.trim() || existing?.customerName || "";
   const customerEmail = input.email?.trim() || existing?.customerEmail || "";
+  const customerNotes = input.notes?.trim() || existing?.customerNotes || "";
 
   const fields = {
     customerEmail,
     customerName,
+    customerNotes,
     subtotalCents: quote.merchandiseSubtotalCents,
     shippingCents: quote.shippingCents,
     taxCents: quote.taxCents,

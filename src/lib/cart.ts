@@ -125,6 +125,7 @@ export const formatCents = formatUsd;
 export const CHECKOUT_LIMITS = {
   name: CONTACT_LIMITS.name,
   email: CONTACT_LIMITS.email,
+  notes: 2000,
   line1: 120,
   city: 80,
   region: 80,
