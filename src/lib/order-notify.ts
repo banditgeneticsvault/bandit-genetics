@@ -31,6 +31,13 @@ export function orderNotificationText(order: Order) {
     `Customer Email: ${order.customerEmail}`,
     `Submitted: ${formatSubmittedAt(order.updatedAt || order.createdAt)}`,
     `Order ID: ${order.id}`,
+    `Payment method: ${order.paymentMethod === "request" ? "Order request" : order.paymentMethod}`,
+    `Order status: ${order.status}`,
+    `Payment status: ${order.paymentStatus}`,
+    "",
+    "Shipping:",
+    order.freeShipping ? "FREE (merchandise qualified)" : formatUsd(order.shippingCents),
+    "Street address is not collected at checkout. Follow up with the customer for delivery details.",
     "",
     "Requested Items:",
     ...(paid.length > 0 ? paid.map(lineDescription) : ["- None recorded"]),
@@ -78,12 +85,19 @@ function orderNotificationHtml(order: Order) {
     <p style="margin:0 0 12px;"><strong>Customer Name</strong><br>${escapeHtml(order.customerName)}</p>
     <p style="margin:0 0 12px;"><strong>Customer Email</strong><br>${escapeHtml(order.customerEmail)}</p>
     <p style="margin:0 0 12px;"><strong>Submitted</strong><br>${escapeHtml(submitted)}</p>
+    <p style="margin:0 0 12px;"><strong>Payment method</strong><br>${escapeHtml(
+      order.paymentMethod === "request" ? "Order request" : order.paymentMethod,
+    )}</p>
+    <p style="margin:0 0 12px;"><strong>Order status</strong><br>${escapeHtml(order.status)}</p>
+    <p style="margin:0 0 12px;"><strong>Payment status</strong><br>${escapeHtml(order.paymentStatus)}</p>
     <p style="margin:16px 0 8px;"><strong>Requested Items</strong></p>
     ${items}
     <p style="margin:16px 0 8px;"><strong>Quantities</strong><br>Shown next to each requested item.</p>
     ${giftBlock}
     <p style="margin:16px 0 8px;"><strong>Merchandise subtotal</strong><br>${escapeHtml(formatUsd(order.subtotalCents))}</p>
-    <p style="margin:0 0 12px;"><strong>Shipping</strong><br>${order.freeShipping ? "FREE" : escapeHtml(formatUsd(order.shippingCents))}</p>
+    <p style="margin:0 0 12px;"><strong>Shipping</strong><br>${
+      order.freeShipping ? "FREE" : escapeHtml(formatUsd(order.shippingCents))
+    }<br>Street address is not collected at checkout. Follow up with the customer for delivery details.</p>
     <p style="margin:0 0 12px;"><strong>Order total</strong><br>${escapeHtml(formatUsd(order.totalCents))}</p>
     <p style="margin:0 0 8px;"><strong>Customer Notes</strong></p>
     <p style="margin:0;white-space:pre-wrap;">${escapeHtml(notes).replaceAll("\n", "<br>")}</p>

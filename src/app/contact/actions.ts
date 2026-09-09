@@ -41,14 +41,15 @@ export async function submitContact(
     const delivered = await deliverContactMessage(parsed.data);
     if (!delivered.ok) {
       if (delivered.reason === "unconfigured") {
-        console.info("contact.delivery.unconfigured");
+        console.error("CONTACT_ACTION_FAILED", { stage: "smtp_unconfigured" });
         return { status: "unconfigured", fieldErrors: {} };
       }
+      console.error("CONTACT_ACTION_FAILED", { stage: "smtp_rejected" });
       return { status: "error", fieldErrors: {} };
     }
     return { status: "success", fieldErrors: {} };
   } catch {
-    console.error("contact.submit.failed");
+    console.error("CONTACT_ACTION_FAILED", { stage: "submit" });
     return { status: "error", fieldErrors: {} };
   }
 }

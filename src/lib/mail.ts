@@ -1,6 +1,7 @@
 import "server-only";
 
 import nodemailer from "nodemailer";
+import type SMTPTransport from "nodemailer/lib/smtp-transport";
 
 const SUPPORT_ADDRESS = "support@banditgenetics.com";
 const LEGACY_PROTON_ADDRESS = "banditgeneticsvault@proton.me";
@@ -21,16 +22,31 @@ type SmtpConfig = {
   destination: string;
 };
 
-function firstEnv(names: string[]) {
-  for (const name of names) {
-    const value = process.env[name]?.trim();
-    if (value) return { name, value };
-  }
-  return null;
+function envValue(value: string | undefined) {
+  return value?.trim() || "";
+}
+
+function smtpPresence() {
+  return {
+    vercelEnv: process.env.VERCEL_ENV || process.env.NODE_ENV || "unknown",
+    CONTACT_SMTP_HOST: Boolean(envValue(process.env.CONTACT_SMTP_HOST) || envValue(process.env.SMTP_HOST)),
+    CONTACT_SMTP_PORT: Boolean(envValue(process.env.CONTACT_SMTP_PORT) || envValue(process.env.SMTP_PORT)),
+    CONTACT_SMTP_USER: Boolean(envValue(process.env.CONTACT_SMTP_USER) || envValue(process.env.SMTP_USER)),
+    CONTACT_SMTP_PASSWORD: Boolean(
+      envValue(process.env.CONTACT_SMTP_PASSWORD) || envValue(process.env.SMTP_PASSWORD),
+    ),
+    EMAIL_FROM: Boolean(envValue(process.env.EMAIL_FROM) || envValue(process.env.CONTACT_FROM_EMAIL)),
+    CONTACT_DESTINATION_EMAIL: Boolean(
+      envValue(process.env.CONTACT_DESTINATION_EMAIL) ||
+        envValue(process.env.CONTACT_NOTIFICATION_EMAIL) ||
+        envValue(process.env.ORDER_NOTIFICATION_EMAIL),
+    ),
+  };
 }
 
 function readPort() {
-  const raw = firstEnv(["CONTACT_SMTP_PORT", "SMTP_PORT"])?.value;
+  const raw =
+    envValue(process.env.CONTACT_SMTP_PORT) || envValue(process.env.SMTP_PORT);
   if (!raw) return DEFAULT_SMTP_PORT;
   const port = Number(raw);
   if (!Number.isInteger(port) || port < 1 || port > 65535) return null;
@@ -50,16 +66,24 @@ function resolveAuthorizedAddress(raw: string | undefined) {
 function readSmtpConfig():
   | { ok: true; config: SmtpConfig }
   | { ok: false; missing: string[] } {
-  const host = firstEnv(["CONTACT_SMTP_HOST", "SMTP_HOST"])?.value ?? DEFAULT_SMTP_HOST;
+  const host =
+    envValue(process.env.CONTACT_SMTP_HOST) ||
+    envValue(process.env.SMTP_HOST) ||
+    DEFAULT_SMTP_HOST;
   const port = readPort();
-  const user = firstEnv(["CONTACT_SMTP_USER", "SMTP_USER"]);
-  const pass = firstEnv(["CONTACT_SMTP_PASSWORD", "SMTP_PASSWORD"]);
-  const fromRaw = firstEnv(["EMAIL_FROM", "CONTACT_FROM_EMAIL"])?.value ?? user?.value;
-  const destinationRaw = firstEnv([
-    "CONTACT_DESTINATION_EMAIL",
-    "CONTACT_NOTIFICATION_EMAIL",
-    "ORDER_NOTIFICATION_EMAIL",
-  ])?.value;
+  const user =
+    envValue(process.env.CONTACT_SMTP_USER) || envValue(process.env.SMTP_USER);
+  const pass =
+    envValue(process.env.CONTACT_SMTP_PASSWORD) ||
+    envValue(process.env.SMTP_PASSWORD);
+  const fromRaw =
+    envValue(process.env.EMAIL_FROM) ||
+    envValue(process.env.CONTACT_FROM_EMAIL) ||
+    user;
+  const destinationRaw =
+    envValue(process.env.CONTACT_DESTINATION_EMAIL) ||
+    envValue(process.env.CONTACT_NOTIFICATION_EMAIL) ||
+    envValue(process.env.ORDER_NOTIFICATION_EMAIL);
 
   const missing: string[] = [];
   if (!user) missing.push("CONTACT_SMTP_USER");
@@ -69,7 +93,7 @@ function readSmtpConfig():
     return { ok: false, missing };
   }
 
-  const authorizedUser = resolveAuthorizedAddress(user!.value) || SUPPORT_ADDRESS;
+  const authorizedUser = resolveAuthorizedAddress(user) || SUPPORT_ADDRESS;
   const from =
     resolveAuthorizedAddress(fromRaw) || authorizedUser || SUPPORT_ADDRESS;
 
@@ -78,8 +102,8 @@ function readSmtpConfig():
     config: {
       host,
       port: port as number,
-      user: user!.value,
-      pass: pass!.value,
+      user,
+      pass,
       from,
       destination: resolveAuthorizedAddress(destinationRaw) || SUPPORT_ADDRESS,
     },
@@ -113,7 +137,7 @@ function classifySmtpError(error: unknown) {
     responseCode === 530 ||
     response.includes("authentication")
   ) {
-    return "auth_failed";
+    return "SMTP_AUTH_FAILED";
   }
   if (
     code === "ECONNECTION" ||
@@ -123,15 +147,15 @@ function classifySmtpError(error: unknown) {
     code === "ENOTFOUND" ||
     code === "EHOSTUNREACH"
   ) {
-    return "connection_failed";
+    return "SMTP_CONNECTION_FAILED";
   }
   if (command === "MAIL FROM" || responseCode === 553) {
-    return "sender_rejected";
+    return "SMTP_REJECTED";
   }
   if (command === "RCPT TO" || response.includes("recipient")) {
-    return "recipient_rejected";
+    return "SMTP_REJECTED";
   }
-  return "send_failed";
+  return "SMTP_SEND_FAILED";
 }
 
 export function escapeHtml(value: string) {
@@ -157,7 +181,10 @@ export async function sendBanditMail(input: {
 }): Promise<MailDeliveryResult> {
   const loaded = readSmtpConfig();
   if (!loaded.ok) {
-    console.error("mail.smtp.unconfigured", { missing: loaded.missing });
+    console.error("SMTP_NOT_CONFIGURED", {
+      missing: loaded.missing,
+      present: smtpPresence(),
+    });
     return { ok: false, reason: "unconfigured" };
   }
 
@@ -168,7 +195,8 @@ export async function sendBanditMail(input: {
   const subject = headerSafe(input.subject);
 
   if (!from || !to || !subject || !isValidReplyTo(replyTo)) {
-    console.error("mail.smtp.invalid_headers", {
+    console.error("SMTP_SEND_FAILED", {
+      reason: "invalid_headers",
       fromSet: Boolean(from),
       toSet: Boolean(to),
       subjectSet: Boolean(subject),
@@ -177,6 +205,7 @@ export async function sendBanditMail(input: {
     return { ok: false, reason: "send_failed" };
   }
 
+  // Force IPv4. Vercel serverless DNS often fails or times out on IPv6 for Proton SMTP.
   const transporter = nodemailer.createTransport({
     host: config.host,
     port: config.port,
@@ -187,13 +216,14 @@ export async function sendBanditMail(input: {
       user: config.user,
       pass: config.pass,
     },
-    connectionTimeout: 20_000,
-    greetingTimeout: 20_000,
-    socketTimeout: 20_000,
+    connectionTimeout: 15_000,
+    greetingTimeout: 15_000,
+    socketTimeout: 15_000,
+    family: 4,
     tls: {
       minVersion: "TLSv1.2",
     },
-  });
+  } as SMTPTransport.Options);
 
   try {
     const info = await transporter.sendMail({
@@ -210,22 +240,30 @@ export async function sendBanditMail(input: {
     });
 
     if (info.rejected && info.rejected.length > 0) {
-      console.error("mail.smtp.rejected", { count: info.rejected.length });
+      console.error("SMTP_REJECTED", {
+        count: info.rejected.length,
+        host: config.host,
+        port: config.port,
+        vercelEnv: process.env.VERCEL_ENV || process.env.NODE_ENV || "unknown",
+      });
       return { ok: false, reason: "send_failed" };
     }
 
-    console.info("mail.smtp.accepted", {
+    console.info("SMTP_ACCEPTED", {
       host: config.host,
       port: config.port,
       messageId: info.messageId ? "set" : "missing",
+      vercelEnv: process.env.VERCEL_ENV || process.env.NODE_ENV || "unknown",
     });
     return { ok: true };
   } catch (error) {
-    console.error("mail.smtp.failed", {
-      kind: classifySmtpError(error),
+    console.error(classifySmtpError(error), {
       host: config.host,
       port: config.port,
+      vercelEnv: process.env.VERCEL_ENV || process.env.NODE_ENV || "unknown",
     });
     return { ok: false, reason: "send_failed" };
+  } finally {
+    transporter.close();
   }
 }

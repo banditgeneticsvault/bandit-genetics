@@ -40,4 +40,14 @@ In the Vercel project → Settings → Environment Variables, set these for Prod
 - `EMAIL_FROM` = `support@banditgenetics.com`
 - `CONTACT_DESTINATION_EMAIL` = `support@banditgenetics.com`
 
-Do not put the SMTP token in git, Cursor chat, or any `NEXT_PUBLIC_*` variable. After changing Production env vars, trigger a new deployment so the runtime picks them up.
+After changing Production env vars, trigger a new deployment so the runtime picks them up.
+
+The From address must be the Proton custom-domain mailbox that owns the SMTP token (`support@banditgenetics.com`). Proton custom-domain DNS (MX, SPF, DKIM) must already be verified in Proton; this app does not change DNS.
+
+To send a controlled mail-path test (no customer order, no charge):
+
+```bash
+node --import ./scripts/register-ts-aliases.mjs --experimental-strip-types scripts/verify-mail.ts content
+node --import ./scripts/register-ts-aliases.mjs --experimental-strip-types scripts/verify-mail.ts missing-env
+node --import ./scripts/register-ts-aliases.mjs --experimental-strip-types scripts/verify-mail.ts send
+```

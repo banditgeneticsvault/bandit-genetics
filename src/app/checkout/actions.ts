@@ -17,7 +17,7 @@ export async function startCheckout(
 ): Promise<CheckoutFormState> {
   const intent = parseCheckoutIntent(formData.get("intent"));
   if (!intent) {
-    console.error("order.submit.invalid_intent");
+    console.error("CHECKOUT_ACTION_FAILED", { stage: "invalid_intent" });
     return { status: "error", fieldErrors: {} };
   }
 
@@ -53,7 +53,7 @@ export async function startCheckout(
       requireGiftIfQualified: true,
     });
   } catch {
-    console.error("order.submit.prepare_failed");
+    console.error("CHECKOUT_ACTION_FAILED", { stage: "prepare" });
     return { status: "error", fieldErrors: {} };
   }
 
@@ -73,28 +73,30 @@ export async function startCheckout(
     };
   }
 
+  const order = {
+    ...prepared.order,
+    status: "requested" as const,
+  };
+
   let delivered: Awaited<ReturnType<typeof deliverOrderRequest>>;
   try {
-    delivered = await deliverOrderRequest(prepared.order);
+    delivered = await deliverOrderRequest(order);
   } catch {
-    console.error("order.delivery.failed");
+    console.error("CHECKOUT_ACTION_FAILED", { stage: "delivery" });
     return { status: "error", fieldErrors: {} };
   }
 
   if (!delivered.ok) {
     if (delivered.reason === "unconfigured") {
-      console.error("order.delivery.unconfigured");
+      console.error("CHECKOUT_ACTION_FAILED", { stage: "smtp_unconfigured" });
       return { status: "unconfigured", fieldErrors: {} };
     }
-    console.error("order.delivery.rejected");
+    console.error("CHECKOUT_ACTION_FAILED", { stage: "smtp_rejected" });
     return { status: "error", fieldErrors: {} };
   }
 
   try {
-    await saveOrder({
-      ...prepared.order,
-      status: "requested",
-    });
+    await saveOrder(order);
     await clearPendingOrderCookie();
   } catch {
     console.error("order.request.finalize_failed");
@@ -103,6 +105,6 @@ export async function startCheckout(
   return {
     status: "success",
     fieldErrors: {},
-    orderId: prepared.order.id,
+    orderId: order.id,
   };
 }
