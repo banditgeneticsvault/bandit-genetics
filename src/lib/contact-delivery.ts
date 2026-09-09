@@ -27,10 +27,14 @@ function contactText(payload: ContactFields, submitted: string) {
 function contactHtml(payload: ContactFields, submitted: string) {
   const message = escapeHtml(payload.message).replaceAll("\n", "<br>");
   return `<!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>New Bandit Genetics Contact Request</title>
+</head>
 <body style="margin:0;padding:24px;background:#f4f1ea;color:#161616;font-family:Georgia,'Times New Roman',serif;line-height:1.5;">
   <div style="max-width:640px;margin:0 auto;background:#fff;border:1px solid #d8d2c4;padding:24px;">
-    <p style="margin:0 0 8px;letter-spacing:.16em;font-size:12px;color:#8a7316;">BANDIT GENETICS</p>
+    <p style="margin:0 0 8px;font-size:12px;color:#8a7316;">Bandit Genetics</p>
     <h1 style="margin:0 0 20px;font-size:22px;">New Bandit Genetics Contact Request</h1>
     <p style="margin:0 0 12px;"><strong>Customer Name</strong><br>${escapeHtml(payload.name)}</p>
     <p style="margin:0 0 12px;"><strong>Customer Email</strong><br>${escapeHtml(payload.email)}</p>
@@ -48,7 +52,6 @@ export async function deliverContactMessage(
 ): Promise<ContactDeliveryResult> {
   const submitted = formatSubmittedAt();
   return sendBanditMail({
-    replyTo: payload.email,
     subject: "New Bandit Genetics Contact Request",
     text: contactText(payload, submitted),
     html: contactHtml(payload, submitted),

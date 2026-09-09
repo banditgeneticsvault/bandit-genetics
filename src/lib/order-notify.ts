@@ -9,13 +9,19 @@ import {
 } from "@/lib/mail";
 import type { Order, OrderLine } from "@/lib/orders/types";
 
+function shippingLabel(order: Order) {
+  return order.freeShipping
+    ? "No shipping charge (order qualifies)"
+    : formatUsd(order.shippingCents);
+}
+
 function lineDescription(line: OrderLine) {
-  const kind = line.kind === "promotional" ? " (promotional gift)" : "";
+  const kind = line.kind === "promotional" ? " (included gift)" : "";
   return `- ${line.strainName} — ${line.packLabel} × ${line.quantity}${kind}`;
 }
 
 function lineHtml(line: OrderLine) {
-  const gift = line.kind === "promotional" ? " (promotional gift)" : "";
+  const gift = line.kind === "promotional" ? " (included gift)" : "";
   return `<li>${escapeHtml(line.strainName)} — ${escapeHtml(line.packLabel)} × ${line.quantity}${gift}</li>`;
 }
 
@@ -36,7 +42,7 @@ export function orderNotificationText(order: Order) {
     `Payment status: ${order.paymentStatus}`,
     "",
     "Shipping:",
-    order.freeShipping ? "FREE (merchandise qualified)" : formatUsd(order.shippingCents),
+    shippingLabel(order),
     "Street address is not collected at checkout. Follow up with the customer for delivery details.",
     "",
     "Requested Items:",
@@ -46,13 +52,13 @@ export function orderNotificationText(order: Order) {
   ];
 
   if (gifts.length > 0) {
-    blocks.push("", "Promotional gift:", ...gifts.map(lineDescription));
+    blocks.push("", "Included gift:", ...gifts.map(lineDescription));
   }
 
   blocks.push(
     "",
     `Merchandise subtotal: ${formatUsd(order.subtotalCents)}`,
-    `Shipping: ${order.freeShipping ? "FREE" : formatUsd(order.shippingCents)}`,
+    `Shipping: ${shippingLabel(order)}`,
     `Order total: ${formatUsd(order.totalCents)}`,
     "",
     "Customer Notes:",
@@ -67,20 +73,25 @@ function orderNotificationHtml(order: Order) {
   const gifts = order.lines.filter((line) => line.kind === "promotional");
   const notes = order.customerNotes?.trim() || "None";
   const submitted = formatSubmittedAt(order.updatedAt || order.createdAt);
+  const shipping = escapeHtml(shippingLabel(order));
   const items =
     paid.length > 0
       ? `<ul style="margin:0;padding-left:20px;">${paid.map(lineHtml).join("")}</ul>`
       : "<p style=\"margin:0;\">None recorded</p>";
   const giftBlock =
     gifts.length > 0
-      ? `<p style="margin:16px 0 8px;"><strong>Promotional gift</strong></p><ul style="margin:0;padding-left:20px;">${gifts.map(lineHtml).join("")}</ul>`
+      ? `<p style="margin:16px 0 8px;"><strong>Included gift</strong></p><ul style="margin:0;padding-left:20px;">${gifts.map(lineHtml).join("")}</ul>`
       : "";
 
   return `<!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>New Bandit Genetics Order Request</title>
+</head>
 <body style="margin:0;padding:24px;background:#f4f1ea;color:#161616;font-family:Georgia,'Times New Roman',serif;line-height:1.5;">
   <div style="max-width:640px;margin:0 auto;background:#fff;border:1px solid #d8d2c4;padding:24px;">
-    <p style="margin:0 0 8px;letter-spacing:.16em;font-size:12px;color:#8a7316;">BANDIT GENETICS</p>
+    <p style="margin:0 0 8px;font-size:12px;color:#8a7316;">Bandit Genetics</p>
     <h1 style="margin:0 0 20px;font-size:22px;">New Bandit Genetics Order Request</h1>
     <p style="margin:0 0 12px;"><strong>Customer Name</strong><br>${escapeHtml(order.customerName)}</p>
     <p style="margin:0 0 12px;"><strong>Customer Email</strong><br>${escapeHtml(order.customerEmail)}</p>
@@ -95,9 +106,7 @@ function orderNotificationHtml(order: Order) {
     <p style="margin:16px 0 8px;"><strong>Quantities</strong><br>Shown next to each requested item.</p>
     ${giftBlock}
     <p style="margin:16px 0 8px;"><strong>Merchandise subtotal</strong><br>${escapeHtml(formatUsd(order.subtotalCents))}</p>
-    <p style="margin:0 0 12px;"><strong>Shipping</strong><br>${
-      order.freeShipping ? "FREE" : escapeHtml(formatUsd(order.shippingCents))
-    }<br>Street address is not collected at checkout. Follow up with the customer for delivery details.</p>
+    <p style="margin:0 0 12px;"><strong>Shipping</strong><br>${shipping}<br>Street address is not collected at checkout. Follow up with the customer for delivery details.</p>
     <p style="margin:0 0 12px;"><strong>Order total</strong><br>${escapeHtml(formatUsd(order.totalCents))}</p>
     <p style="margin:0 0 8px;"><strong>Customer Notes</strong></p>
     <p style="margin:0;white-space:pre-wrap;">${escapeHtml(notes).replaceAll("\n", "<br>")}</p>
@@ -111,7 +120,6 @@ export async function deliverOrderRequest(
   order: Order,
 ): Promise<MailDeliveryResult> {
   return sendBanditMail({
-    replyTo: order.customerEmail,
     subject: "New Bandit Genetics Order Request",
     text: orderNotificationText(order),
     html: orderNotificationHtml(order),

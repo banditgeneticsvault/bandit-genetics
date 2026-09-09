@@ -7,7 +7,6 @@ const SUPPORT_ADDRESS = "support@banditgenetics.com";
 const LEGACY_PROTON_ADDRESS = "banditgeneticsvault@proton.me";
 const DEFAULT_SMTP_HOST = "smtp.protonmail.ch";
 const DEFAULT_SMTP_PORT = 587;
-const REPLY_TO_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export type MailDeliveryResult =
   | { ok: true }
@@ -113,10 +112,6 @@ function readSmtpConfig():
 /** Strip CR/LF so submitted values cannot inject SMTP headers. */
 function headerSafe(value: string) {
   return value.replace(/[\0\r\n\u2028\u2029]+/g, " ").trim();
-}
-
-function isValidReplyTo(value: string) {
-  return REPLY_TO_PATTERN.test(value) && value.length <= 254;
 }
 
 function sanitizeSmtpResponse(value: unknown) {
@@ -240,7 +235,6 @@ export function formatSubmittedAt(value?: string) {
 }
 
 export async function sendBanditMail(input: {
-  replyTo: string;
   subject: string;
   text: string;
   html: string;
@@ -257,16 +251,15 @@ export async function sendBanditMail(input: {
   const { config } = loaded;
   const from = headerSafe(config.from);
   const to = headerSafe(config.destination);
-  const replyTo = headerSafe(input.replyTo).toLowerCase();
+  const envelopeFrom = from;
   const subject = headerSafe(input.subject);
 
-  if (!from || !to || !subject || !isValidReplyTo(replyTo)) {
+  if (!from || !to || !subject) {
     console.error("SMTP_SEND_FAILED", {
       reason: "invalid_headers",
       fromSet: Boolean(from),
       toSet: Boolean(to),
       subjectSet: Boolean(subject),
-      replyToValid: isValidReplyTo(replyTo),
     });
     return { ok: false, reason: "send_failed" };
   }
@@ -295,9 +288,8 @@ export async function sendBanditMail(input: {
     const info = await transporter.sendMail({
       from: `Bandit Genetics <${from}>`,
       to,
-      replyTo,
       envelope: {
-        from: headerSafe(config.user) || from,
+        from: envelopeFrom,
         to,
       },
       subject,

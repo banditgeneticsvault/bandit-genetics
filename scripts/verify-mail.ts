@@ -90,7 +90,6 @@ async function main() {
     delete process.env.SMTP_USER;
     delete process.env.SMTP_PASSWORD;
     const result = await sendBanditMail({
-      replyTo: "mail-verify@example.com",
       subject: "Missing env check",
       text: "missing",
       html: "<p>missing</p>",
@@ -121,7 +120,6 @@ async function main() {
 
   if (mode === "send") {
     const result = await sendBanditMail({
-      replyTo: "mail-verify@example.com",
       subject: "Bandit Genetics mail path test",
       text: [
         "This is a controlled mail-path test.",
