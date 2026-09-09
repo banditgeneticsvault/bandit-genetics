@@ -127,4 +127,32 @@
       transform: none;
     }
   }
+
+  @keyframes cart-notice-attention {
+    0%,
+    100% {
+      border-color: rgb(184 149 85 / 0.5);
+      box-shadow: 0 0 0 0 transparent;
+    }
+    16%,
+    54% {
+      border-color: rgb(184 149 85 / 0.82);
+      box-shadow: 0 0 12px rgb(184 149 85 / 0.16);
+    }
+    32%,
+    72% {
+      border-color: rgb(184 149 85 / 0.5);
+      box-shadow: 0 0 0 0 transparent;
+    }
+  }
+
+  .cart-notice-attention {
+    animation: cart-notice-attention 900ms ease-in-out 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cart-notice-attention {
+      animation: none;
+    }
+  }
 }
