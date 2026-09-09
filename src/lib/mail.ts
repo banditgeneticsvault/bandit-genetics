@@ -119,6 +119,53 @@ function isValidReplyTo(value: string) {
   return REPLY_TO_PATTERN.test(value) && value.length <= 254;
 }
 
+function smtpErrorDiagnostics(error: unknown) {
+  const err =
+    error && typeof error === "object"
+      ? (error as {
+          name?: unknown;
+          code?: unknown;
+          command?: unknown;
+          responseCode?: unknown;
+          errno?: unknown;
+          syscall?: unknown;
+          address?: unknown;
+          port?: unknown;
+        })
+      : null;
+
+  function shortToken(value: unknown) {
+    if (typeof value !== "string") return undefined;
+    const trimmed = value.trim();
+    if (!trimmed || trimmed.length > 64) return undefined;
+    if (!/^[A-Za-z][A-Za-z0-9._:\s-]*$/.test(trimmed)) return undefined;
+    return trimmed;
+  }
+
+  function finiteNumber(value: unknown) {
+    return typeof value === "number" && Number.isFinite(value) ? value : undefined;
+  }
+
+  function hostOrIp(value: unknown) {
+    if (typeof value !== "string") return undefined;
+    const trimmed = value.trim();
+    if (!trimmed || trimmed.length > 253) return undefined;
+    if (!/^[A-Za-z0-9.:[\]]+$/.test(trimmed)) return undefined;
+    return trimmed;
+  }
+
+  return {
+    name: shortToken(err?.name),
+    code: shortToken(err?.code),
+    command: shortToken(err?.command),
+    responseCode: finiteNumber(err?.responseCode),
+    errno: finiteNumber(err?.errno),
+    syscall: shortToken(err?.syscall),
+    address: hostOrIp(err?.address),
+    port: finiteNumber(err?.port),
+  };
+}
+
 function classifySmtpError(error: unknown) {
   const err = error as {
     code?: string;
@@ -261,6 +308,7 @@ export async function sendBanditMail(input: {
       host: config.host,
       port: config.port,
       vercelEnv: process.env.VERCEL_ENV || process.env.NODE_ENV || "unknown",
+      diagnostics: smtpErrorDiagnostics(error),
     });
     return { ok: false, reason: "send_failed" };
   } finally {
