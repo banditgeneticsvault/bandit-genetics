@@ -119,6 +119,23 @@ function isValidReplyTo(value: string) {
   return REPLY_TO_PATTERN.test(value) && value.length <= 254;
 }
 
+function sanitizeSmtpResponse(value: unknown) {
+  if (typeof value !== "string") return undefined;
+  const firstLine = value
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .find((line) => /^\d{3}\b/.test(line));
+  if (!firstLine) return undefined;
+
+  const sanitized = firstLine
+    .replace(/[^\s<>(),;:"]+@[^\s<>(),;:"]+/g, "[redacted]")
+    .replace(/\b[A-Za-z0-9+/]{24,}={0,2}\b/g, "[redacted]")
+    .slice(0, 240)
+    .trim();
+
+  return /^\d{3}\b/.test(sanitized) ? sanitized : undefined;
+}
+
 function smtpErrorDiagnostics(error: unknown) {
   const err =
     error && typeof error === "object"
@@ -127,6 +144,7 @@ function smtpErrorDiagnostics(error: unknown) {
           code?: unknown;
           command?: unknown;
           responseCode?: unknown;
+          response?: unknown;
           errno?: unknown;
           syscall?: unknown;
           address?: unknown;
@@ -159,6 +177,7 @@ function smtpErrorDiagnostics(error: unknown) {
     code: shortToken(err?.code),
     command: shortToken(err?.command),
     responseCode: finiteNumber(err?.responseCode),
+    response: sanitizeSmtpResponse(err?.response),
     errno: finiteNumber(err?.errno),
     syscall: shortToken(err?.syscall),
     address: hostOrIp(err?.address),
