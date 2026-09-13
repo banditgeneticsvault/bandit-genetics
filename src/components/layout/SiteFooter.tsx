@@ -15,7 +15,7 @@ export function SiteFooter() {
             {brand.wordmark}
           </p>
           <p className="mt-5 max-w-sm break-words text-copy leading-relaxed text-ice/70">
-            Submit an order request at checkout. For questions, email{" "}
+            Place an order at checkout. We follow up to complete payment. For questions, email{" "}
             <OrderEmailLink />.
           </p>
         </div>

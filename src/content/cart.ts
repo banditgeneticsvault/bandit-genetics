@@ -44,32 +44,32 @@ export const cartCopy = {
   bulkCta: "REQUEST A CUSTOM BULK ORDER",
   toastView: "VIEW CART",
   addThenCheckout:
-    "Add this file to the cart, then submit your request at checkout. One of us will follow up.",
+    "Add this file to the cart, then place your order at checkout. We follow up to complete payment.",
   checkoutTitle: "CHECKOUT",
   checkoutKicker: "THE DESK",
   checkoutIntro:
-    "Review the strains on this ticket, add your name and email, and submit the request. One of us will follow up.",
+    "Review the strains in your cart, add your name and email, and place your order. We follow up to complete payment.",
   paymentMethod: "HOW TO ORDER",
   choosePayment:
-    "Submit what you want from this page. One of us will reach out to the email you enter.",
+    "Place your order from this page. We reach out to the email you enter to complete payment.",
   cancelledCheckout:
     "Checkout was not completed. Your cart is still here.",
   invalidItems:
     "One or more items in the cart could not be checked out. Remove unavailable strains and try again.",
   orderLabel: "Order",
-  ticketSubmitted: "REQUEST RECEIVED",
+  ticketSubmitted: "ORDER RECEIVED",
   ticketSubmittedBody:
-    "We have your request. Someone from Bandit Genetics will follow up at the email you provided. This is not a payment, an approval, or a shipment — just the start of the order.",
-  ticketMissing: "This checkout request could not be found.",
-  placeOrder: "SUBMIT REQUEST",
+    "We have your order. Someone from Bandit Genetics will follow up at the email you provided to complete payment. This is not a payment or a shipment yet.",
+  ticketMissing: "This order could not be found.",
+  placeOrder: "PLACE ORDER",
   submittingOrder: "SENDING",
   unconfigured:
-    "This request could not be sent from the website. Wait a moment and try again.",
-  sendFailed: "We could not send this request. Wait a moment and try again.",
+    "This order could not be sent from the website. Wait a moment and try again.",
+  sendFailed: "We could not send this order. Wait a moment and try again.",
   name: "Name",
   email: "Email",
   notes: "Notes",
-  notesHint: "Anything we should know before we follow up. Optional.",
+  notesHint: "Anything we should know about this order. Optional.",
   line1: "Street address",
   city: "City",
   region: "State / region",

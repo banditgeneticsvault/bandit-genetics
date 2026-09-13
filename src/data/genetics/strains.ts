@@ -89,6 +89,7 @@ const strainArt = {
 } as const;
 
 const comingSoon = "INFORMATION COMING SOON";
+const available = "AVAILABLE";
 
 export const strains: StrainRecord[] = [
   {
@@ -128,7 +129,7 @@ export const strains: StrainRecord[] = [
     galleryImages: [],
     featured: false,
     status: "IN VAULT",
-    availability: comingSoon,
+    availability: available,
     researchNotes: [
       {
         topic: "Naming",
@@ -179,7 +180,7 @@ export const strains: StrainRecord[] = [
     galleryImages: [],
     featured: false,
     status: "IN VAULT",
-    availability: comingSoon,
+    availability: available,
     researchNotes: [],
     phenotypeNotes: comingSoon,
     growNotes: comingSoon,
@@ -224,7 +225,7 @@ export const strains: StrainRecord[] = [
     galleryImages: [],
     featured: false,
     status: "IN VAULT",
-    availability: comingSoon,
+    availability: available,
     researchNotes: [],
     phenotypeNotes: comingSoon,
     growNotes: comingSoon,
@@ -269,7 +270,7 @@ export const strains: StrainRecord[] = [
     galleryImages: [],
     featured: false,
     status: "IN VAULT",
-    availability: comingSoon,
+    availability: available,
     researchNotes: [],
     phenotypeNotes: comingSoon,
     growNotes: comingSoon,
@@ -314,7 +315,7 @@ export const strains: StrainRecord[] = [
     galleryImages: [],
     featured: false,
     status: "IN VAULT",
-    availability: comingSoon,
+    availability: available,
     researchNotes: [
       {
         topic: "Dip N Stix pedigree",
@@ -365,7 +366,7 @@ export const strains: StrainRecord[] = [
     galleryImages: [],
     featured: false,
     status: "IN VAULT",
-    availability: comingSoon,
+    availability: available,
     researchNotes: [],
     phenotypeNotes: comingSoon,
     growNotes: comingSoon,
@@ -410,7 +411,7 @@ export const strains: StrainRecord[] = [
     galleryImages: [],
     featured: false,
     status: "IN VAULT",
-    availability: comingSoon,
+    availability: available,
     researchNotes: [
       {
         topic: "Blueberry Piff",
@@ -461,7 +462,7 @@ export const strains: StrainRecord[] = [
     galleryImages: [],
     featured: false,
     status: "IN VAULT",
-    availability: comingSoon,
+    availability: available,
     researchNotes: [
       {
         topic: "Blue Grapesicle conflict",
@@ -512,7 +513,7 @@ export const strains: StrainRecord[] = [
     galleryImages: [],
     featured: false,
     status: "IN VAULT",
-    availability: comingSoon,
+    availability: available,
     researchNotes: [],
     phenotypeNotes: comingSoon,
     growNotes: comingSoon,
@@ -557,7 +558,7 @@ export const strains: StrainRecord[] = [
     galleryImages: [],
     featured: false,
     status: "IN VAULT",
-    availability: comingSoon,
+    availability: available,
     researchNotes: [
       {
         topic: "Parent identity",
@@ -608,7 +609,7 @@ export const strains: StrainRecord[] = [
     galleryImages: [],
     featured: false,
     status: "IN VAULT",
-    availability: comingSoon,
+    availability: available,
     researchNotes: [],
     phenotypeNotes: comingSoon,
     growNotes: comingSoon,
@@ -653,7 +654,7 @@ export const strains: StrainRecord[] = [
     galleryImages: [],
     featured: false,
     status: "IN VAULT",
-    availability: comingSoon,
+    availability: available,
     researchNotes: [
       {
         topic: "Atomic Burn Auto",

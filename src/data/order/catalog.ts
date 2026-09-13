@@ -6,16 +6,23 @@ export function inferOrderState(availability: string): OrderState {
   const value = availability.trim().toUpperCase();
   if (value === "SOLD OUT" || value === "SOLDOUT") return "SOLD_OUT";
   if (value === "LOW STOCK" || value === "LOW_STOCK") return "LOW_STOCK";
-  if (value === "AVAILABLE") return "AVAILABLE";
+  if (
+    value === "AVAILABLE" ||
+    value === "AVAILABLE NOW" ||
+    value === "IN STOCK" ||
+    value === "INSTOCK"
+  ) {
+    return "AVAILABLE";
+  }
   if (value === "INQUIRY ONLY" || value === "INQUIRY_ONLY") return "INQUIRY_ONLY";
-  if (value.includes("COMING SOON") || value === "INFORMATION COMING SOON") {
+  if (value === "COMING SOON" || value === "COMING_SOON") {
     return "COMING_SOON";
   }
   return "INQUIRY_ONLY";
 }
 
 export function canAddToCart(state: OrderState): boolean {
-  return state === "AVAILABLE" || state === "LOW_STOCK" || state === "COMING_SOON";
+  return state === "AVAILABLE" || state === "LOW_STOCK";
 }
 
 export function toOrderListing(slugOrId: string): OrderListing | undefined {
@@ -41,7 +48,7 @@ export function getOrderListings(): OrderListing[] {
 }
 
 export const ORDER_STATE_LABELS: Record<OrderState, string> = {
-  AVAILABLE: "AVAILABLE",
+  AVAILABLE: "AVAILABLE NOW",
   LOW_STOCK: "LOW STOCK",
   SOLD_OUT: "SOLD OUT",
   COMING_SOON: "COMING SOON",

@@ -7,7 +7,7 @@ import { isInternalOrderId, getOrderById } from "@/lib/orders/repository";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Order ticket",
+  title: "Order received",
   description: cartCopy.ticketSubmittedBody,
   robots: { index: false, follow: false },
   alternates: {

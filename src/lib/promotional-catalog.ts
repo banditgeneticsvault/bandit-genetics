@@ -28,8 +28,8 @@ export type PromotionalGiftView = {
 
 /**
  * Complimentary packs use the same purchase eligibility as the storefront cart.
- * Unavailable / inquiry-only / sold-out files cannot be purchased, so they
- * cannot be awarded. Missing identifiers or artwork are excluded.
+ * Unavailable / inquiry-only / sold-out / coming-soon files cannot be purchased,
+ * so they cannot be awarded. Missing identifiers or artwork are excluded.
  */
 export function eligiblePromotionalListings(): OrderListing[] {
   return getOrderListings().filter((listing) => {

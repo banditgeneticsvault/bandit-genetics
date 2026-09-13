@@ -41,5 +41,5 @@ export const dossierCopy = {
   notFoundKicker: "FILE MISSING",
   notFoundTitle: "NO MATCH IN THE VAULT",
   notFoundBody:
-    "That slug is not in the launch catalog. Return to the archive and open a real file.",
+    "That slug is not in The Vault. Return to the archive and open a real file.",
 } as const;
