@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { allFaqItems } from "@/content/faq";
 import { brand, homeHero, pageCopy, siteUrl, socialPlatforms } from "@/content/site";
 import { STRAIN_TYPE_LABELS, type StrainRecord } from "@/data/genetics/types";
 import { inferOrderState, SEED_TIERS, type OrderState } from "@/data/order";
@@ -210,6 +211,44 @@ export function contactBreadcrumbJsonLd() {
     { name: "Home", path: "/" },
     { name: "Contact", path: "/contact" },
   ]);
+}
+
+export function faqBreadcrumbJsonLd() {
+  return breadcrumbJsonLd([
+    { name: "Home", path: "/" },
+    { name: "FAQ", path: "/faq" },
+  ]);
+}
+
+export function faqJsonLd(): JsonLd {
+  const items = allFaqItems();
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "FAQPage",
+        "@id": `${absoluteUrl("/faq")}#faq`,
+        url: absoluteUrl("/faq"),
+        name: "FAQ",
+        isPartOf: {
+          "@id": WEBSITE_ID,
+        },
+        mainEntity: items.map((item) => ({
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: item.paragraphs.join(" "),
+          },
+        })),
+      },
+      breadcrumbList([
+        { name: "Home", path: "/" },
+        { name: "FAQ", path: "/faq" },
+      ]),
+    ],
+  };
 }
 
 export function strainJsonLd(strain: StrainRecord): JsonLd {

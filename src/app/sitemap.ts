@@ -11,6 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: absoluteUrl("/") },
     { url: absoluteUrl("/vault") },
     { url: absoluteUrl("/about") },
+    { url: absoluteUrl("/faq") },
     { url: absoluteUrl("/contact") },
     ...strains,
   ];
