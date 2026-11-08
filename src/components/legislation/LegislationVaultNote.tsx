@@ -7,7 +7,6 @@ import { LEGISLATION_DEADLINE_LABEL } from "@/lib/legislation-deadline";
 export function LegislationVaultNote() {
   const countdown = useLegislationCountdown();
   const passed = countdown.phase === "passed";
-  const unit = countdown.daysRemaining === 1 ? "day" : "days";
 
   return (
     <aside
@@ -18,16 +17,7 @@ export function LegislationVaultNote() {
         <div className="min-w-0">
           <p className="section-kicker">{legislationCopy.vaultKicker}</p>
           <p className="mt-2 font-display text-[clamp(1.7rem,3vw,2.35rem)] leading-[1.05] text-frost">
-            {passed ? (
-              legislationCopy.passedBar
-            ) : (
-              <>
-                <span className="tabular-nums" suppressHydrationWarning>
-                  {countdown.daysRemaining}
-                </span>{" "}
-                {unit} until {LEGISLATION_DEADLINE_LABEL}
-              </>
-            )}
+            {passed ? legislationCopy.passedBar : LEGISLATION_DEADLINE_LABEL}
           </p>
         </div>
         <p className="max-w-md text-[1.02rem] leading-relaxed text-ice/75">

@@ -9,8 +9,10 @@
  * including THCA. Provisions about cannabinoids a cannabis plant cannot
  * naturally produce were left on the original November 12, 2026 date.
  *
- * Neither statute states an hour. The countdown is calendar days in Eastern
- * Time until December 11, 2026, not a claimed statutory clock time.
+ * Neither statute states an hour. The running clock counts down to 12:00 a.m.
+ * Eastern Time at the start of December 11, 2026: the beginning of that
+ * calendar date, not a clock time written in the statute. The calendar phase
+ * still treats the whole Eastern day of December 11 as the date itself.
  */
 
 export const LEGISLATION_TIME_ZONE = "America/New_York";
@@ -36,6 +38,20 @@ export type LegislationCountdown = {
   daysRemaining: number;
   phase: LegislationPhase;
   timeZone: typeof LEGISLATION_TIME_ZONE;
+};
+
+export type LegislationClock = {
+  phase: LegislationPhase;
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+};
+
+type WallTime = CalendarDate & {
+  hour: number;
+  minute: number;
+  second: number;
 };
 
 export function calendarDateInTimeZone(
@@ -82,6 +98,94 @@ export function getLegislationCountdown(now = new Date()): LegislationCountdown 
     phase,
     timeZone: LEGISLATION_TIME_ZONE,
   };
+}
+
+function wallTimeInTimeZone(instant: Date, timeZone: string): WallTime {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    hourCycle: "h23",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  }).formatToParts(instant);
+
+  const read = (type: Intl.DateTimeFormatPartTypes) => {
+    const part = parts.find((entry) => entry.type === type);
+    if (!part) {
+      throw new Error(`Missing calendar part: ${type}`);
+    }
+    return Number(part.value);
+  };
+
+  const hour = read("hour");
+
+  return {
+    year: read("year"),
+    month: read("month"),
+    day: read("day"),
+    hour: hour === 24 ? 0 : hour,
+    minute: read("minute"),
+    second: read("second"),
+  };
+}
+
+function timeZoneOffsetMs(instant: Date, timeZone: string): number {
+  const wall = wallTimeInTimeZone(instant, timeZone);
+  const asUtc = Date.UTC(
+    wall.year,
+    wall.month - 1,
+    wall.day,
+    wall.hour,
+    wall.minute,
+    wall.second,
+  );
+  return asUtc - instant.getTime();
+}
+
+/** Wall-clock time in `timeZone`, expressed as a UTC instant. */
+export function zonedWallTimeToInstant(wall: WallTime, timeZone: string): Date {
+  const guess = Date.UTC(
+    wall.year,
+    wall.month - 1,
+    wall.day,
+    wall.hour,
+    wall.minute,
+    wall.second,
+  );
+  const first = guess - timeZoneOffsetMs(new Date(guess), timeZone);
+  return new Date(guess - timeZoneOffsetMs(new Date(first), timeZone));
+}
+
+let deadlineInstant: Date | null = null;
+
+/** 12:00 a.m. Eastern Time on the deadline date. */
+export function legislationDeadlineInstant(): Date {
+  if (!deadlineInstant) {
+    deadlineInstant = zonedWallTimeToInstant(
+      { ...LEGISLATION_DEADLINE, hour: 0, minute: 0, second: 0 },
+      LEGISLATION_TIME_ZONE,
+    );
+  }
+  return deadlineInstant;
+}
+
+export function getLegislationClock(now = new Date()): LegislationClock {
+  const { phase } = getLegislationCountdown(now);
+  const remainingMs = legislationDeadlineInstant().getTime() - now.getTime();
+  const totalSeconds = Math.max(0, Math.floor(remainingMs / 1000));
+  const days = Math.floor(totalSeconds / 86_400);
+  const hours = Math.floor((totalSeconds % 86_400) / 3_600);
+  const minutes = Math.floor((totalSeconds % 3_600) / 60);
+  const seconds = totalSeconds % 60;
+
+  if (phase !== "upcoming") {
+    return { phase, days: 0, hours: 0, minutes: 0, seconds: 0 };
+  }
+
+  return { phase, days, hours, minutes, seconds };
 }
 
 /** Milliseconds from `now` until the next Eastern Time calendar date. */

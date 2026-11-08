@@ -91,7 +91,7 @@ export function SiteHeader() {
           </ul>
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="legislation-clock-clearance flex items-center gap-2">
           <button
             type="button"
             onClick={openCart}

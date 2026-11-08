@@ -32,6 +32,10 @@
 @layer base {
   html {
     --legislation-bar-height: 2.75rem;
+    --legislation-clock-top: 15px;
+    --legislation-clock-right: 0.75rem;
+    --legislation-clock-width: 10rem;
+    --legislation-clock-height: 9.5rem;
     background: var(--color-black);
     color: var(--color-frost);
     -webkit-font-smoothing: antialiased;
@@ -159,6 +163,156 @@
 
   .legislation-bar {
     height: var(--legislation-bar-height);
+  }
+
+  .legislation-clock {
+    position: fixed;
+    top: var(--legislation-clock-top);
+    right: var(--legislation-clock-right);
+    z-index: 30;
+    width: var(--legislation-clock-width);
+    padding: 0.7rem 0.7rem 0.6rem;
+    border: 1px solid rgb(255 255 255 / 0.22);
+    border-radius: 0.45rem;
+    background: #f20d0d;
+    color: #fff;
+    box-shadow: 0 14px 34px rgb(0 0 0 / 0.42);
+  }
+
+  .legislation-clock-kicker,
+  .legislation-clock-label,
+  .legislation-clock-date {
+    font-family: var(--font-label);
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .legislation-clock-kicker {
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+  }
+
+  .legislation-clock-units {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem;
+    margin-top: 0.55rem;
+  }
+
+  .legislation-clock-unit {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.28rem;
+    border-radius: 0.28rem;
+    background: rgb(0 0 0 / 0.14);
+    padding: 0.4rem 0.25rem 0.35rem;
+  }
+
+  .legislation-clock-value {
+    min-width: 2ch;
+    font-family: var(--font-label);
+    font-size: 1.7rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 0.85;
+    text-align: center;
+  }
+
+  .legislation-clock-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+  }
+
+  .legislation-clock-date,
+  .legislation-clock-status {
+    margin-top: 0.5rem;
+    text-align: center;
+  }
+
+  .legislation-clock-date {
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+  }
+
+  .legislation-clock-status {
+    font-family: var(--font-label);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.15;
+    text-transform: uppercase;
+  }
+
+  .legislation-clock-clearance {
+    margin-right: max(
+      0px,
+      calc(
+        var(--legislation-clock-width) + var(--legislation-clock-right) + 0.7rem -
+          var(--spacing-gutter)
+      )
+    );
+  }
+
+  @media (min-width: 1024px) {
+    html {
+      --legislation-clock-right: 20px;
+      --legislation-clock-width: 16.5rem;
+      --legislation-clock-height: 18.5rem;
+    }
+
+    .legislation-clock {
+      padding: 0.95rem 1.05rem 0.85rem;
+    }
+
+    .legislation-clock-kicker {
+      font-size: 0.78rem;
+      letter-spacing: 0.22em;
+    }
+
+    .legislation-clock-units {
+      grid-template-columns: 1fr;
+      gap: 0;
+      margin-top: 0.7rem;
+    }
+
+    .legislation-clock-unit {
+      flex-direction: row;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.75rem;
+      border-radius: 0;
+      background: transparent;
+      border-top: 1px solid rgb(255 255 255 / 0.28);
+      padding: 0.45rem 0 0.15rem;
+    }
+
+    .legislation-clock-value {
+      font-size: 3rem;
+      text-align: left;
+    }
+
+    .legislation-clock-label {
+      font-size: 0.82rem;
+      letter-spacing: 0.18em;
+    }
+
+    .legislation-clock-date {
+      margin-top: 0.7rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+      text-align: left;
+    }
+
+    .legislation-clock-status {
+      margin-top: 0.85rem;
+      font-size: 1.35rem;
+      text-align: left;
+    }
   }
 
   .chrome-clearance {

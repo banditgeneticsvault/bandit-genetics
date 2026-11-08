@@ -374,7 +374,7 @@ export function CheckoutDesk() {
         action={formAction}
         onSubmit={handleSubmit}
         noValidate
-        className="flex min-w-0 flex-col border border-white/10 bg-charcoal/95 lg:col-span-5 lg:sticky lg:top-[calc(7rem+var(--legislation-bar-height))] lg:z-10 lg:max-h-[calc(100dvh-8.5rem-var(--legislation-bar-height))] lg:self-start lg:overflow-hidden"
+        className="flex min-w-0 flex-col border border-white/10 bg-charcoal/95 lg:col-span-5 lg:sticky lg:top-[calc(var(--legislation-clock-top)+var(--legislation-clock-height)+0.75rem)] lg:z-10 lg:max-h-[calc(100dvh-var(--legislation-clock-top)-var(--legislation-clock-height)-2rem)] lg:self-start lg:overflow-hidden"
       >
         <div className="grid min-h-0 min-w-0 gap-6 overflow-x-hidden px-5 py-6 md:px-7 md:py-8 lg:flex-1 lg:overflow-y-auto">
           <input type="hidden" name="items" value={JSON.stringify(lines)} />
