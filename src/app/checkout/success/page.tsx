@@ -34,7 +34,7 @@ export default async function CheckoutSuccessPage({
         className="pointer-events-none absolute inset-x-0 top-0 h-[28rem] vault-grate opacity-40"
         aria-hidden
       />
-      <PageContainer width="wide" className="relative pt-28 pb-20 md:pt-36 md:pb-28">
+      <PageContainer width="wide" className="chrome-clearance relative pb-20 md:pb-28">
         <header className="mb-12 max-w-3xl">
           <p className="section-kicker">{cartCopy.checkoutKicker}</p>
           <h1 className="mt-4 font-display text-[clamp(2.6rem,8vw,5.8rem)] leading-[0.85] text-frost">

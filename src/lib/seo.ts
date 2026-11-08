@@ -97,6 +97,12 @@ export function strainShareImage(strain: StrainRecord) {
 export function strainSeoDescription(strain: StrainRecord) {
   const typeLabel = STRAIN_TYPE_LABELS[strain.type];
   if (strain.seoDescription.includes(typeLabel)) return strain.seoDescription;
+  if (
+    strain.type === "REGULAR" &&
+    /\bregulars?\b/i.test(strain.seoDescription)
+  ) {
+    return strain.seoDescription;
+  }
   return `${strain.seoDescription} ${typeLabel}.`;
 }
 

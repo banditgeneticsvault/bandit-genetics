@@ -72,7 +72,7 @@ export function GeneticDossier({ strain }: GeneticDossierProps) {
         aria-hidden
       />
 
-      <PageContainer width="wide" className="relative pt-28 pb-16 md:pt-36 md:pb-24">
+      <PageContainer width="wide" className="chrome-clearance relative pb-16 md:pb-24">
         <SiteBreadcrumb
           items={[
             { name: "Home", href: "/" },

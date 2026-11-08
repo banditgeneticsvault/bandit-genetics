@@ -1,8 +1,8 @@
-export const STRAIN_TYPES = ["FEMINIZED_PHOTOPERIOD", "AUTOFLOWER"] as const;
+export const STRAIN_TYPES = ["REGULAR", "AUTOFLOWER"] as const;
 export type StrainType = (typeof STRAIN_TYPES)[number];
 
 export const STRAIN_TYPE_LABELS: Record<StrainType, string> = {
-  FEMINIZED_PHOTOPERIOD: "FEMINIZED PHOTOPERIOD",
+  REGULAR: "REGULAR SEEDS",
   AUTOFLOWER: "AUTOFLOWER",
 };
 

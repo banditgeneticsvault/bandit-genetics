@@ -1,5 +1,6 @@
 import { vaultCopy } from "@/content/site";
 import type { VaultFilters, VaultView } from "@/data/genetics";
+import { STRAIN_TYPE_LABELS, STRAIN_TYPES } from "@/data/genetics/types";
 import { cn } from "@/lib/cn";
 
 type VaultToolbarProps = {
@@ -10,8 +11,10 @@ type VaultToolbarProps = {
 
 const VIEWS: { id: VaultView; label: string }[] = [
   { id: "ALL", label: "ALL" },
-  { id: "FEMINIZED_PHOTOPERIOD", label: "FEMINIZED PHOTOPERIOD" },
-  { id: "AUTOFLOWER", label: "AUTOFLOWER" },
+  ...STRAIN_TYPES.map((id) => ({
+    id,
+    label: STRAIN_TYPE_LABELS[id],
+  })),
 ];
 
 function Chip({

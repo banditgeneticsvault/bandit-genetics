@@ -43,14 +43,12 @@ function assertCatalog() {
     throw new Error(`Catalog must contain 12 strains. Found ${strains.length}.`);
   }
 
-  const photos = strains.filter(
-    (strain) => strain.type === "FEMINIZED_PHOTOPERIOD",
-  );
+  const regulars = strains.filter((strain) => strain.type === "REGULAR");
   const autos = strains.filter((strain) => strain.type === "AUTOFLOWER");
 
-  if (photos.length !== 9) {
+  if (regulars.length !== 9) {
     throw new Error(
-      `Expected 9 feminized photoperiod strains. Found ${photos.length}.`,
+      `Expected 9 regular seed strains. Found ${regulars.length}.`,
     );
   }
 

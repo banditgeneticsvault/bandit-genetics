@@ -43,7 +43,7 @@ export function AboutPage() {
 
       <PageContainer
         width="wide"
-        className="relative pt-28 pb-20 md:pt-36 md:pb-28"
+        className="chrome-clearance relative pb-20 md:pb-28"
       >
         <SiteBreadcrumb
           items={[

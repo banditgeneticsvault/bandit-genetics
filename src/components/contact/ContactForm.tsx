@@ -26,7 +26,7 @@ const parseMessages: ContactParseMessages = {
 };
 
 const fieldClassName =
-  "min-h-12 w-full scroll-mt-28 scroll-mb-28 rounded-none border bg-black/55 px-3 py-3 font-sans text-copy text-frost outline-none placeholder:text-ice/35 focus-visible:border-gold";
+  "min-h-12 w-full chrome-anchor scroll-mb-28 rounded-none border bg-black/55 px-3 py-3 font-sans text-copy text-frost outline-none placeholder:text-ice/35 focus-visible:border-gold";
 
 export function ContactForm({
   selectedStrain,

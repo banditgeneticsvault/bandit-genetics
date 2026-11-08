@@ -5,7 +5,7 @@ import { dossierCopy } from "@/content/dossier";
 export default function NotFound() {
   return (
     <main className="bg-black">
-      <PageContainer width="wide" className="flex min-h-[70dvh] flex-col justify-center pt-32 pb-20">
+      <PageContainer width="wide" className="chrome-clearance-center flex min-h-[70dvh] flex-col justify-center pb-20">
         <p className="section-kicker">
           {dossierCopy.notFoundKicker}
         </p>

@@ -123,8 +123,8 @@ export const faqSections: readonly FaqSection[] = [
         question: "Why are you doing a public run now?",
         paragraphs: [
           "We have been working with genetics for some time. Sharing that work publicly was always going to be a real chapter, not a side listing. We wanted the collection ready, and we wanted the timing to make sense.",
-          "Federal law is scheduled to change on November 12, 2026. Those changes could materially affect how viable cannabis seeds are treated under the federal hemp framework. We are not going to predict the outcome for you. We are not going to tell you the sky is falling.",
-          "What we can say is this: we were ready to open The Vault, and with the federal landscape shifting, this felt like the right time to do it.",
+          "Most of the changes to the federal definition of hemp are scheduled for December 11, 2026. Those changes could materially affect how viable cannabis seeds are treated under the federal hemp framework. We are not going to predict the outcome for you. We are not going to tell you the sky is falling.",
+          "What we can say is this: we were ready to open The Vault, and with the federal landscape shifting, this felt like the right time to do it. December 11, 2026 is not a closing date, and it is not a last order date.",
         ],
       },
     ],
@@ -469,7 +469,7 @@ export const faqSections: readonly FaqSection[] = [
         question: "Do I need to check my local laws?",
         paragraphs: [
           "Yes. Federal, state, and local rules can all matter, and they can differ. Check them before you order, and before you do anything with seed.",
-          "The scheduled federal change on November 12, 2026 is one reason people are paying attention. It is not a blanket statement that every seed is illegal, and it is not legal advice.",
+          "The scheduled federal change on December 11, 2026 is one reason people are paying attention. It is not a blanket statement that every seed is illegal, and it is not legal advice.",
         ],
       },
     ],

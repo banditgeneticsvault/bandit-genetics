@@ -31,6 +31,7 @@
 
 @layer base {
   html {
+    --legislation-bar-height: 2.75rem;
     background: var(--color-black);
     color: var(--color-frost);
     -webkit-font-smoothing: antialiased;
@@ -152,6 +153,59 @@
 
   @media (prefers-reduced-motion: reduce) {
     .cart-notice-attention {
+      animation: none;
+    }
+  }
+
+  .legislation-bar {
+    height: var(--legislation-bar-height);
+  }
+
+  .chrome-clearance {
+    padding-top: calc(7rem + var(--legislation-bar-height));
+  }
+
+  .chrome-clearance-hero {
+    padding-top: calc(7rem + var(--legislation-bar-height));
+  }
+
+  .chrome-clearance-center {
+    padding-top: calc(8rem + var(--legislation-bar-height));
+  }
+
+  .chrome-anchor {
+    scroll-margin-top: calc(7.5rem + var(--legislation-bar-height));
+  }
+
+  @media (min-width: 768px) {
+    .chrome-clearance {
+      padding-top: calc(9rem + var(--legislation-bar-height));
+    }
+
+    .chrome-clearance-hero {
+      padding-top: calc(8rem + var(--legislation-bar-height));
+    }
+
+    .chrome-anchor {
+      scroll-margin-top: calc(8.5rem + var(--legislation-bar-height));
+    }
+  }
+
+  @keyframes legislation-rule {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  .legislation-rule {
+    animation: legislation-rule 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .legislation-rule {
       animation: none;
     }
   }

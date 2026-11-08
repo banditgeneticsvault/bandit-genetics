@@ -1,4 +1,5 @@
 import { PageContainer } from "@/components/layout/PageContainer";
+import { LegislationVaultNote } from "@/components/legislation/LegislationVaultNote";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { SiteBreadcrumb } from "@/components/seo/SiteBreadcrumb";
 import { VaultArchive } from "@/components/vault/VaultArchive";
@@ -25,7 +26,7 @@ export default function VaultPage() {
         aria-hidden
       />
 
-      <PageContainer width="wide" className="relative pt-28 pb-20 md:pt-36 md:pb-28">
+      <PageContainer width="wide" className="chrome-clearance relative pb-20 md:pb-28">
         <SiteBreadcrumb
           items={[
             { name: "Home", href: "/" },
@@ -54,6 +55,7 @@ export default function VaultPage() {
           </div>
         </div>
 
+        <LegislationVaultNote />
         <VaultArchive items={items} />
       </PageContainer>
     </main>

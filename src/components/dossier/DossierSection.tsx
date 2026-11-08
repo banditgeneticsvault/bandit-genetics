@@ -25,7 +25,7 @@ export function DossierSection({
     <section
       id={id}
       aria-labelledby={`${id}-title`}
-      className={cn("min-w-0 w-full @container scroll-mt-28", className)}
+      className={cn("min-w-0 w-full @container chrome-anchor", className)}
     >
       {kicker ? (
         <p className={cn("mb-2", dossierKickerClass)}>

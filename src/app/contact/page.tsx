@@ -36,7 +36,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
         background={homeHero.background}
       />
 
-      <PageContainer width="wide" className="relative pt-28 pb-20 md:pt-36 md:pb-28">
+      <PageContainer width="wide" className="chrome-clearance relative pb-20 md:pb-28">
         <SiteBreadcrumb
           items={[
             { name: "Home", href: "/" },

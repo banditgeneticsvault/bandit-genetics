@@ -35,7 +35,7 @@ import { revealInvalidControl } from "@/lib/form-focus";
 import { cn } from "@/lib/cn";
 
 const fieldClassName =
-  "min-h-12 w-full scroll-mt-28 scroll-mb-28 rounded-none border bg-black/55 px-3 py-3 font-sans text-copy text-frost outline-none placeholder:text-ice/35 focus-visible:border-gold";
+  "min-h-12 w-full chrome-anchor scroll-mb-28 rounded-none border bg-black/55 px-3 py-3 font-sans text-copy text-frost outline-none placeholder:text-ice/35 focus-visible:border-gold";
 
 const parseMessages = {
   nameRequired: cartCopy.nameRequired,
@@ -374,7 +374,7 @@ export function CheckoutDesk() {
         action={formAction}
         onSubmit={handleSubmit}
         noValidate
-        className="flex min-w-0 flex-col border border-white/10 bg-charcoal/95 lg:col-span-5 lg:sticky lg:top-28 lg:z-10 lg:max-h-[calc(100dvh-8.5rem)] lg:self-start lg:overflow-hidden"
+        className="flex min-w-0 flex-col border border-white/10 bg-charcoal/95 lg:col-span-5 lg:sticky lg:top-[calc(7rem+var(--legislation-bar-height))] lg:z-10 lg:max-h-[calc(100dvh-8.5rem-var(--legislation-bar-height))] lg:self-start lg:overflow-hidden"
       >
         <div className="grid min-h-0 min-w-0 gap-6 overflow-x-hidden px-5 py-6 md:px-7 md:py-8 lg:flex-1 lg:overflow-y-auto">
           <input type="hidden" name="items" value={JSON.stringify(lines)} />

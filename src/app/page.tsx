@@ -1,4 +1,5 @@
 import { HomeHero } from "@/components/home/HomeHero";
+import { LegislationAnnouncement } from "@/components/legislation/LegislationAnnouncement";
 import { seoCopy } from "@/content/site";
 import { pageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
@@ -18,6 +19,7 @@ export default function Home() {
   return (
     <main>
       <HomeHero />
+      <LegislationAnnouncement />
     </main>
   );
 }

@@ -28,7 +28,7 @@ export function FaqPage() {
 
       <PageContainer
         width="wide"
-        className="relative pt-28 pb-20 md:pt-36 md:pb-28"
+        className="chrome-clearance relative pb-20 md:pb-28"
       >
         <SiteBreadcrumb
           items={[
@@ -79,7 +79,7 @@ export function FaqPage() {
               key={section.id}
               id={section.id}
               aria-labelledby={`${section.id}-title`}
-              className="scroll-mt-28 border-b border-white/10 py-10 md:py-12"
+              className="chrome-anchor border-b border-white/10 py-10 md:py-12"
             >
               <p className="section-kicker">{section.kicker}</p>
               <h2
@@ -102,7 +102,7 @@ export function FaqPage() {
 
         <section
           aria-labelledby="promise-title"
-          className="scroll-mt-28 border-b border-white/10 py-12 md:py-16"
+          className="chrome-anchor border-b border-white/10 py-12 md:py-16"
         >
           <p className="section-kicker">{faqCopy.promiseKicker}</p>
           <h2
@@ -122,7 +122,7 @@ export function FaqPage() {
 
         <section
           aria-labelledby="faq-cta-title"
-          className="scroll-mt-28 pt-12 md:pt-16"
+          className="chrome-anchor pt-12 md:pt-16"
         >
           <p className="section-kicker">{faqCopy.ctaKicker}</p>
           <h2

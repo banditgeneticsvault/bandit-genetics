@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { LegislationBar } from "@/components/legislation/LegislationBar";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 
@@ -13,7 +14,10 @@ export function SiteChrome({ children }: { children: ReactNode }) {
       >
         Skip to content
       </a>
-      <SiteHeader />
+      <div className="absolute inset-x-0 top-0 z-40">
+        <LegislationBar />
+        <SiteHeader />
+      </div>
       <div id="content" className="flex-1">
         {children}
       </div>

@@ -100,7 +100,7 @@ export const strains: StrainRecord[] = [
     lineage: "Gorilla Glue #4 × Dante's Inferno",
     parentOneId: "gorilla-glue-4",
     parentTwoId: "dantes-inferno",
-    type: "FEMINIZED_PHOTOPERIOD",
+    type: "REGULAR",
     collection: "BANDIT COLLECTION",
     theme: "METAL",
     shortDescription:
@@ -151,7 +151,7 @@ export const strains: StrainRecord[] = [
     lineage: "Permanent Marker S1 × Platinum Lemon Cherry Gelato S1",
     parentOneId: "permanent-marker-s1",
     parentTwoId: "platinum-lemon-cherry-gelato-s1",
-    type: "FEMINIZED_PHOTOPERIOD",
+    type: "REGULAR",
     collection: "THIRST TRAP COLLECTION",
     theme: "SILK",
     shortDescription:
@@ -196,7 +196,7 @@ export const strains: StrainRecord[] = [
     lineage: "Gorilla Glue #4 S1 × Platinum Frosting",
     parentOneId: "gorilla-glue-4-s1",
     parentTwoId: "platinum-frosting",
-    type: "FEMINIZED_PHOTOPERIOD",
+    type: "REGULAR",
     collection: "BANDIT COLLECTION",
     theme: "METAL",
     shortDescription:
@@ -241,7 +241,7 @@ export const strains: StrainRecord[] = [
     lineage: "Tropicana Blue × Blueberry Inferno",
     parentOneId: "tropicana-blue",
     parentTwoId: "blueberry-inferno",
-    type: "FEMINIZED_PHOTOPERIOD",
+    type: "REGULAR",
     collection: "BANDIT COLLECTION",
     theme: "METAL",
     shortDescription:
@@ -286,7 +286,7 @@ export const strains: StrainRecord[] = [
     lineage: "Gucciberry × Dip N Stix S1",
     parentOneId: "gucciberry",
     parentTwoId: "dip-n-stix-s1",
-    type: "FEMINIZED_PHOTOPERIOD",
+    type: "REGULAR",
     collection: "THIRST TRAP COLLECTION",
     theme: "SILK",
     shortDescription:
@@ -337,7 +337,7 @@ export const strains: StrainRecord[] = [
     lineage: "Blue Ve'Gas × Platinum City Diesel",
     parentOneId: "blue-vegas",
     parentTwoId: "platinum-city-diesel",
-    type: "FEMINIZED_PHOTOPERIOD",
+    type: "REGULAR",
     collection: "BANDIT COLLECTION",
     theme: "METAL",
     shortDescription:
@@ -382,7 +382,7 @@ export const strains: StrainRecord[] = [
     lineage: "Dragon Gas × Blueberry Piff",
     parentOneId: "dragon-gas",
     parentTwoId: "blueberry-piff",
-    type: "FEMINIZED_PHOTOPERIOD",
+    type: "REGULAR",
     collection: "THIRST TRAP COLLECTION",
     theme: "SILK",
     shortDescription:
@@ -433,7 +433,7 @@ export const strains: StrainRecord[] = [
     lineage: "Jokers Pie × Blue Grapesicle",
     parentOneId: "jokers-pie",
     parentTwoId: "blue-grapesicle",
-    type: "FEMINIZED_PHOTOPERIOD",
+    type: "REGULAR",
     collection: "THIRST TRAP COLLECTION",
     theme: "SILK",
     shortDescription:
@@ -484,7 +484,7 @@ export const strains: StrainRecord[] = [
     lineage: "Big Perm × Platinum City Diesel",
     parentOneId: "big-perm",
     parentTwoId: "platinum-city-diesel",
-    type: "FEMINIZED_PHOTOPERIOD",
+    type: "REGULAR",
     collection: "BANDIT COLLECTION",
     theme: "METAL",
     shortDescription:

@@ -43,7 +43,7 @@ export function FaqAccordion({ items }: { items: readonly FaqItem[] }) {
         <details
           key={item.id}
           id={item.id}
-          className="group scroll-mt-28 border-b border-white/10"
+          className="group chrome-anchor border-b border-white/10"
         >
           <summary className="flex min-h-12 cursor-pointer list-none items-start justify-between gap-4 py-4 text-left marker:content-none [&::-webkit-details-marker]:hidden">
             <span className="pt-0.5 font-sans text-[1.05rem] leading-snug text-frost md:text-copy">

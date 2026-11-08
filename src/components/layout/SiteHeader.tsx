@@ -49,7 +49,7 @@ export function SiteHeader() {
   const count = ready ? itemCount : 0;
 
   return (
-    <header className="absolute inset-x-0 top-0 z-40">
+    <header className="relative">
       <div className="page-gutter mx-auto flex max-w-[92rem] items-center justify-between gap-4 py-4 md:gap-6 md:py-5">
         <Link
           href="/"

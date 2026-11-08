@@ -43,7 +43,7 @@ export function AddToCartPanel({ listing }: AddToCartPanelProps) {
     <section
       id="cart"
       aria-labelledby={`${formId}-title`}
-      className="scroll-mt-28 border border-white/10 bg-charcoal px-5 py-6 md:px-6 md:py-7"
+      className="chrome-anchor border border-white/10 bg-charcoal px-5 py-6 md:px-6 md:py-7"
     >
       <p className="section-kicker">{cartCopy.cart}</p>
       <h2
