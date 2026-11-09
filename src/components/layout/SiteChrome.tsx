@@ -2,7 +2,6 @@
 
 import type { ReactNode } from "react";
 import { LegislationBar } from "@/components/legislation/LegislationBar";
-import { LegislationClock } from "@/components/legislation/LegislationCountdown";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 
@@ -18,7 +17,6 @@ export function SiteChrome({ children }: { children: ReactNode }) {
       <div className="absolute inset-x-0 top-0 z-40">
         <LegislationBar />
         <SiteHeader />
-        <LegislationClock />
       </div>
       <div id="content" className="flex-1">
         {children}

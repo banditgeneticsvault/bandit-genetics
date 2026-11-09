@@ -12,15 +12,16 @@ export const legislationCopy = {
   passedKicker: "The date has passed",
   passedBar: `${LEGISLATION_DEADLINE_LABEL} has passed`,
   timeNote: "Eastern Time",
-  clockKicker: "Federal deadline",
-  clockDay: "Day",
-  clockDays: "Days",
-  clockHour: "Hour",
-  clockHours: "Hours",
-  clockMinute: "Minute",
-  clockMinutes: "Minutes",
-  clockSecond: "Second",
-  clockSeconds: "Seconds",
+  bannerHeadline:
+    "WE'RE SHUTTING DOWN — FEDERAL SEED BAN TAKES EFFECT DECEMBER 11, 2026.",
+  bannerDistinction:
+    "December 11, 2026 is the federal effective date, not a confirmed Bandit closing day.",
+  bannerDay: "DAY",
+  bannerDays: "DAYS",
+  bannerHour: "HR",
+  bannerHours: "HRS",
+  bannerMinute: "MIN",
+  bannerSecond: "SEC",
   sectionId: "legislation",
   kicker: "A turning point",
   headline: "The clock is ticking on American cannabis genetics.",
@@ -30,9 +31,9 @@ export const legislationCopy = {
   passedSupport:
     "December 11, 2026 was the scheduled date for most of the revised federal hemp definition, including the treatment of viable conventional cannabis seeds. What that means for any one person or business is not something this page can decide.",
   bandit:
-    "Bandit opened The Vault while that landscape is shifting. This is not a closing notice, and December 11 is not an order deadline.",
+    "Bandit is shutting down. December 11, 2026 is the federal effective date, not a confirmed last operating day, and not an order deadline.",
   passedBandit:
-    "The Vault is still open. Bandit did not treat December 11 as a closing day or a final order date.",
+    "The Vault is still open. December 11 was the federal effective date, not a confirmed last operating day or an order deadline.",
   note: `Most of the revised federal hemp definition is scheduled for ${LEGISLATION_DEADLINE_LABEL}, including an exclusion for viable seeds from cannabis plants over 0.3% total THC, THCA included. Public Law 119-103 delayed those portions to this date. The clock counts down to 12:00 a.m. Eastern Time at the start of that date, because the statute does not name an hour. It is not a ban on every cannabis seed, not a Bandit order deadline, and not legal advice.`,
   passedNote:
     "The December 11, 2026 date for most of the revised federal hemp definition has passed. This site is not declaring an outcome for every seed, and it is not legal advice. The Vault remains open.",

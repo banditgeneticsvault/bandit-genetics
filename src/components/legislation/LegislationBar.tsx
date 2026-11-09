@@ -1,67 +1,104 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useEffect, useId, useRef } from "react";
 import { legislationCopy } from "@/content/legislation";
-import {
-  LEGISLATION_DEADLINE_LABEL,
-  LEGISLATION_DEADLINE_SHORT,
-} from "@/lib/legislation-deadline";
-import { useLegislationCountdown } from "@/components/legislation/useLegislationCountdown";
+import { useLegislationClock } from "@/components/legislation/useLegislationCountdown";
 
-function barLabel(phase: "upcoming" | "today" | "passed") {
-  if (phase === "passed") return legislationCopy.passedBar;
-  if (phase === "today") return legislationCopy.today;
-  return `${legislationCopy.clockKicker} · ${LEGISLATION_DEADLINE_LABEL}`;
+function unitWord(value: number, singular: string, plural: string) {
+  return value === 1 ? singular : plural;
+}
+
+function spokenClock(days: number, hours: number, minutes: number) {
+  const dayWord = unitWord(days, "day", "days");
+  const hourWord = unitWord(hours, "hour", "hours");
+  const minuteWord = unitWord(minutes, "minute", "minutes");
+  return `${days} ${dayWord}, ${hours} ${hourWord}, ${minutes} ${minuteWord}. ${legislationCopy.timeNote}.`;
 }
 
 export function LegislationBar() {
-  const countdown = useLegislationCountdown();
-  const pathname = usePathname();
-  const onVault = pathname === "/vault";
-  const storyHref =
-    pathname === "/" ? `#${legislationCopy.sectionId}` : `/#${legislationCopy.sectionId}`;
-  const label = barLabel(countdown.phase);
+  const clock = useLegislationClock();
+  const bannerRef = useRef<HTMLDivElement>(null);
+  const titleId = useId();
+  const noteId = useId();
+  const upcoming = clock.phase === "upcoming";
+  const units = [
+    {
+      key: "days",
+      value: clock.days,
+      label: unitWord(clock.days, legislationCopy.bannerDay, legislationCopy.bannerDays),
+    },
+    {
+      key: "hours",
+      value: clock.hours,
+      label: unitWord(clock.hours, legislationCopy.bannerHour, legislationCopy.bannerHours),
+    },
+    { key: "minutes", value: clock.minutes, label: legislationCopy.bannerMinute },
+    { key: "seconds", value: clock.seconds, label: legislationCopy.bannerSecond },
+  ];
 
-  const readout = (
-    <span className="truncate font-label text-[0.72rem] tracking-[0.14em] text-frost uppercase sm:text-[0.8rem] sm:tracking-[0.18em]">
-      <span className="sm:hidden">{LEGISLATION_DEADLINE_SHORT}</span>
-      <span className="hidden sm:inline">{label}</span>
-    </span>
-  );
+  useEffect(() => {
+    const node = bannerRef.current;
+    if (!node) return;
+
+    const apply = () => {
+      const { height } = node.getBoundingClientRect();
+      document.documentElement.style.setProperty(
+        "--legislation-bar-height",
+        `${Math.ceil(height)}px`,
+      );
+    };
+
+    apply();
+    const observer = new ResizeObserver(apply);
+    observer.observe(node);
+    window.addEventListener("resize", apply);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", apply);
+    };
+  }, [clock.phase]);
 
   return (
-    <div
-      className="legislation-bar overflow-hidden border-b border-gold/35 bg-emerald-deep text-frost"
-      role="region"
-      aria-label={legislationCopy.regionLabel}
-    >
-      <div className="page-gutter mx-auto flex h-full max-w-[92rem] items-center justify-between gap-3">
-        {onVault ? (
-          <p className="flex min-w-0 items-center">{readout}</p>
+    <>
+      <div
+        ref={bannerRef}
+        className="legislation-banner"
+        role="region"
+        aria-labelledby={titleId}
+        aria-describedby={noteId}
+      >
+        <p id={titleId} className="legislation-banner-headline">
+          {legislationCopy.bannerHeadline}
+        </p>
+        <p id={noteId} className="sr-only">
+          {legislationCopy.bannerDistinction}
+        </p>
+        <p className="sr-only" aria-live="polite">
+          {upcoming
+            ? spokenClock(clock.days, clock.hours, clock.minutes)
+            : clock.phase === "today"
+              ? `${legislationCopy.today}. ${legislationCopy.bannerDistinction}`
+              : `${legislationCopy.passedBar}. ${legislationCopy.bannerDistinction}`}
+        </p>
+        {upcoming ? (
+          <p className="legislation-banner-clock" aria-hidden>
+            {units.map((unit, index) => (
+              <span key={unit.key}>
+                {index > 0 ? <span className="legislation-banner-sep"> | </span> : null}
+                <span className="legislation-banner-num" suppressHydrationWarning>
+                  {unit.value}
+                </span>{" "}
+                <span className="legislation-banner-unit-label">{unit.label}</span>
+              </span>
+            ))}
+          </p>
         ) : (
-          <a href={storyHref} className="flex h-full min-w-0 items-center">
-            {readout}
-          </a>
-        )}
-
-        {onVault ? (
-          <a
-            href={storyHref}
-            className="legislation-clock-clearance inline-flex h-full shrink-0 items-center font-label text-[0.72rem] tracking-[0.16em] text-gold uppercase hover:text-frost sm:text-[0.8rem] sm:tracking-[0.2em]"
-          >
-            {legislationCopy.barStory}
-          </a>
-        ) : (
-          <Link
-            href="/vault"
-            className="legislation-clock-clearance inline-flex h-full shrink-0 items-center font-label text-[0.72rem] tracking-[0.16em] text-gold uppercase hover:text-frost sm:text-[0.8rem] sm:tracking-[0.2em]"
-          >
-            <span className="sm:hidden">{legislationCopy.barCtaShort}</span>
-            <span className="hidden sm:inline">{legislationCopy.barCta}</span>
-          </Link>
+          <p className="legislation-banner-status">
+            {clock.phase === "today" ? legislationCopy.today : legislationCopy.passedKicker}
+          </p>
         )}
       </div>
-    </div>
+      <div className="legislation-banner-spacer" aria-hidden />
+    </>
   );
 }
